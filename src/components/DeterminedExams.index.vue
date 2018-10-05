@@ -12,13 +12,23 @@
         data () {
             return {
                 DeterminedExams: []
+
             }
         },
         created () {
-            this.$http.get('http://localhost:8000/exams/full').then(function(data) {
-                console.log(data)
-                this.DeterminedExams = data.body
-            })
+            this.$http.get('http://localhost:8000/exams/full').then(response => {
+                console.log(response)
+                this.DeterminedExams = response.body
+            }, response => {
+                alert(response.status);
+                if (response.status === 404) {
+                    alert(404)
+                } else if (response.status === 500) {
+                    alert(500)
+                } else {
+                    alert("unknown error")
+                }
+            });
         }
     }
 </script>
