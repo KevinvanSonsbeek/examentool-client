@@ -23,9 +23,9 @@
             // API call
             this.$http.get('http://localhost:8000/exams/full').then(response => {
                 // Succeed
-                console.log(response);
                 this.DeterminedExams = response.body
             }, response => {
+                // Failed
                 if (response.status === 404) {
                     alert(404)
                 } else if (response.status === 500) {
