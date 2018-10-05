@@ -11,15 +11,19 @@
     export default {
         name: 'DeterminedExam',
         search: '',
+        // Function needed for the data
         data () {
             return {
                 search: '',
                 DeterminedExams: []
             }
         },
+        // Function called at creation of the page
         created () {
+            // API call
             this.$http.get('http://localhost:8000/exams/full').then(response => {
-                console.log(response)
+                // Succeed
+                console.log(response);
                 this.DeterminedExams = response.body
             }, response => {
                 if (response.status === 404) {
@@ -32,6 +36,7 @@
             });
         },
         computed: {
+            // For filtering the examns for the search function
             FilteredExams() {
                 return this.DeterminedExams.filter(Exam => {
                     return Exam.exam_title.toLowerCase().includes(this.search.toLowerCase())
