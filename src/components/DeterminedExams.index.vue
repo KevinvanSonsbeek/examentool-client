@@ -1,6 +1,5 @@
 <template>
   <div id="DeterminedExams">
-    <div v-for="Exam in DeterminedExams" class="determinedExam">
     <input type="text" class="form-control" v-model="search" placeholder="Search for exam.."/><br>
     <div v-for="Exam in FilteredExams" class="determinedExam">
       <p>{{ Exam.exam_title }}</p>
@@ -11,10 +10,11 @@
 <script>
     export default {
         name: 'DeterminedExam',
+        search: '',
         data () {
             return {
-                DeterminedExams: []
-
+                DeterminedExams: [],
+                search: ''
             }
         },
         created () {
@@ -31,6 +31,13 @@
                     alert("unknown error")
                 }
             });
+        },
+        computed: {
+            FilteredExams() {
+                return this.DeterminedExams.filter(Exam => {
+                    return Exam.exam_title.toLowerCase().includes(this.search.toLowerCase())
+                })
+            }
         }
     }
 </script>
