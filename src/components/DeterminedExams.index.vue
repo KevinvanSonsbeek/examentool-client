@@ -4,7 +4,7 @@
     <div class="list-group">
       <div v-for="Exam in FilteredExams" class="">
         <!--<a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenter">{{ Exam.exam_title }}</a>-->
-        <router-link :to="{ name: 'DeterminedExamsNewAssessment', params: { examId: Exam._id }}">{{ Exam.exam_title }}</router-link>
+        <router-link :to="{ name: 'DeterminedExamsAssessment', params: { examId: Exam._id }}">{{ Exam.exam_title }}</router-link>
       </div>
     </div>
 
