@@ -1,9 +1,34 @@
 <template>
   <div id="DeterminedExams">
     <input type="text" class="form-control" v-model="search" placeholder="Search for exam.."/>
-    <div v-for="Exam in FilteredExams" class="determinedExam">
-      <p>{{ Exam.exam_title }}</p>
+    <div class="list-group">
+      <div v-for="Exam in FilteredExams" class="">
+        <!--<a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenter">{{ Exam.exam_title }}</a>-->
+        <router-link :to="{ name: 'DeterminedExamsAssessment', params: { examId: Exam._id }}">{{ Exam.exam_title }}</router-link>
+      </div>
     </div>
+
+    <!--WIP-->
+    <!--&lt;!&ndash; Modal &ndash;&gt;-->
+    <!--<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">-->
+      <!--<div class="modal-dialog" role="document">-->
+        <!--<div class="modal-content">-->
+          <!--<div class="modal-header">-->
+            <!--<h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>-->
+            <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+              <!--<span aria-hidden="true">&times;</span>-->
+            <!--</button>-->
+          <!--</div>-->
+          <!--<div class="modal-body">-->
+            <!--hoi-->
+          <!--</div>-->
+          <!--<div class="modal-footer">-->
+            <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+            <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -11,6 +36,11 @@
     export default {
         name: 'DeterminedExam',
         search: '',
+        head: {
+            script: [
+                {src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'},
+            ]
+        },
         // Function needed for the data
         data () {
             return {
@@ -44,6 +74,10 @@
             }
         }
     }
+
+    // $('#exampleModalCenter').on('shown.bs.modal', function () {
+    //     $('#exampleModalLong').trigger('focus')
+    // })
 </script>
 
 <style>
