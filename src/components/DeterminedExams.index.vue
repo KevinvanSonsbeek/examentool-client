@@ -1,6 +1,6 @@
 <template>
   <div id="DeterminedExams">
-    <input type="text" v-model="search" placeholder="Search for exam.."/>
+    <input type="text" class="form-control" v-model="search" placeholder="Search for exam.."/>
     <div v-for="Exam in FilteredExams" class="determinedExam">
       <p>{{ Exam.exam_title }}</p>
     </div>
@@ -45,3 +45,10 @@
         }
     }
 </script>
+
+<style>
+  #DeterminedExams{
+    margin-top: 25px;
+  }
+
+</style>
