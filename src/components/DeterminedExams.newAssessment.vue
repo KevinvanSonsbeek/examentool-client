@@ -27,11 +27,11 @@
                 console.log(this.exam);
 
                 if (this.webStorageSupport) {
-                    localStorage.setItem("exams", {
+                    localStorage.setItem('assessment-' + this.exam._id, JSON.stringify({
                         lastUpdate: Date.now(),
                         data: this.exam,
                         justCreated: true
-                    });
+                    }));
                 }
 
                 // Go to the assessment
