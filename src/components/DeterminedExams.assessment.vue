@@ -31,8 +31,8 @@
               </tr>
               <tr v-for="criteria in section.criteria">
                 <td>{{ criteria.criteria_name }}</td>
-                <td><input class="form-check-input" type="radio" value="option1"></td>
-                <td><input class="form-check-input" type="radio" value="option2"></td>
+                <td><input class="form-check-input" v-bind:name="criteria.criteria_name + 'wel'" type="radio" value="option1"></td>
+                <td><input class="form-check-input" v-bind:name="criteria.criteria_name + 'niet'" type="radio" value="option2"></td>
                 <td><input class="form-check-input" type="checkbox" value=""></td>
               </tr>
             </tbody>
