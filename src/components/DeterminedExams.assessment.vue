@@ -56,28 +56,36 @@ export default {
     };
   },
   // Function called at creation of the page
-  created() {
-    // API call
-    this.$http
-      .get("http://localhost:8000/exam/" + this.$route.params.examId + "/start")
-      .then(
-        response => {
-          // Succeed
-          this.sections = response.body.exam_criteria;
-          console.log(this.sections);
-        },
-        response => {
-          // Failed
-          if (response.status === 404) {
-            alert(404);
-          } else if (response.status === 500) {
-            alert(500);
-          } else {
-            alert("unknown error");
-          }
+    created () {
+        // Check if there wis web storage support
+        this.webStorageSupport = typeof(Storage) !== "undefined";
+        let localStorageData = JSON.parse(localStorage.getItem('assessment-' + this.$route.params.examId));
+
+        if (!localStorageData.justCreated) {
+            // API call
+            this.$http.get('http://localhost:8000/assessment/' + this.$route.params.examId + '/join').then(response => {
+                // Succeed
+                console.log(this.exam);
+            }, response => {
+                // Failed
+                if (response.status === 404) {
+                    alert(404)
+                } else if (response.status === 500) {
+                    alert(500)
+                } else {
+                    alert("unknown error")
+                }
+
+                // Sever not available, using local storage
+                this.exam = localStorageData.data
+                // TODO: Logic for server not available
+            });
+        } else {
+            this.exam = localStorageData.data;
+            localStorageData.justCreated = false;
         }
-      );
-  },
+        localStorage.setItem('assessment-' + this.$route.params.examId, JSON.stringify(localStorageData))
+    },
   methods: {
     // Data has been entered and continue button clicked
     StartAssignment: function() {
@@ -119,6 +127,7 @@ export default {
             {
                 localStorage.setItem(string, "notChecked")
             }
+            localStorage.setItem('assessment-' + this.$route.params.examId, JSON.stringify(localStorageData))
         }
     }
   }
