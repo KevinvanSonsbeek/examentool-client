@@ -31,8 +31,8 @@
                 </tr>
                 <tr v-for="criteria in section.criteria">
                     <td v-bind:id="criteria.criteria_name + 'Title'">{{ criteria.criteria_name }}</td>
-                    <td><input class="form-check-input" v-on:change="SaveStorage('radio', criteria.criteria_name, 'wel')" v-bind:name="criteria.criteria_name" v-bind:id="criteria.criteria_name + 'wel'" type="radio" value="option1"></td>
-                    <td><input class="form-check-input" v-on:change="SaveStorage('radio', criteria.criteria_name, 'niet')" v-bind:name="criteria.criteria_name" v-bind:id="criteria.criteria_name + 'niet'" type="radio" value="option2"></td>
+                    <td><input class="form-check-input" v-on:change="SaveStorage('radio', criteria.criteria_name, 'true')" v-bind:name="criteria.criteria_name" v-bind:id="criteria.criteria_name + 'true'" type="radio" value="option1"></td>
+                    <td><input class="form-check-input" v-on:change="SaveStorage('radio', criteria.criteria_name, 'false')" v-bind:name="criteria.criteria_name" v-bind:id="criteria.criteria_name + 'false'" type="radio" value="option2"></td>
                     <td><input class="form-check-input" v-on:change="SaveStorage('checkbox', criteria.criteria_name + 'Doubt', 'doubt')" v-bind:id="criteria.criteria_name + 'Doubt'" type="checkbox" value=""></td>
                 </tr>
             </tbody>
@@ -77,36 +77,34 @@ export default {
       );
   },
   methods: {
+    //Gegevens ingevoerd en 'doorgaan' knop aangeklikt
     StartAssignment: function() {
         document.getElementById("infoTable").style.display = "none";
         document.getElementById("sectionsDiv").style.display = "block";
 
+        //Voor iedere sectie
         for(var section in this.sections)
         {
+            //Voor iedere criteria in de secties
             for(var curCriteria in this.sections[section].criteria)
             {
                 var criteriaName = this.sections[section].criteria[curCriteria].criteria_name;
-                
-                if(localStorage.getItem(criteriaName) == "null")
+                //Check voor eventuele local storage en pas het toe aan de radio knoppen en checkboxes
+                if(localStorage.getItem(criteriaName) == "true")
                 {
-
-                }else if(localStorage.getItem(criteriaName) == "wel")
+                    document.getElementById(criteriaName + "true").checked = true;
+                }else if(localStorage.getItem(criteriaName) == "false")
                 {
-                    document.getElementById(criteriaName + "wel").checked = true;
-                }else if(localStorage.getItem(criteriaName) == "niet")
-                {
-                    document.getElementById(criteriaName + "niet").checked = true;
+                    document.getElementById(criteriaName + "false").checked = true;
                 }
-                if(localStorage.getItem(criteriaName + "Doubt") == "null")
-                {
-                    
-                }else if(localStorage.getItem(criteriaName + "Doubt") == "checked")
+                if(localStorage.getItem(criteriaName + "Doubt") == "checked")
                 {
                     document.getElementById(criteriaName + "Doubt").checked = true;
                 }
             }
         }
     },
+    //Antwoorden opslaan in localstorage
     SaveStorage: function(type, string, status) {
         if(type == "radio"){
             localStorage.setItem(string, status);
