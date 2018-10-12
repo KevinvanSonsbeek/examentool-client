@@ -77,19 +77,19 @@ export default {
       );
   },
   methods: {
-    //Gegevens ingevoerd en 'doorgaan' knop aangeklikt
+    //Data has been entered and continue button clicked
     StartAssignment: function() {
         document.getElementById("infoTable").style.display = "none";
         document.getElementById("sectionsDiv").style.display = "block";
 
-        //Voor iedere sectie
+        //For each section
         for(var section in this.sections)
         {
-            //Voor iedere criteria in de secties
+            //For each criteria in the sections
             for(var curCriteria in this.sections[section].criteria)
             {
                 var criteriaName = this.sections[section].criteria[curCriteria].criteria_name;
-                //Check voor eventuele local storage en pas het toe aan de radio knoppen en checkboxes
+                //Look for local storage data and alter inputs accordingly
                 if(localStorage.getItem(criteriaName) == "true")
                 {
                     document.getElementById(criteriaName + "true").checked = true;
@@ -104,7 +104,7 @@ export default {
             }
         }
     },
-    //Antwoorden opslaan in localstorage
+    //Save answers in local storage
     SaveStorage: function(type, string, status) {
         if(type == "radio"){
             localStorage.setItem(string, status);
