@@ -76,7 +76,7 @@ export default {
                     alert("unknown error")
                 }
 
-                // Sever not available, using local storage
+                // Server not available, using local storage
                 this.exam = localStorageData.data
                 // TODO: Logic for server not available
             });
@@ -127,8 +127,8 @@ export default {
             {
                 localStorage.setItem(string, "notChecked")
             }
-            localStorage.setItem('assessment-' + this.$route.params.examId, JSON.stringify(localStorageData))
         }
+        localStorage.setItem('assessment-' + this.$route.params.examId, JSON.stringify(localStorageData))
     }
   }
 };
