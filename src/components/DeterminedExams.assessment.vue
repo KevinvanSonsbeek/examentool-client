@@ -91,7 +91,8 @@ export default {
     StartAssignment: function() {
         document.getElementById("infoTable").style.display = "none";
         document.getElementById("sectionsDiv").style.display = "block";
-
+        let examId = 'assessment-' + this.$route.params.examId;
+        let examObject = JSON.parse(localStorage.getItem((examId)));        
         // For each section
         for(let section in this.sections)
         {
@@ -100,27 +101,28 @@ export default {
             {
                 let criteriaName = this.sections[section].criteria[curCriteria].criteria_name;
                 // Look for local storage data and alter inputs accordingly
-                if(localStorage.getItem(criteriaName) == "true")
+                if(examObject.data.exam_criteria[section].criteria[curCriteria].rating_group == "true")
                 {
                     document.getElementById(criteriaName + "true").checked = true;
-                }else if(localStorage.getItem(criteriaName) == "false")
+                }else if(examObject.data.exam_criteria[section].criteria[curCriteria].rating_group == "false")
                 {
                     document.getElementById(criteriaName + "false").checked = true;
                 }
+                /*
                 if(localStorage.getItem(criteriaName + "Doubt") == "checked")
                 {
                     document.getElementById(criteriaName + "Doubt").checked = true;
-                }
+                }*/
             }
         }
     },
     // Save answers in local storage
     SaveStorage: function(type, section, criteria, string, status) {
         let examId = 'assessment-' + this.$route.params.examId;
-        let examArray = JSON.parse(localStorage.getItem((examId)));
-
+        let examObject = JSON.parse(localStorage.getItem((examId)));
+        // Act according to type
         if(type == "radio"){
-            examArray.data.exam_criteria[section].criteria[criteria].rating_group = status;
+            examObject.data.exam_criteria[section].criteria[criteria].rating_group = status;
         }else if(type == "checkbox")
         {
             if(document.getElementById(string).checked == true)
@@ -131,7 +133,7 @@ export default {
                 //localStorage.setItem(this.$route.params.examId[section].criteria[criteria].string, "notChecked")
             }
         }
-        localStorage.setItem(examId, JSON.stringify(examArray))
+        localStorage.setItem(examId, JSON.stringify(examObject))
     }
   }
 };
