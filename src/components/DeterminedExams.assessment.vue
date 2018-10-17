@@ -19,7 +19,7 @@
         </table>
         <div id="sectionsDiv">
           <table id="sectionTables" class="table sectionTable">
-            <tbody class="" v-for="section in sections"><br><br>
+            <tbody class="" v-for="(section, sectionIndex) in sections"><br><br>
             <tr>
                 <td class="sectionHeader">{{ section.title }}</td>
               </tr>
@@ -31,11 +31,11 @@
                 <td>Uitleg:</td>
                 <td>Notitie:</td>
                 </tr>
-                <tr v-for="criteria in section.criteria">
+                <tr v-for="(criteria, criteriaIndex) in section.criteria">
                     <td v-bind:id="criteria.criteria_name + 'Title'">{{ criteria.criteria_name }}</td>
-                    <td><input class="form-check-input" v-on:change="SaveStorage('radio', criteria.criteria_name, 'true')" v-bind:name="criteria.criteria_name" v-bind:id="criteria.criteria_name + 'true'" type="radio" value="option1"></td>
-                    <td><input class="form-check-input" v-on:change="SaveStorage('radio', criteria.criteria_name, 'false')" v-bind:name="criteria.criteria_name" v-bind:id="criteria.criteria_name + 'false'" type="radio" value="option2"></td>
-                    <td><input class="form-check-input" v-on:change="SaveStorage('checkbox', criteria.criteria_name + 'Doubt', 'doubt')" v-bind:id="criteria.criteria_name + 'Doubt'" type="checkbox" value=""></td>
+                    <td><input class="form-check-input" v-on:change="SaveStorage('radio', sectionIndex, criteriaIndex, criteria.criteria_name, 'true')" v-bind:name="criteria.criteria_name" v-bind:id="criteria.criteria_name + 'true'" type="radio" value="option1"></td>
+                    <td><input class="form-check-input" v-on:change="SaveStorage('radio', sectionIndex, criteriaIndex, criteria.criteria_name, 'false')" v-bind:name="criteria.criteria_name" v-bind:id="criteria.criteria_name + 'false'" type="radio" value="option2"></td>
+                    <td><input class="form-check-input" v-on:change="SaveStorage('checkbox', sectionIndex, criteriaIndex, criteria.criteria_name + 'Doubt', 'doubt')" v-bind:id="criteria.criteria_name + 'Doubt'" type="checkbox" value=""></td>
                 <td><button v-on:click="showInfo(criteria.criteria_description)">?</button></td>
                 </tr>
             </tbody>
@@ -65,23 +65,23 @@ export default {
             // API call
             this.$http.get('http://localhost:8000/assessment/' + this.$route.params.examId + '/join').then(response => {
                 // Succeed
-                console.log(this.exam);
             }, response => {
                 // Failed
                 if (response.status === 404) {
-                    alert(404)
+                    console.log(404)
                 } else if (response.status === 500) {
-                    alert(500)
+                    console.log(500)
                 } else {
-                    alert("unknown error")
+                    console.log("unknown error")
                 }
-
                 // Server not available, using local storage
-                this.exam = localStorageData.data
+                this.exam = localStorageData.data;
+                this.sections = localStorageData.data.exam_criteria;
                 // TODO: Logic for server not available
             });
         } else {
             this.exam = localStorageData.data;
+            this.sections = localStorageData.data.exam_criteria;
             localStorageData.justCreated = false;
         }
         localStorage.setItem('assessment-' + this.$route.params.examId, JSON.stringify(localStorageData))
@@ -93,12 +93,12 @@ export default {
         document.getElementById("sectionsDiv").style.display = "block";
 
         // For each section
-        for(var section in this.sections)
+        for(let section in this.sections)
         {
             // For each criteria in the sections
-            for(var curCriteria in this.sections[section].criteria)
+            for(let curCriteria in this.sections[section].criteria)
             {
-                var criteriaName = this.sections[section].criteria[curCriteria].criteria_name;
+                let criteriaName = this.sections[section].criteria[curCriteria].criteria_name;
                 // Look for local storage data and alter inputs accordingly
                 if(localStorage.getItem(criteriaName) == "true")
                 {
@@ -115,20 +115,23 @@ export default {
         }
     },
     // Save answers in local storage
-    SaveStorage: function(type, string, status) {
+    SaveStorage: function(type, section, criteria, string, status) {
+        let examId = 'assessment-' + this.$route.params.examId;
+        let examArray = JSON.parse(localStorage.getItem((examId)));
+
         if(type == "radio"){
-            localStorage.setItem(string, status);
+            examArray.data.exam_criteria[section].criteria[criteria].rating_group = status;
         }else if(type == "checkbox")
         {
             if(document.getElementById(string).checked == true)
             {
-                localStorage.setItem(string, "checked");
+                //localStorage.setItem(this.$route.params.examId[section].criteria[criteria].string, "checked");
             }else if(document.getElementById(string).checked == false)
             {
-                localStorage.setItem(string, "notChecked")
+                //localStorage.setItem(this.$route.params.examId[section].criteria[criteria].string, "notChecked")
             }
         }
-        localStorage.setItem('assessment-' + this.$route.params.examId, JSON.stringify(localStorageData))
+        localStorage.setItem(examId, JSON.stringify(examArray))
     }
   }
 };
