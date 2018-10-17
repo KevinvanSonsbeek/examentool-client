@@ -20,4 +20,4 @@ export default new Router({
         component: DeterminedExamsAssessment
       }
   ]
-})
+});

@@ -1,5 +1,6 @@
 <template>
     <div id="DeterminedExams">
+      <!-- This is the form shown before the start of a exam -->
         <table id="infoTable" class="table">
           <tbody>
               <tr>
@@ -19,6 +20,7 @@
         </table>
 
           <table id="sectionTables" class="table sectionTable">
+            <!-- For every section it creates a new table -->
             <tbody class="" v-for="section in sections"><br><br>
             <tr>
                 <td class="sectionHeader">{{ section.title }}</td>
@@ -31,6 +33,7 @@
                 <td>Uitleg:</td>
                 <td>Notitie:</td>
               </tr>
+              <!-- For every criteria it creates a table row with the name and options -->
               <tr v-for="criteria in section.criteria">
                 <td>{{ criteria.criteria_name }}</td>
                 <td><input class="form-check-input" v-bind:name="criteria.criteria_name" id="wel" type="radio" value="option1"></td>
@@ -85,7 +88,9 @@ export default {
       document.getElementById("infoTable").hidden = true;
       document.getElementById("sectionTables").style.display = "block";
     },
-    
+    showInfo: function(description) {
+      alert(description);
+    }
   }
 };
 </script>
