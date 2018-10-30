@@ -63,7 +63,7 @@ export default {
 
         this.$http.post('http://localhost:8000/assessment/' + this.$route.params.examId + '/join', {examinator_name: "name"}).then(response => {
             // Succeed
-            var serverVersionTime = new Date(response.data[0].updated_at).getTime();
+            var serverVersionTime = new Date(response.data.updated_at).getTime();
             if(localStorageData != null)
             {
                 if(serverVersionTime > localStorageData.lastUpdate)
