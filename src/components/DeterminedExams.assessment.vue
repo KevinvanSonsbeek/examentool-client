@@ -33,8 +33,8 @@
                 </tr>
                 <tr v-for="(criteria, criteriaIndex) in section.criteria">
                     <td v-bind:id="criteria.criteria_name + 'Title'">{{ criteria.criteria_name }}</td>
-                    <td><input class="form-check-input" v-on:change="SaveStorage('radio', sectionIndex, criteriaIndex, criteria.criteria_name, 'true')" v-bind:name="criteria.criteria_name" v-bind:id="criteria.criteria_name + 'true'" type="radio" value="option1"></td>
-                    <td><input class="form-check-input" v-on:change="SaveStorage('radio', sectionIndex, criteriaIndex, criteria.criteria_name, 'false')" v-bind:name="criteria.criteria_name" v-bind:id="criteria.criteria_name + 'false'" type="radio" value="option2"></td>
+                    <td><input class="form-check-input" v-on:change="SaveStorage('radio', sectionIndex, criteriaIndex, criteria.criteria_name, true)" v-bind:name="criteria.criteria_name" v-bind:id="criteria.criteria_name + 'True'" type="radio" value="option1"></td>
+                    <td><input class="form-check-input" v-on:change="SaveStorage('radio', sectionIndex, criteriaIndex, criteria.criteria_name, false)" v-bind:name="criteria.criteria_name" v-bind:id="criteria.criteria_name + 'False'" type="radio" value="option2"></td>
                     <td><input class="form-check-input" v-on:change="SaveStorage('checkbox', sectionIndex, criteriaIndex, criteria.criteria_name + 'Doubt', 'doubt')" v-bind:id="criteria.criteria_name + 'Doubt'" type="checkbox" value=""></td>
                 <td><button v-on:click="showInfo(criteria.criteria_description)">?</button></td>
                 </tr>
@@ -61,29 +61,48 @@ export default {
         this.webStorageSupport = typeof(Storage) !== "undefined";
         let localStorageData = JSON.parse(localStorage.getItem('assessment-' + this.$route.params.examId));
 
-        if (!localStorageData.justCreated) {
-            // API call
-            this.$http.get('http://localhost:8000/assessment/' + this.$route.params.examId + '/join').then(response => {
-                // Succeed
-            }, response => {
-                // Failed
-                if (response.status === 404) {
-                    console.log(404)
-                } else if (response.status === 500) {
-                    console.log(500)
-                } else {
-                    console.log("unknown error")
+        this.$http.post('http://localhost:8000/assessment/' + this.$route.params.examId + '/join', {examinator_name: "name"}).then(response => {
+            // Succeed
+            var serverVersionTime = new Date(response.data[0].updated_at).getTime();
+            if(localStorageData != null)
+            {
+                if(serverVersionTime > localStorageData.lastUpdate)
+                {                
+                    this.sections = response.body[0].exam_criteria
+                    localStorage.setItem('assessment-' + this.$route.params.examId, JSON.stringify({
+                        lastUpdate: Date.now(),
+                        data: response.body,
+                        justCreated: true
+                    }));
+                }else
+                {
+                    this.sections = localStorageData.data[0].exam_criteria;
                 }
-                // Server not available, using local storage
-                this.exam = localStorageData.data;
-                this.sections = localStorageData.data.exam_criteria;
-                // TODO: Logic for server not available
-            });
-        } else {
-            this.exam = localStorageData.data;
-            this.sections = localStorageData.data.exam_criteria;
-            localStorageData.justCreated = false;
-        }
+            }else
+            {
+                this.sections = response.body[0].exam_criteria            
+                localStorage.setItem('assessment-' + this.$route.params.examId, JSON.stringify({
+                    lastUpdate: Date.now(),
+                    data: response.body,
+                    justCreated: true
+                }));
+            }
+        }, response => {
+            // Failed
+            if (response.status === 404) {
+                console.log(404)
+            } else if (response.status === 500) {
+                console.log(500)
+            } else {
+                console.log("unknown error")
+            }
+            // Server not available, using local storage
+            // this.exam = localStorageData.data;
+            // this.sections = localStorageData.data.exam_criteria;
+            // TODO: Logic for server not available
+            alert("failed");
+        });
+
         localStorage.setItem('assessment-' + this.$route.params.examId, JSON.stringify(localStorageData))
     },
   methods: {
@@ -92,7 +111,7 @@ export default {
         document.getElementById("infoTable").style.display = "none";
         document.getElementById("sectionsDiv").style.display = "block";
         let examId = 'assessment-' + this.$route.params.examId;
-        let examObject = JSON.parse(localStorage.getItem((examId)));        
+        let examObject = JSON.parse(localStorage.getItem((examId)));
         // For each section
         for(let section in this.sections)
         {
@@ -101,18 +120,17 @@ export default {
             {
                 let criteriaName = this.sections[section].criteria[curCriteria].criteria_name;
                 // Look for local storage data and alter inputs accordingly
-                if(examObject.data.exam_criteria[section].criteria[curCriteria].rating_group == "true")
+                if(examObject.data[0].exam_criteria[section].criteria[curCriteria].rating_group == true)
                 {
-                    document.getElementById(criteriaName + "true").checked = true;
-                }else if(examObject.data.exam_criteria[section].criteria[curCriteria].rating_group == "false")
+                    document.getElementById(criteriaName + "True").checked = true;
+                }else if(examObject.data[0].exam_criteria[section].criteria[curCriteria].rating_group == false)
                 {
-                    document.getElementById(criteriaName + "false").checked = true;
+                    document.getElementById(criteriaName + "False").checked = true;
                 }
-                /*
-                if(localStorage.getItem(criteriaName + "Doubt") == "checked")
+                if(examObject.data[0].exam_criteria[section].criteria[curCriteria].doubt == true)
                 {
                     document.getElementById(criteriaName + "Doubt").checked = true;
-                }*/
+                }
             }
         }
     },
@@ -122,15 +140,15 @@ export default {
         let examObject = JSON.parse(localStorage.getItem((examId)));
         // Act according to type
         if(type == "radio"){
-            examObject.data.exam_criteria[section].criteria[criteria].rating_group = status;
+            examObject.data[0].exam_criteria[section].criteria[criteria].rating_group = status;
         }else if(type == "checkbox")
         {
             if(document.getElementById(string).checked == true)
             {
-                //localStorage.setItem(this.$route.params.examId[section].criteria[criteria].string, "checked");
+                examObject.data[0].exam_criteria[section].criteria[criteria].doubt = true;
             }else if(document.getElementById(string).checked == false)
             {
-                //localStorage.setItem(this.$route.params.examId[section].criteria[criteria].string, "notChecked")
+                examObject.data[0].exam_criteria[section].criteria[criteria].doubt = false;
             }
         }
         localStorage.setItem(examId, JSON.stringify(examObject))

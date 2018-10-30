@@ -24,15 +24,14 @@
             this.$http.get('http://localhost:8000/exam/' + this.$route.params.examId + '/start').then(response => {
                 // Succeed
                 this.exam = response.body;
-                console.log(this.exam);
 
-                if (this.webStorageSupport) {
-                    localStorage.setItem('assessment-' + this.exam._id, JSON.stringify({
-                        lastUpdate: Date.now(),
-                        data: this.exam,
-                        justCreated: true
-                    }));
-                }
+                // if (this.webStorageSupport) {
+                //     localStorage.setItem('final_assessment-' + this.exam._id, JSON.stringify({
+                //         lastUpdate: Date.now(),
+                //         data: this.exam,
+                //         justCreated: true
+                //     }));
+                // }
 
                 // Go to the assessment
                 this.$router.push({ name: 'DeterminedExamsAssessment', params: { examId: this.exam._id }})
