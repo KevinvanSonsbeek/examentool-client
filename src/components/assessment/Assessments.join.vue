@@ -23,19 +23,25 @@
         },
         methods: {
             setWebStorage(data) {
-                if (this.webStorageSupport) {
-                    this.getWebStorage().then((localData => {
-                        // When there is no web storage, prevent using current date and use data from data
-                        if (localData === null) {
-                            data.updated_at = new Date(data.updated_at).getTime(); //Convert to unix timestamp
+                return new Promise(
+                    (resolve, reject) => {
+                        if (this.webStorageSupport) {
+                            this.getWebStorage().then((localData => {
+                                // When there is no web storage, prevent using current date and use data from data
+                                if (localData === null) {
+                                    data.updated_at = new Date(data.updated_at).getTime(); //Convert to unix timestamp
+                                } else {
+                                    data.updated_at = Date.now();
+                                }
+                                localStorage.setItem(this.webStorageName, JSON.stringify(data));
+                                resolve(data);
+                            }));
+                            reject(new Error("Unknown error"));
                         } else {
-                            data.updated_at = Date.now();
+                            reject(new Error("Web storage is not supported"));
                         }
-                        localStorage.setItem(this.webStorageName, JSON.stringify(data));
-                        return this.webStorageSupport;
-                    }));
-                    return false;
-                }
+                    }
+                );
             },
             getWebStorage() {
                 return new Promise(
@@ -51,7 +57,15 @@
                 )
             },
             setServerData(data) {
-                return false;
+                return new Promise(
+                    (resolve, reject) => {
+                        this.$http.put('http://localhost:8000/assessment/' + this.$route.params.examId + '/update', data).then(response => {
+                            resolve(response.body);
+                        }, response => {
+                            reject(new Error(response))
+                        })
+                    }
+                );
             },
             getServerData()  {
                 return new Promise(
@@ -85,8 +99,9 @@
                 });
             },
             setData(data) {
-                this.setWebStorage(data);
-                this.setServerData(data);
+                Promise.all([this.setWebStorage(data), this.setServerData(data)]).then(function() {
+                    return true;
+                });
             }
         }
     }
