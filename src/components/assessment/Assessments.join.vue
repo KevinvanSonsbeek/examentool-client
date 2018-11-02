@@ -22,11 +22,22 @@
             // TODO: Logic
         },
         methods: {
-            setLocalData(data) {
-                if (this.webStorageSupport) {localStorage.setItem(this.webStorageName, JSON.stringify(data))}
-                return this.webStorageSupport;
+            setWebStorage(data) {
+                if (this.webStorageSupport) {
+                    this.getWebStorage().then((localData => {
+                        // When there is no web storage, prevent using current date and use data from data
+                        if (localData === null) {
+                            data.updated_at = new Date(data.updated_at).getTime(); //Convert to unix timestamp
+                        } else {
+                            data.updated_at = Date.now();
+                        }
+                        localStorage.setItem(this.webStorageName, JSON.stringify(data));
+                        return this.webStorageSupport;
+                    }));
+                    return false;
+                }
             },
-            getLocalData() {
+            getWebStorage() {
                 return new Promise(
                     (resolve, reject) => {
                         let data;
@@ -46,12 +57,36 @@
                 return new Promise(
                     (resolve, reject) => {
                         this.$http.post('http://localhost:8000/assessment/' + this.$route.params.examId + '/join', {examinator_name: this.examiner}).then(response => {
-                            resolve(response.body)
+                            response.body.updated_at = new Date(response.body.updated_at).getTime(); //Convert to unix timestamp
+                            resolve(response.body);
                         }, response => {
                             reject(new Error(response))
                         })
                     }
                 );
+            },
+            getData() {
+                let self = this;
+                Promise.all([this.getServerData(), this.getWebStorage()]).then(function(values) {
+                    let serverData = values[0];
+                    let webStorageData = values[1];
+
+                    console.log("Server data:", serverData);
+                    console.log("Web storage data:", webStorageData);
+
+                    if (webStorageData === null) {
+                        self.setWebStorage(serverData);
+                        return serverData;
+                    } else if (serverData.updated_at >= webStorageData.updated_at) {
+                        return serverData;
+                    } else if (webStorageData.updated_at >= serverData.updated_at) {
+                        return webStorageData;
+                    }
+                });
+            },
+            setData(data) {
+                this.setWebStorage(data);
+                this.setServerData(data);
             }
         }
     }
