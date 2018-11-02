@@ -81,22 +81,23 @@
             },
             getData() {
                 let self = this;
-                Promise.all([this.getServerData(), this.getWebStorage()]).then(function(values) {
-                    let serverData = values[0];
-                    let webStorageData = values[1];
+                return new Promise(
+                    (resolve) => {
+                        Promise.all([this.getServerData(), this.getWebStorage()]).then(function(values) {
+                            let serverData = values[0];
+                            let webStorageData = values[1];
 
-                    console.log("Server data:", serverData);
-                    console.log("Web storage data:", webStorageData);
-
-                    if (webStorageData === null) {
-                        self.setWebStorage(serverData);
-                        return serverData;
-                    } else if (serverData.updated_at >= webStorageData.updated_at) {
-                        return serverData;
-                    } else if (webStorageData.updated_at >= serverData.updated_at) {
-                        return webStorageData;
+                            if (webStorageData === null) {
+                                self.setWebStorage(serverData);
+                                resolve(serverData);
+                            } else if (serverData.updated_at >= webStorageData.updated_at) {
+                                resolve(serverData);
+                            } else if (webStorageData.updated_at >= serverData.updated_at) {
+                                resolve(webStorageData);
+                            }
+                        });
                     }
-                });
+                )
             },
             setData(data) {
                 Promise.all([this.setWebStorage(data), this.setServerData(data)]).then(function() {
