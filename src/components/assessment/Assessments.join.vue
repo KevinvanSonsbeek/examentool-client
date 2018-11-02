@@ -11,25 +11,23 @@
         // Function needed for the data
         data () {
             return {
-                webStorageSupport: undefined,
+                // Check if there is web storage support
+                webStorageSupport: typeof(Storage) !== undefined,
                 examiner: "Richard", //TODO: Ask for one
                 webStorageName: undefined,
             }
         },
         // Function called at creation of the page
         created () {
-            // Check if there is web storage support
-            this.webStorageSupport = typeof(Storage) !== undefined;
             // Set variable for web storage name
             this.webStorageName = 'assessment-' + this.$route.params.examId + '-' + this.examiner;
-
         },
         methods: {
-            setLocalData: (data) => {
+            setLocalData(data) {
                 if (this.webStorageSupport) {localStorage.setItem(this.webStorageName, JSON.stringify(data))}
                 return this.webStorageSupport;
             },
-            getLocalData: () => {
+            getLocalData() {
                 return new Promise(
                     (resolve, reject) => {
                         let data;
@@ -42,14 +40,14 @@
                     }
                 )
             },
-            setServerData: (data) => {
+            setServerData(data) {
                 return false;
             },
-            getServerData: () => {
+            getServerData()  {
                 return new Promise(
                     (resolve, reject) => {
                         this.$http.post('http://localhost:8000/assessment/' + this.$route.params.examId + '/join', {examinator_name: this.examiner}).then(response => {
-                            resolve(response)
+                            resolve(response.body)
                         }, response => {
                             reject(new Error(response))
                         })
