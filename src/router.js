@@ -29,7 +29,7 @@ export default new Router({
         component: DeterminedExamsNewAssessment
       },
       {
-          path: '/assessments/index',
+          path: '/assessments',
           name: 'AssessmentsIndex',
           component: AssessmentsIndex
       },

@@ -20,9 +20,12 @@
             this.webStorageSupport = typeof(Storage) !== "undefined";
 
             // API call
-            this.$http.get('http://localhost:8000/exam/' + this.$route.params.examId + '/start').then(response => {
+            this.$http.get('http://localhost:8000/exam/' + this.$route.params.examId + '/start').then((data) => {
                 // Succeed
-                this.$router.push({ name: 'DeterminedExamsAssessment', params: { examId: this.exam._id }})
+
+                console.log(data.body);
+
+                this.$router.push({ name: 'AssessmentsJoin', params: { examId: data.body._id }})
             }, response => {
                 // Failed
                 if (response.status === 404) {

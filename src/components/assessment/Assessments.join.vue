@@ -1,6 +1,57 @@
+<style>
+    #infoTable {
+        width: 600px;
+        margin: auto;
+    }
+    #infoTable input {
+        width: 200px;
+    }
+    #sectionsDiv{
+        margin: auto;
+        width: 800px!important;
+    }
+    .sectionHeader {
+        background: lightgrey;
+        width: 100%;
+    }
+    .card {
+        border: 1px solid lightgray;
+        border-radius: 5px;
+        padding: 20px;
+        min-width: 400px;
+        margin: 0px auto;
+        vertical-align: middle!important;
+        background: white;
+    }
+</style>
+
 <template>
     <div id="DeterminedExams">
-        Loading...
+        <div id="sectionsDiv">
+            <table id="sectionTables" class="table sectionTable">
+                <tbody class="" v-for="section in sections"><br><br>
+                <tr>
+                    <td class="sectionHeader">{{ section.title }}</td>
+                </tr>
+                <tr>
+                    <td>Vraag:</td>
+                    <td>Wel:</td>
+                    <td>Niet:</td>
+                    <td>Twijfel:</td>
+                    <td>Uitleg:</td>
+                    <td>Notitie:</td>
+                </tr>
+                <tr v-for="criteria in section.criteria">
+                    <td v-bind:id="criteria.criteria_name + 'Title'">{{ criteria.criteria_name }}</td>
+                    <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="true" type="radio"></td>
+                    <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="false" type="radio"></td>
+                    <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.doubt" type="checkbox"></td>
+                    <td><button v-on:click="showInfo(criteria.criteria_description)">?</button></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="cardDiv"></div>
     </div>
 </template>
 
@@ -14,12 +65,22 @@
                 // Check if there is web storage support
                 webStorageSupport: typeof(Storage) !== undefined,
                 examiner: "Richard", //TODO: Ask for one
-                webStorageName: this.webStorageName = 'assessment-' + this.$route.params.examId + '-' + this.examiner,
+                webStorageName: undefined,
+
+                assessment: null,
+                sections: null,
             }
         },
         // Function called at creation of the page
         created () {
-            // TODO: Logic
+            this.webStorageName = this.webStorageName = 'assessment-' + this.$route.params.examId + '-' + this.examiner;
+
+            this.getData().then((data) => {
+                this.assessment = data;
+                this.sections = data.exam_criteria;
+
+                console.log(this.assessment)
+            });
         },
         methods: {
             setWebStorage(data) {
@@ -59,7 +120,7 @@
             setServerData(data) {
                 return new Promise(
                     (resolve, reject) => {
-                        this.$http.put('http://localhost:8000/assessment/' + this.$route.params.examId + '/update', data).then(response => {
+                        this.$http.put('http://localhost:8000/assessment/' + this.assessment._id + '/update', data).then(response => {
                             resolve(response.body);
                         }, response => {
                             reject(new Error(response))
@@ -103,6 +164,9 @@
                 Promise.all([this.setWebStorage(data), this.setServerData(data)]).then(function() {
                     return true;
                 });
+            },
+            onChange() {
+                this.setData(this.assessment);
             }
         }
     }

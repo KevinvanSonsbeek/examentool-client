@@ -157,30 +157,30 @@ export default {
 };
 </script>
 
-<style>
-  #infoTable {
-    width: 600px;
-    margin: auto;
-  }
-  #infoTable input {
-    width: 200px;
-  }
-  #sectionsDiv{
-    display: none;
-    margin: auto;
-    width: 800px!important;
-  }
-  .sectionHeader {
-    background: lightgrey;
-    width: 100%;
-  }
-  .card {
-    border: 1px solid lightgray;
-    border-radius: 5px;
-    padding: 20px;
-    min-width: 400px;
-    margin: 0px auto;
-    vertical-align: middle!important;
-    background: white;
-  }
-</style>
+<!--<style>-->
+  <!--#infoTable {-->
+    <!--width: 600px;-->
+    <!--margin: auto;-->
+  <!--}-->
+  <!--#infoTable input {-->
+    <!--width: 200px;-->
+  <!--}-->
+  <!--#sectionsDiv{-->
+    <!--display: none;-->
+    <!--margin: auto;-->
+    <!--width: 800px!important;-->
+  <!--}-->
+  <!--.sectionHeader {-->
+    <!--background: lightgrey;-->
+    <!--width: 100%;-->
+  <!--}-->
+  <!--.card {-->
+    <!--border: 1px solid lightgray;-->
+    <!--border-radius: 5px;-->
+    <!--padding: 20px;-->
+    <!--min-width: 400px;-->
+    <!--margin: 0px auto;-->
+    <!--vertical-align: middle!important;-->
+    <!--background: white;-->
+  <!--}-->
+<!--</style>-->
