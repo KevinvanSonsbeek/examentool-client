@@ -14,13 +14,12 @@
                 // Check if there is web storage support
                 webStorageSupport: typeof(Storage) !== undefined,
                 examiner: "Richard", //TODO: Ask for one
-                webStorageName: undefined,
+                webStorageName: this.webStorageName = 'assessment-' + this.$route.params.examId + '-' + this.examiner,
             }
         },
         // Function called at creation of the page
         created () {
-            // Set variable for web storage name
-            this.webStorageName = 'assessment-' + this.$route.params.examId + '-' + this.examiner;
+            // TODO: Logic
         },
         methods: {
             setLocalData(data) {
