@@ -155,7 +155,7 @@
                         this.$http.put('http://localhost:8000/assessment/' + this.assessment._id + '/update', data).then(response => {
                             resolve(response.body);
                         }, response => {
-                            this._addStatusMessage('error', response.statusText, response.status);
+                            this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
                             reject(new Error(response))
                         })
                     }
