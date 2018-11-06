@@ -1,18 +1,29 @@
+
+
+<script>
+export default {
+  methods: {
+    CloseMenu: function() {
+      document.getElementById("menuToggler").checked = false;
+    }
+  }
+}
+</script>
 <template>
   <div id="app">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     <nav role="navigation">
       <div id="menuToggle">
-        <input type="checkbox" />
+        <input type="checkbox" id="menuToggler"/>
         <span></span>
         <span></span>
         <span></span>
         <ul id="menu">
-          <li><router-link to="/">Home</router-link></li>
-          <li><router-link to="/">Exams</router-link></li>
-          <li><router-link to="/">About</router-link></li>
-          <li><router-link to="/">Students</router-link></li>
+          <li><router-link to="/" exact v-on:click.native="CloseMenu">Home</router-link></li>
+          <li><router-link to="/" exact v-on:click.native="CloseMenu">Exams</router-link></li>
+          <li><router-link to="/" exact v-on:click.native="CloseMenu">About</router-link></li>
+          <li><router-link to="/" exact v-on:click.native="CloseMenu">Students</router-link></li>
         </ul>
       </div>
     </nav>
@@ -154,7 +165,6 @@ a:hover
 
   transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
 }
-
 #menu li
 {
   padding: 10px 0;
