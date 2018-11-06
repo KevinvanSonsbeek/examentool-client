@@ -17,15 +17,35 @@
       </div>
     </nav>
 
-    <div v-for="errorMessage in errorMessages" :key="errorMessage.code">
-      <!--<div class="alert alert-warning alert-dismissible fade show" role="alert">-->
-      <div class="alert alert-warning alert-dismissible" role="alert">
-        <strong>Foutmelding: {{ errorMessage.code }}.</strong> {{ errorMessage.message }}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    </div>
+    <!--TODO: Find a way to make it dry-->
+    <!--<div class="statusMessages">-->
+      <!--<div v-for="statusMessage in statusMessages" :key="statusMessage.index">-->
+        <!--<div v-if="statusMessage.type === 'success'" class="alert alert-success alert-dismissible" role="alert">-->
+          <!--<strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}-->
+          <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">-->
+            <!--<span aria-hidden="true">&times;</span>-->
+          <!--</button>-->
+        <!--</div>-->
+        <!--<div v-if="statusMessage.type === 'info'" class="alert alert-info alert-dismissible" role="alert">-->
+          <!--<strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}-->
+          <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">-->
+            <!--<span aria-hidden="true">&times;</span>-->
+          <!--</button>-->
+        <!--</div>-->
+        <!--<div v-if="statusMessage.type === 'warning'" class="alert alert-warning alert-dismissible" role="alert">-->
+          <!--<strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}-->
+          <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">-->
+            <!--<span aria-hidden="true">&times;</span>-->
+          <!--</button>-->
+        <!--</div>-->
+        <!--<div v-if="statusMessage.type === 'error'" class="alert alert-danger alert-dismissible" role="alert">-->
+          <!--<strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}-->
+          <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">-->
+            <!--<span aria-hidden="true">&times;</span>-->
+          <!--</button>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
 
     <router-view/>
   </div>
@@ -175,5 +195,14 @@ a:hover
 {
   transform: none;
 }
+
+  /* For the status messages */
+  .statusMessages
+  {
+    position: absolute;
+    right: 10px;
+    width: 425px;
+    max-width: 95%;
+  }
 
 </style>

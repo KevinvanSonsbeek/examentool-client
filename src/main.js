@@ -2,24 +2,13 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueResource from 'vue-resource'
 import router from './router'
+import StatusMessageMixin from './mixins/StatusMessages'
 
 Vue.use(VueResource);
 
 Vue.config.productionTip = false;
 
-Vue.mixin({
-  data () {
-    return {
-        errorMessages: []
-    }
-  },
-  methods: {
-    _addErrorMessage(errorCode, message) {
-      this.errorMessages.push({code: errorCode, message: message});
-      console.log(this.errorMessages);
-    },
-  }
-});
+Vue.mixin(StatusMessageMixin);
 
 new Vue({
   router,

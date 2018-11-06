@@ -28,6 +28,36 @@
 <template>
     <div id="DeterminedExams">
         <div id="sectionsDiv">
+            <!--TODO: Find a way to make it dry-->
+            <div class="statusMessages">
+                <div v-for="statusMessage in statusMessages" :key="statusMessage.index">
+                    <div v-if="statusMessage.type === 'success'" class="alert alert-success alert-dismissible" role="alert">
+                        <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div v-if="statusMessage.type === 'info'" class="alert alert-info alert-dismissible" role="alert">
+                        <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div v-if="statusMessage.type === 'warning'" class="alert alert-warning alert-dismissible" role="alert">
+                        <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div v-if="statusMessage.type === 'error'" class="alert alert-danger alert-dismissible" role="alert">
+                        <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <table id="sectionTables" class="table sectionTable">
                 <tbody class="" v-for="section in sections"><br><br>
                 <tr>
@@ -125,7 +155,7 @@
                         this.$http.put('http://localhost:8000/assessment/' + this.assessment._id + '/update', data).then(response => {
                             resolve(response.body);
                         }, response => {
-                            this._addErrorMessage(response.status, response.statusText);
+                            this._addStatusMessage('error', response.statusText, response.status);
                             reject(new Error(response))
                         })
                     }
