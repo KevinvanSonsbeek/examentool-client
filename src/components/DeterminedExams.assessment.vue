@@ -85,7 +85,6 @@ export default {
       document.getElementById("infoTable").hidden = true;
       document.getElementById("sectionTables").style.display = "block";
     },
-    
   }
 };
 </script>

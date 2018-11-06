@@ -74,15 +74,10 @@
             }
         }
     }
-
-    // $('#exampleModalCenter').on('shown.bs.modal', function () {
-    //     $('#exampleModalLong').trigger('focus')
-    // })
 </script>
 
 <style>
-  #DeterminedExams{
+  #DeterminedExams {
     margin-top: 25px;
   }
-
 </style>
