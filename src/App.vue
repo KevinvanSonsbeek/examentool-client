@@ -26,6 +26,12 @@ export default {
           <li><router-link to="/" exact v-on:click.native="CloseMenu">Students</router-link></li>
         </ul>
       </div>
+      <div id="navBar">
+          <router-link to="/" exact v-on:click.native="CloseMenu">Home</router-link>
+          <router-link to="/" exact v-on:click.native="CloseMenu">Exams</router-link>
+          <router-link to="/" exact v-on:click.native="CloseMenu">About</router-link>
+          <router-link to="/" exact v-on:click.native="CloseMenu">Students</router-link>
+      </div>
     </nav>
     <router-view/>
   </div>
@@ -54,9 +60,9 @@ export default {
 
 body
 {
+  overflow: hidden;
   margin: 0;
   padding: 0;
-
   background: #232323;
   color: #cdcdcd;
   font-family: "Avenir Next", "Avenir", sans-serif;
@@ -74,7 +80,6 @@ a:hover
 {
   color: tomato;
 }
-
 #menuToggle
 {
   display: block;
@@ -87,7 +92,34 @@ a:hover
   -webkit-user-select: none;
   user-select: none;
 }
-
+@media (max-width: 850px)
+{
+  #navBar{
+    display: none;
+  }
+}
+@media (min-width: 850px)
+{
+  #menuToggle{
+    display: none;
+  }
+  #navBar{
+    display: block;
+    background-color: lightgray;
+    height: 35px;
+    width: 100%;
+    padding-left: 25%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+  }
+  #navBar a
+  {
+    margin-right: 25px;
+    line-height: 35px;
+    color: black;
+  }
+}
 #menuToggle input
 {
   display: block;
@@ -151,24 +183,23 @@ a:hover
 #menu
 {
   position: absolute;
-  width: 105%;
+  width: 100%;
   margin: -50px 0 0 -10px;
   padding: 20px;
   padding-top: 50px;
 
-  background: #ededed;
+  background: lightgrey;
   list-style-type: none;
   -webkit-font-smoothing: antialiased;
 
   transform-origin: 0% 0%;
   transform: translate(-100%, 0);
-
-  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+  transition: transform 0.25s cubic-bezier(0.77,0.2,0.05,1.0);
 }
 #menu li
 {
-  padding: 10px 0;
-  font-size: 18px;
+  padding: 5px 0;
+  font-size: 17px;
 }
 #menuToggle input:checked ~ ul
 {

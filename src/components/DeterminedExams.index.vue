@@ -1,6 +1,6 @@
 <template>
   <div id="DeterminedExams">
-    <input type="text" class="form-control" v-model="search" placeholder="Search for exam.."/>
+    <input type="text" id="examSearch" class="form-control" v-model="search" placeholder="Search for exam.."/>
     <div class="list-group">
       <div v-for="Exam in FilteredExams" class="">
         <!--<a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenter">{{ Exam.exam_title }}</a>-->
@@ -79,10 +79,3 @@
     //     $('#exampleModalLong').trigger('focus')
     // })
 </script>
-
-<style>
-  #DeterminedExams{
-    margin-top: 25px;
-  }
-
-</style>

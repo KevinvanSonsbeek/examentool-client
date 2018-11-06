@@ -19,7 +19,7 @@
         </table>
 
           <table id="sectionTables" class="table sectionTable">
-            <tbody class="" v-for="section in sections"><br><br>
+            <tbody class="" v-for="section in sections">
             <tr>
                 <td class="sectionHeader">{{ section.title }}</td>
               </tr>
@@ -39,7 +39,7 @@
                 <td><button v-on:click="showInfo(criteria.criteria_description)">?</button></td>
                 <td></td>
               </tr>
-            </tbody>
+            </tbody><br><br>
           </table>
 
           <div id="cardDiv"></div>
@@ -91,15 +91,36 @@ export default {
 </script>
 
 <style>
+
+  #DeterminedExams{
+      width: 50%;
+      margin: auto;
+      margin-top: 75px;
+      background: lightyellow;
+      min-width: 425px;
+      padding: 30px;
+      padding-top: 40px;
+      border-radius: 15px;
+  }
+  #DeterminedExams a{
+      color: black;
+  };
   #infoTable {
-    width: 600px;
+    width: 50%;
+    max-width: 600px;
+    min-width: 200px;
     margin: auto;
+    margin-top: 5px;
   }
   #infoTable input {
     width: 200px;
   }
   #sectionTables{
     display: none;
+  }
+  .table{
+    max-width: 500px;
+    min-width: 200px;
   }
   .sectionTable {
     margin: auto;
@@ -117,5 +138,16 @@ export default {
     margin: 0px auto;
     vertical-align: middle!important;
     background: white;
+  }
+  #examSearch{
+      width: 75%;
+      min-width: 100px;
+      max-width: 200px;
+      margin: auto;
+      margin-bottom: 30px;
+  }
+  @media (max-width: 850px)
+  {
+    /*mobile*/
   }
 </style>
