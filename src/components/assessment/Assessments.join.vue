@@ -65,16 +65,18 @@
                 // Check if there is web storage support
                 webStorageSupport: typeof(Storage) !== undefined,
                 examiner: "Richard", //TODO: Ask for one
-                webStorageName: undefined,
 
                 assessment: null,
                 sections: null,
             }
         },
+        computed: {
+            webStorageName: function () {
+                return 'assessment-' + this.$route.params.examId + '-' + this.examiner;
+            }
+        },
         // Function called at creation of the page
         created () {
-            this.webStorageName = this.webStorageName = 'assessment-' + this.$route.params.examId + '-' + this.examiner;
-
             this.getData().then((data) => {
                 this.assessment = data;
                 this.sections = data.exam_criteria;

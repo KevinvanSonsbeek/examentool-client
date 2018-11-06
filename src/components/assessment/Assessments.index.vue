@@ -44,7 +44,7 @@
             });
         },
         computed: {
-            // For filtering the examns for the search function
+            // For filtering the exam's for the search function
             FilteredExams() {
                 return this.DeterminedExams.filter(Exam => {
                     return Exam.exam_title.toLowerCase().includes(this.search.toLowerCase())
