@@ -168,6 +168,7 @@
                             response.body.updated_at = new Date(response.body.updated_at).getTime(); //Convert to unix timestamp
                             resolve(response.body);
                         }, response => {
+                            this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
                             reject(new Error(response))
                         })
                     }
