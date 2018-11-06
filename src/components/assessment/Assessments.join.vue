@@ -125,6 +125,7 @@
                         this.$http.put('http://localhost:8000/assessment/' + this.assessment._id + '/update', data).then(response => {
                             resolve(response.body);
                         }, response => {
+                            this._addErrorMessage(response.status, response.statusText);
                             reject(new Error(response))
                         })
                     }
@@ -164,8 +165,12 @@
             },
             setData(data) {
                 Promise.all([this.setWebStorage(data), this.setServerData(data)]).then(function() {
-                    return true;
+                    // return true;
                 });
+                // TODO: Why unknown error?
+                // this.setWebStorage(data).catch(function (error) {
+                //     console.log("test:", error);
+                // });
             },
             onChange() {
                 this.setData(this.assessment);

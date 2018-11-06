@@ -7,6 +7,20 @@ Vue.use(VueResource);
 
 Vue.config.productionTip = false;
 
+Vue.mixin({
+  data () {
+    return {
+        errorMessages: []
+    }
+  },
+  methods: {
+    _addErrorMessage(errorCode, message) {
+      this.errorMessages.push({code: errorCode, message: message});
+      console.log(this.errorMessages);
+    },
+  }
+});
+
 new Vue({
   router,
   render: h => h(App)

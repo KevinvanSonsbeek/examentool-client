@@ -16,6 +16,17 @@
         </ul>
       </div>
     </nav>
+
+    <div v-for="errorMessage in errorMessages" :key="errorMessage.code">
+      <!--<div class="alert alert-warning alert-dismissible fade show" role="alert">-->
+      <div class="alert alert-warning alert-dismissible" role="alert">
+        <strong>Foutmelding: {{ errorMessage.code }}.</strong> {{ errorMessage.message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    </div>
+
     <router-view/>
   </div>
 </template>
