@@ -248,3 +248,64 @@ a:hover
   }
 
 </style>
+<style>
+
+  #DeterminedExams{
+    width: 50%;
+    margin: auto;
+    margin-top: 75px;
+    background: lightyellow;
+    min-width: 425px;
+    padding: 30px;
+    padding-top: 40px;
+    border-radius: 15px;
+  }
+  #DeterminedExams a{
+    color: black;
+  }
+  #infoTable {
+    width: 50%;
+    max-width: 600px;
+    min-width: 200px;
+    margin: auto;
+    margin-top: 5px;
+  }
+  #infoTable input {
+    width: 200px;
+  }
+  #sectionTables{
+    display: none;
+  }
+  .table{
+    max-width: 500px;
+    min-width: 200px;
+  }
+  .sectionTable {
+    margin: auto;
+    width: 800px!important;
+  }
+  .sectionHeader {
+    background: lightgrey;
+    width: 100%;
+  }
+  .card {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 15px 0px 5px 0px;
+    margin: 0px auto;
+    vertical-align: middle!important;
+    background: white;
+  }
+  #examSearch{
+    width: 75%;
+    min-width: 100px;
+    max-width: 200px;
+    margin: auto;
+    margin-bottom: 30px;
+  }
+
+  @media (max-width: 850px)
+  {
+    /*mobile*/
+  }
+</style>
