@@ -110,8 +110,6 @@
             this.getData().then((data) => {
                 this.assessment = data;
                 this.sections = data.exam_criteria;
-
-                console.log(this.assessment)
             });
         },
         methods: {

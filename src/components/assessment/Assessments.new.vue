@@ -23,8 +23,6 @@
             this.$http.get('http://localhost:8000/exam/' + this.$route.params.examId + '/start').then((data) => {
                 // Succeed
 
-                console.log(data.body);
-
                 this.$router.push({ name: 'AssessmentsJoin', params: { examId: data.body._id }})
             }, response => {
                 // Failed

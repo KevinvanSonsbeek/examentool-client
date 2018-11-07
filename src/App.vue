@@ -13,6 +13,7 @@
           <li><router-link to="/">Exams</router-link></li>
           <li><router-link to="/">About</router-link></li>
           <li><router-link to="/">Students</router-link></li>
+          <li><router-link :to="{ name: 'AssessmentsIndex'}">Inhaken op afnamen</router-link></li>
         </ul>
       </div>
     </nav>
