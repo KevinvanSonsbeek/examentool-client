@@ -28,7 +28,6 @@
                 <td>Wel:</td>
                 <td>Niet:</td>
                 <td>Twijfel:</td>
-                <td>Uitleg:</td>
                 <td>Notitie:</td>
               </tr>
 
@@ -44,7 +43,7 @@
                   <td><input class="form-check-input" v-bind:name="criteria.criteria_name" id="wel" type="radio" value="option1"></td>
                   <td><input class="form-check-input" v-bind:name="criteria.criteria_name" id="niet" type="radio" value="option2"></td>
                   <td><input class="form-check-input" type="checkbox" value=""></td>
-                  <td><button v-on:click="showInfo(criteria.criteria_description)">?</button></td>
+                  <td><textarea rows="2" cols="9"></textarea></td>
                   <td></td>
                 </tr>
 
@@ -94,7 +93,6 @@ export default {
       document.getElementById("infoTable").hidden = true;
       document.getElementById("sectionTables").style.display = "block";
     },
-    
   }
 };
 </script>
