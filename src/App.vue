@@ -25,6 +25,7 @@ export default {
           <li><router-link to="/" exact v-on:click.native="CloseMenu">About</router-link></li>
           <li><router-link to="/" exact v-on:click.native="CloseMenu">Students</router-link></li>
           <li><router-link :to="{ name: 'AssessmentsIndex'}" exact v-on:click.native="CloseMenu">Inhaken op afnamen</router-link></li>
+          <li><router-link to="/AddExam" exact v-on:click.native="CloseMenu">Add exam</router-link></li>
         </ul>
       </div>
       <div id="navBar">
@@ -33,6 +34,7 @@ export default {
           <router-link to="/" exact v-on:click.native="CloseMenu">About</router-link>
           <router-link to="/" exact v-on:click.native="CloseMenu">Students</router-link>
           <router-link :to="{ name: 'AssessmentsIndex'}" exact v-on:click.native="CloseMenu">Inhaken op afnamen</router-link>
+          <router-link to="/AddExam" exact v-on:click.native="CloseMenu">Add exam</router-link>
       </div>
     </nav>
 
