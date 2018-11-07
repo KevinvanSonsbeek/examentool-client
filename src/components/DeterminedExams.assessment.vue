@@ -18,9 +18,9 @@
           </tbody>
         </table>
 
-          <table id="sectionTables" class="table sectionTable">
+          <table id="sectionTables" class="table-responsive table sectionTable">
             <tbody class="" v-for="section in sections">
-            <tr>
+              <tr>
                 <td class="sectionHeader">{{ section.title }}</td>
               </tr>
               <tr>
@@ -31,14 +31,23 @@
                 <td>Uitleg:</td>
                 <td>Notitie:</td>
               </tr>
-              <tr v-for="criteria in section.criteria">
-                <td>{{ criteria.criteria_name }}</td>
-                <td><input class="form-check-input" v-bind:name="criteria.criteria_name" id="wel" type="radio" value="option1"></td>
-                <td><input class="form-check-input" v-bind:name="criteria.criteria_name" id="niet" type="radio" value="option2"></td>
-                <td><input class="form-check-input" type="checkbox" value=""></td>
-                <td><button v-on:click="showInfo(criteria.criteria_description)">?</button></td>
-                <td></td>
-              </tr>
+
+                <tr v-for="criteria in section.criteria" v-bind:id="criteria.criteria_name + 'Element'">
+                  <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_name }}                    
+                    <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
+                      <b-card>
+                        <p class="card-text">{{ criteria.criteria_description }}</p>      
+                      </b-card>
+                    </b-collapse>
+                  </td>
+                  
+                  <td><input class="form-check-input" v-bind:name="criteria.criteria_name" id="wel" type="radio" value="option1"></td>
+                  <td><input class="form-check-input" v-bind:name="criteria.criteria_name" id="niet" type="radio" value="option2"></td>
+                  <td><input class="form-check-input" type="checkbox" value=""></td>
+                  <td><button v-on:click="showInfo(criteria.criteria_description)">?</button></td>
+                  <td></td>
+                </tr>
+
             </tbody><br><br>
           </table>
 
@@ -133,8 +142,7 @@ export default {
   .card {
     border: 1px solid lightgray;
     border-radius: 5px;
-    padding: 20px;
-    min-width: 400px;
+    padding: 15px 0px 5px 0px;
     margin: 0px auto;
     vertical-align: middle!important;
     background: white;
@@ -146,6 +154,7 @@ export default {
       margin: auto;
       margin-bottom: 30px;
   }
+  
   @media (max-width: 850px)
   {
     /*mobile*/
