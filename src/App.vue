@@ -275,9 +275,9 @@ a:hover
   #infoTable input {
     width: 200px;
   }
-  #sectionTables{
-    display: none;
-  }
+  /*#sectionTables{*/
+    /*display: none;*/
+  /*}*/
   .table{
     max-width: 500px;
     min-width: 200px;
