@@ -59,7 +59,7 @@
             </div>
 
             <table id="sectionTables" class="table sectionTable">
-                <tbody class="" v-for="section in sections"><br><br>
+                <tbody class="" v-for="section in sections" :key="section.index"><br><br>
                 <tr>
                     <td class="sectionHeader">{{ section.title }}</td>
                 </tr>
