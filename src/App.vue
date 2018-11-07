@@ -24,6 +24,7 @@ export default {
           <li><router-link to="/" exact v-on:click.native="CloseMenu">Exams</router-link></li>
           <li><router-link to="/" exact v-on:click.native="CloseMenu">About</router-link></li>
           <li><router-link to="/" exact v-on:click.native="CloseMenu">Students</router-link></li>
+          <li><router-link :to="{ name: 'AssessmentsIndex'}" exact v-on:click.native="CloseMenu">Inhaken op afnamen</router-link></li>
         </ul>
       </div>
       <div id="navBar">
@@ -31,8 +32,40 @@ export default {
           <router-link to="/" exact v-on:click.native="CloseMenu">Exams</router-link>
           <router-link to="/" exact v-on:click.native="CloseMenu">About</router-link>
           <router-link to="/" exact v-on:click.native="CloseMenu">Students</router-link>
+          <router-link :to="{ name: 'AssessmentsIndex'}" exact v-on:click.native="CloseMenu">Inhaken op afnamen</router-link>
       </div>
     </nav>
+
+    <!--TODO: Find a way to make it dry-->
+    <!--<div class="statusMessages">-->
+      <!--<div v-for="statusMessage in statusMessages" :key="statusMessage.index">-->
+        <!--<div v-if="statusMessage.type === 'success'" class="alert alert-success alert-dismissible" role="alert">-->
+          <!--<strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}-->
+          <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">-->
+            <!--<span aria-hidden="true">&times;</span>-->
+          <!--</button>-->
+        <!--</div>-->
+        <!--<div v-if="statusMessage.type === 'info'" class="alert alert-info alert-dismissible" role="alert">-->
+          <!--<strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}-->
+          <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">-->
+            <!--<span aria-hidden="true">&times;</span>-->
+          <!--</button>-->
+        <!--</div>-->
+        <!--<div v-if="statusMessage.type === 'warning'" class="alert alert-warning alert-dismissible" role="alert">-->
+          <!--<strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}-->
+          <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">-->
+            <!--<span aria-hidden="true">&times;</span>-->
+          <!--</button>-->
+        <!--</div>-->
+        <!--<div v-if="statusMessage.type === 'error'" class="alert alert-danger alert-dismissible" role="alert">-->
+          <!--<strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}-->
+          <!--<button type="button" class="close" data-dismiss="alert" aria-label="Close">-->
+            <!--<span aria-hidden="true">&times;</span>-->
+          <!--</button>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+
     <router-view/>
   </div>
 </template>
@@ -205,5 +238,13 @@ a:hover
 {
   transform: none;
 }
+  /* For the status messages */
+  .statusMessages
+  {
+    position: absolute;
+    right: 10px;
+    width: 425px;
+    max-width: 95%;
+  }
 
 </style>
