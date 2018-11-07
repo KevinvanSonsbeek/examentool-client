@@ -127,7 +127,6 @@
                                 localStorage.setItem(this.webStorageName, JSON.stringify(data));
                                 resolve(data);
                             }));
-                            reject(new Error("Unknown error"));
                         } else {
                             reject(new Error("Web storage is not supported"));
                         }
