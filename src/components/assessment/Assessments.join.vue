@@ -192,8 +192,7 @@
                 )
             },
             setData(data) {
-                Promise.all([this.setWebStorage(data)]).then(function() {
-                // Promise.all([this.setWebStorage(data), this.setServerData(data)]).then(function() {
+                Promise.all([this.setWebStorage(data), this.setServerData(data)]).then(function() {
                     // return true;
                 });
                 // TODO: Why unknown error?
