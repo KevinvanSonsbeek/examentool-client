@@ -1,10 +1,10 @@
 <template>
   <div id="DeterminedExams">
-    <input type="text" id="examSearch" class="form-control" v-model="search" placeholder="Search for exam.."/>
+    <input type="text" class="form-control" v-model="search" placeholder="Search for exam.."/>
     <div class="list-group">
       <div v-for="Exam in FilteredExams" class="">
         <!--<a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenter">{{ Exam.exam_title }}</a>-->
-        <router-link :to="{ name: 'AssessmentsNew', params: { examId: Exam._id }}">{{ Exam.exam_title }}</router-link>
+        <router-link :to="{ name: 'AssessmentsJoin', params: { examId: Exam._id }}">{{ Exam.exam_title }}</router-link>
       </div>
     </div>
   </div>
@@ -29,7 +29,7 @@
         // Function called at creation of the page
         created () {
             // API call
-            this.$http.get('http://localhost:8000/exams/full').then(response => {
+            this.$http.get('http://localhost:8000/assessments').then(response => {
                 // Succeed
                 this.DeterminedExams = response.body
             }, response => {
@@ -44,7 +44,7 @@
             });
         },
         computed: {
-            // For filtering the examns for the search function
+            // For filtering the exam's for the search function
             FilteredExams() {
                 return this.DeterminedExams.filter(Exam => {
                     return Exam.exam_title.toLowerCase().includes(this.search.toLowerCase())
@@ -55,7 +55,8 @@
 </script>
 
 <style>
-  #DeterminedExams {
+  #DeterminedExams{
     margin-top: 25px;
   }
+
 </style>
