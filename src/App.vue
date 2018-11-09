@@ -275,16 +275,15 @@ a:hover
   #infoTable input {
     width: 200px;
   }
-  /*#sectionTables{*/
-    /*display: none;*/
-  /*}*/
-  .table{
-    max-width: 500px;
-    min-width: 200px;
+  #sectionTables{
+    width: 90%!important;
   }
+  .table{
+
+    }
   .sectionTable {
     margin: auto;
-    width: 800px!important;
+    width: 50%;
   }
   .sectionHeader {
     background: lightgrey;

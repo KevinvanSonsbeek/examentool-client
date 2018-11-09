@@ -1,28 +1,41 @@
 <style>
-    #infoTable {
-        width: 600px;
-        margin: auto;
-    }
-    #infoTable input {
-        width: 200px;
-    }
-    #sectionsDiv{
-        margin: auto;
-        width: 800px!important;
-    }
-    .sectionHeader {
-        background: lightgrey;
-        width: 100%;
-    }
-    .card {
-        border: 1px solid lightgray;
-        border-radius: 5px;
-        padding: 20px;
-        min-width: 400px;
-        margin: 0px auto;
-        vertical-align: middle!important;
-        background: white;
-    }
+  #infoTable {
+    width: 50%;
+    max-width: 600px;
+    min-width: 200px;
+    margin: auto;
+    margin-top: 5px;
+  }
+  #infoTable input {
+    width: 200px;
+  }
+  .table{
+    max-width: 500px;
+    min-width: 200px;
+  }
+  .sectionTable {
+    margin: auto;
+    width: 800px!important;
+  }
+  .sectionHeader {
+    background: lightgrey;
+    width: 100%;
+  }
+  .card {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 15px 0px 5px 0px;
+    margin: 0px auto;
+    vertical-align: middle!important;
+    background: white;
+  }
+  #examSearch{
+      width: 75%;
+      min-width: 100px;
+      max-width: 200px;
+      margin: auto;
+      margin-bottom: 30px;
+  }
 </style>
 
 <template>
@@ -68,15 +81,20 @@
                     <td>Wel:</td>
                     <td>Niet:</td>
                     <td>Twijfel:</td>
-                    <td>Uitleg:</td>
                     <td>Notitie:</td>
                 </tr>
-                <tr v-for="criteria in section.criteria">
-                    <td v-bind:id="criteria.criteria_name + 'Title'">{{ criteria.criteria_name }}</td>
+                <tr v-for="criteria in section.criteria" v-bind:id="criteria.criteria_name + 'Element'">
+                    <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_name }}                    
+                        <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
+                        <b-card>
+                            <p class="card-text">{{ criteria.criteria_description }}</p>      
+                        </b-card>
+                        </b-collapse>
+                    </td>
                     <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="true" type="radio"></td>
                     <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="false" type="radio"></td>
                     <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.doubt" type="checkbox"></td>
-                    <td><button v-on:click="showInfo(criteria.criteria_description)">?</button></td>
+                    <td><textarea rows="2" cols="12"></textarea></td>
                 </tr>
                 </tbody>
             </table>
