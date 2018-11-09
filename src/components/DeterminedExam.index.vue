@@ -21,7 +21,7 @@
                 <hr>
                 <div class="form-group">
                     <h1>Examen Criteria</h1>
-                    <div v-for="criteria_section in DeterminedExam.exam_criteria">
+                    <div v-for="(criteria_section, index) in DeterminedExam.exam_criteria" :key="index">
                         <label>Criteria sectie</label>
                         <input v-model="criteria_section.title" class="form-control">
                         <table class="table">
@@ -34,7 +34,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="criteria in criteria_section.criteria">
+                                <tr v-for="(criteria, index) in criteria_section.criteria" :key="index">
                                     <td>
                                         <input v-model="criteria.criteria_name" class="form-control">
                                     </td>
@@ -54,7 +54,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <a type="button" class="btn btn-primary float-right" v-on:click="addCriteria(index)">Add criteria</a>
                     </div>
+                    <a type="button" class="btn btn-primary" v-on:click="addSection()">Add section</a>
                 </div>
                 <a type="button" class="btn btn-primary" v-on:click="updateDeterminedExam()">Update</a>
             </form>
@@ -111,7 +113,13 @@
                            alert("Unknown error")
                        }
                     })
-            }
+            },
+            addSection: function() {
+                this.DeterminedExam.exam_criteria.push([]);
+            },
+            addCriteria: function(index) {
+                this.DeterminedExam.exam_criteria[index].criteria.push({});
+            },
         }
     }
 </script>
