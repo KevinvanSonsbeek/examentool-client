@@ -94,7 +94,7 @@
             return {
                 // Check if there is web storage support
                 webStorageSupport: typeof(Storage) !== undefined,
-                examiner: "Richard", //TODO: Ask for one
+                examiner: '', //TODO: Ask for one
 
                 assessment: null,
                 sections: null,
@@ -107,6 +107,9 @@
         },
         // Function called at creation of the page
         created () {
+            var person = prompt("Please enter your name:");
+            this.examiner = person;
+
             this.getData().then((data) => {
                 this.assessment = data;
                 this.sections = data.exam_criteria;
