@@ -81,7 +81,5 @@
 </script>
 
 <style>
-  #DeterminedExams {
-    margin-top: 25px;
-  }
+
 </style>

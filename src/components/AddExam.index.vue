@@ -4,9 +4,9 @@
         <h3>Add exam:</h3><br>
         <div id="form">
             <p>Exam title:</p><br>
-            <input type="text" v-model="exam_title" placeholder="Exam title">
+            <input type="text" id="textInput" class="form-control" v-model="exam_title" placeholder="Exam title">
             <p>Exam description:</p><br>
-            <input type="text" v-model="exam_description" placeholder="Exam description">
+            <input type="text" id="textInput" class="form-control" v-model="exam_description" placeholder="Exam description">
             <p>Exam cohort:</p><br>
             <select v-model="exam_cohort">
                 <option value="2014">2014</option>
@@ -17,7 +17,7 @@
             </select>
         </div><br>
         <!-- Calls the add exam function -->
-        <button v-on:click="AddExam()">Add new exam</button>
+        <button class="btn btn-dark" v-on:click="AddExam()">Add new exam</button>
     </div>
 </template>
 
@@ -48,5 +48,23 @@ export default {
 </script>
 
 <style>
-
+#textInput{    
+    width: 75%;
+    min-width: 100px;
+    max-width: 200px;
+    margin: auto;
+    margin-bottom: 10px;
+}
+#AddExam{
+    width: 50%;
+    margin: auto;
+    margin-top: 25px;
+    background: lightyellow;
+    min-width: 425px;
+    padding: 25px;
+    border-radius: 15px;
+}
+#AddExam a{
+    color: black;
+}
 </style>

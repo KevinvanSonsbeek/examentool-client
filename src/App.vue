@@ -95,9 +95,9 @@ export default {
 
 body
 {
-  overflow: hidden;
   margin: 0;
   padding: 0;
+  padding-bottom: 100px;
   background: #232323;
   color: #cdcdcd;
   font-family: "Avenir Next", "Avenir", sans-serif;
@@ -251,15 +251,14 @@ a:hover
 
 </style>
 <style>
-
   #DeterminedExams{
     width: 50%;
     margin: auto;
-    margin-top: 75px;
+    margin-top: 25px;
     background: lightyellow;
     min-width: 425px;
     padding: 30px;
-    padding-top: 40px;
+    padding-top: 25px;
     border-radius: 15px;
   }
   #DeterminedExams a{
