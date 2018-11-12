@@ -111,8 +111,9 @@
                     this.DeterminedExam = response.body;
                     console.log(response.body);
                 })
-                .catch(err => {
-                    console.log(err);
+                .catch(response => {
+                    console.log(response);
+                    this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
                 })
         },
         methods: {
