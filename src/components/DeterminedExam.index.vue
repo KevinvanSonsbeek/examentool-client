@@ -21,7 +21,7 @@
                 <hr>
                 <div class="form-group">
                     <h1>Examen Criteria</h1>
-                    <div v-for="criteria_section in DeterminedExam.exam_criteria">
+                    <div v-for="(criteria_section, index) in DeterminedExam.exam_criteria" :key="index">
                         <label>Criteria sectie</label>
                         <input v-model="criteria_section.title" class="form-control">
                         <table class="table">
@@ -34,7 +34,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="criteria in criteria_section.criteria">
+                                <tr v-for="(criteria, index) in criteria_section.criteria" :key="index">
                                     <td>
                                         <input v-model="criteria.criteria_name" class="form-control">
                                     </td>
@@ -54,7 +54,9 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <a type="button" class="btn btn-primary float-right" v-on:click="addCriteria(index)">Add criteria</a>
                     </div>
+                    <a type="button" class="btn btn-primary" v-on:click="addSection()">Add section</a>
                 </div>
                 <a type="button" class="btn btn-primary" v-on:click="updateDeterminedExam()">Update</a>
             </form>
@@ -88,7 +90,10 @@
              * Send update for determined exam
              */
             updateDeterminedExam: function() {
-                console.log(this.DeterminedExam);
+                if (!this.checkData()) {
+                    alert('Empty fields');
+                    return false
+                }
 
                 this.$http.put(`http://localhost:8000/exam/${this.DeterminedExam._id}`, this.DeterminedExam)
                     .then(response => {
@@ -111,7 +116,26 @@
                            alert("Unknown error")
                        }
                     })
-            }
+            },
+            addSection: function() {
+                this.DeterminedExam.exam_criteria.push({title: null, criteria: []});
+            },
+            addCriteria: function(index) {
+                this.DeterminedExam.exam_criteria[index].criteria.push({criteria_description: null, criteria_name: null, rating_group: null, show_stopper: false});
+            },
+            // Check if there are empty fields.
+            checkData: function() {
+                for (let indexSection = 0; indexSection < this.DeterminedExam.exam_criteria.length; indexSection++) {
+                    if (!this.DeterminedExam.exam_criteria[indexSection].title) {return false}
+
+                    for (let indexCriteria = 0; indexCriteria < this.DeterminedExam.exam_criteria[indexSection].criteria.length; indexCriteria++) {
+                        if (!this.DeterminedExam.exam_criteria[indexSection].criteria[indexCriteria].criteria_name) {return false}
+                        if (!this.DeterminedExam.exam_criteria[indexSection].criteria[indexCriteria].criteria_description) {return false}
+                        if (!this.DeterminedExam.exam_criteria[indexSection].criteria[indexCriteria].rating_group) {return false}
+                    }
+                }
+                return true;
+            },
         }
     }
 </script>
