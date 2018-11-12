@@ -1,5 +1,35 @@
 <template>
     <div id="DeterminedExam">
+        <!--TODO: Find a way to make it dry-->
+        <div class="statusMessages">
+            <div v-for="statusMessage in statusMessages" :key="statusMessage.index">
+                <div v-if="statusMessage.type === 'success'" class="alert alert-success alert-dismissible" role="alert">
+                    <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div v-if="statusMessage.type === 'info'" class="alert alert-info alert-dismissible" role="alert">
+                    <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div v-if="statusMessage.type === 'warning'" class="alert alert-warning alert-dismissible" role="alert">
+                    <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div v-if="statusMessage.type === 'error'" class="alert alert-danger alert-dismissible" role="alert">
+                    <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="container">
             <form>
                 <div>
@@ -91,7 +121,7 @@
              */
             updateDeterminedExam: function() {
                 if (!this.checkData()) {
-                    alert('Empty fields');
+                    this._addStatusMessage('warning', 'Lege velden.');
                     return false
                 }
 
