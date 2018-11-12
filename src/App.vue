@@ -243,7 +243,7 @@ a:hover
   /* For the status messages */
   .statusMessages
   {
-    position: absolute;
+    position: fixed;
     right: 10px;
     width: 425px;
     max-width: 95%;
