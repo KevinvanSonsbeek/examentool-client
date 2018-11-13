@@ -21,7 +21,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div v-if="statusMessage.type === 'error'" class="alert alert-danger alert-dismissible" role="alert">
+                <div v-if="statusMessage.type === 'responseor'" class="alert alert-danger alert-dismissible" role="alert">
                     <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -113,7 +113,7 @@
                 })
                 .catch(response => {
                     console.log(response);
-                    this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                    this._addStatusMessage('responseor', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
                 })
         },
         methods: {
@@ -130,21 +130,20 @@
                     .then(response => {
                         if(response.status === 200) {
                             this._addStatusMessage('success', 'Succesvol opgeslagen');
-                        } else if(response.status === 404){
-                            alert("Error: Determined Exam not found");
-                        } else if(response.status === 405){
-                            alert("Error: Update not allowed (already has been used for assessment");
-                        } else if(response.status === 500){
-                            alert("Error: Internal Server Error");
-                        } else  {
-                            alert("How?");
                         }
                     })
-                    .catch(err => {
-                       if(err.status === 0) {
-                            alert("No server connection");
+                    .catch(response => {
+                       if(response.status === 0) {
+                           this._addStatusMessage('warning', 'Geen verbinding met server');
+                       } else if(response.status === 404){
+                           this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                       } else if(response.status === 405){
+                           this._addStatusMessage('warning', 'Examen mag niet aangepast worden. Er is een lopende afnamen van dit examen.');
+                       } else if(response.status === 500){
+                           this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
                        } else {
-                           alert("Unknown error")
+                           this._addStatusMessage('error', 'Onbekende foutmelding');
+                           console.log(new Error(response))
                        }
                     })
             },
