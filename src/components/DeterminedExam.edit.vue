@@ -159,13 +159,14 @@
                 if (!this.DeterminedExam.exam_title) {return false}
                 if (!this.DeterminedExam.exam_cohort) {return false}
                 if (!this.DeterminedExam.exam_description) {return false}
-                for (let indexSection = 0; indexSection < this.DeterminedExam.exam_criteria.length; indexSection++) {
-                    if (!this.DeterminedExam.exam_criteria[indexSection].title) {return false}
-
-                    for (let indexCriteria = 0; indexCriteria < this.DeterminedExam.exam_criteria[indexSection].criteria.length; indexCriteria++) {
-                        if (!this.DeterminedExam.exam_criteria[indexSection].criteria[indexCriteria].criteria_name) {return false}
-                        if (!this.DeterminedExam.exam_criteria[indexSection].criteria[indexCriteria].criteria_description) {return false}
-                        if (!this.DeterminedExam.exam_criteria[indexSection].criteria[indexCriteria].rating_group) {return false}
+                if (this.DeterminedExam.exam_criteria) {
+                    for (let indexSection = 0; indexSection < this.DeterminedExam.exam_criteria.length; indexSection++) {
+                        if (!this.DeterminedExam.exam_criteria[indexSection].title) {return false}
+                        for (let indexCriteria = 0; indexCriteria < this.DeterminedExam.exam_criteria[indexSection].criteria.length; indexCriteria++) {
+                            if (!this.DeterminedExam.exam_criteria[indexSection].criteria[indexCriteria].criteria_name) {return false}
+                            if (!this.DeterminedExam.exam_criteria[indexSection].criteria[indexCriteria].criteria_description) {return false}
+                            if (!this.DeterminedExam.exam_criteria[indexSection].criteria[indexCriteria].rating_group) {return false}
+                        }
                     }
                 }
                 return true;
