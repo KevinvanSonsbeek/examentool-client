@@ -122,14 +122,14 @@
              */
             updateDeterminedExam: function() {
                 if (!this.checkData()) {
-                    this._addStatusMessage('warning', 'Lege velden.');
+                    this._addStatusMessage('warning', 'Lege velden. Vul deze in a.u.b. in.');
                     return false
                 }
 
                 this.$http.put(`http://localhost:8000/exam/${this.DeterminedExam._id}`, this.DeterminedExam)
                     .then(response => {
                         if(response.status === 200) {
-                            alert("Successfull update");
+                            this._addStatusMessage('success', 'Succesvol opgeslagen');
                         } else if(response.status === 404){
                             alert("Error: Determined Exam not found");
                         } else if(response.status === 405){
@@ -156,6 +156,9 @@
             },
             // Check if there are empty fields.
             checkData: function() {
+                if (!this.DeterminedExam.exam_title) {return false}
+                if (!this.DeterminedExam.exam_cohort) {return false}
+                if (!this.DeterminedExam.exam_description) {return false}
                 for (let indexSection = 0; indexSection < this.DeterminedExam.exam_criteria.length; indexSection++) {
                     if (!this.DeterminedExam.exam_criteria[indexSection].title) {return false}
 

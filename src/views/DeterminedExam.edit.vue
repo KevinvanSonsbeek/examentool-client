@@ -4,7 +4,7 @@
 
 <script>
     // @ is an alias to /src
-    import DeterminedExam from '@/components/DeterminedExam.index.vue'
+    import DeterminedExam from '@/components/DeterminedExam.edit.vue'
 
     export default {
         name: 'DeterminedExamById',

@@ -1,12 +1,20 @@
 <template>
   <div id="DeterminedExams">
-    <input type="text" id="examSearch" class="form-control" v-model="search" placeholder="Search for exam.."/>
+    <h2>Vastgesteld examens</h2>
+    <input type="text" id="examSearch" class="form-control" v-model="search" placeholder="Zoeken..."/>
     <div class="list-group">
-      <div v-for="Exam in FilteredExams" class="">
-        <!--<a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenter">{{ Exam.exam_title }}</a>-->
-        <router-link :to="{ name: 'AssessmentsNew', params: { examId: Exam._id }}">{{ Exam.exam_title }}</router-link>
+      <div v-for="(Exam, index) in FilteredExams" :key="index">
+          <div class="list-group-item clearfix align-items-center justify-content-between">
+              <span class="pull-right">
+                  <router-link class="btn btn-primary" :to="{ name: 'AssessmentsNew', params: { examId: Exam._id }}">Start</router-link>
+                  <router-link class="btn btn-primary" :to="{ name: 'DeterminedExamEdit', params: { examId: Exam._id }}">Wijzigen</router-link>
+              </span>
+              <div>{{ Exam.exam_title }}</div>
+              <div>Cohort: {{ Exam.exam_cohort }}</div>
+          </div>
       </div>
     </div>
+    <router-link class="btn btn-primary" :to="{ name: 'DeterminedExamAdd'}">Nieuw vastgesteld examen</router-link>
 
     <!--WIP-->
     <!--&lt;!&ndash; Modal &ndash;&gt;-->
