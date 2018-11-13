@@ -34,14 +34,19 @@ export default {
   methods: {
       // Function for adding a new exam
       AddExam: function () {
-          // The post request to the backend with the paramenters for the new exam
-          this.$http.post('http://localhost:8000/exam/create', {
-              exam_title: this.exam_title,
-              exam_description: this.exam_description,
-              exam_cohort: this.exam_cohort
-          });
-          // Send the user to the home page
-          this.$router.push('/');
+          // A check to see if everything is filled in 
+          if (this.exam_title && this.exam_description && this.exam_cohort) {
+              // The post request to the backend with the paramenters for the new exam
+              this.$http.post('http://localhost:8000/exam/create', {
+                  exam_title: this.exam_title,
+                  exam_description: this.exam_description,
+                  exam_cohort: this.exam_cohort
+              });
+              // Send the user to the home page
+              this.$router.push('/');
+          } else {
+              alert("Nog niet alle velden zijn ingevuld.")
+          }
         }
     }
 };
