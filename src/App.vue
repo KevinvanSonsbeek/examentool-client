@@ -21,7 +21,6 @@ export default {
         <span></span>
         <ul id="menu">
           <li><router-link to="/" exact v-on:click.native="CloseMenu">Home</router-link></li>
-          <li><router-link to="/" exact v-on:click.native="CloseMenu">Exams</router-link></li>
           <li><router-link to="/" exact v-on:click.native="CloseMenu">About</router-link></li>
           <li><router-link to="/" exact v-on:click.native="CloseMenu">Students</router-link></li>
           <li><router-link :to="{ name: 'AssessmentsIndex'}" exact v-on:click.native="CloseMenu">Inhaken op afnamen</router-link></li>
@@ -30,7 +29,6 @@ export default {
       </div>
       <div id="navBar">
           <router-link to="/" exact v-on:click.native="CloseMenu">Home</router-link>
-          <router-link to="/" exact v-on:click.native="CloseMenu">Exams</router-link>
           <router-link to="/" exact v-on:click.native="CloseMenu">About</router-link>
           <router-link to="/" exact v-on:click.native="CloseMenu">Students</router-link>
           <router-link :to="{ name: 'AssessmentsIndex'}" exact v-on:click.native="CloseMenu">Inhaken op afnamen</router-link>
@@ -243,7 +241,7 @@ a:hover
   /* For the status messages */
   .statusMessages
   {
-    position: absolute;
+    position: fixed;
     right: 10px;
     width: 425px;
     max-width: 95%;
