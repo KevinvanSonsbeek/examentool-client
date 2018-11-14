@@ -1,12 +1,42 @@
 <template>
   <div id="DeterminedExams">
-    <input type="text" id="examSearch" class="form-control" v-model="search" placeholder="Search for exam.."/>
+    <h2>Vastgesteld examens</h2>
+    <input type="text" id="examSearch" class="form-control" v-model="search" placeholder="Zoeken..."/>
     <div class="list-group">
-      <div v-for="Exam in FilteredExams" class="">
-        <!--<a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenter">{{ Exam.exam_title }}</a>-->
-        <router-link :to="{ name: 'AssessmentsNew', params: { examId: Exam._id }}">{{ Exam.exam_title }}</router-link>
+      <div v-for="(Exam, index) in FilteredExams" :key="index">
+          <div class="list-group-item clearfix align-items-center justify-content-between">
+              <span class="pull-right">
+                  <router-link class="btn btn-primary" :to="{ name: 'AssessmentsNew', params: { examId: Exam._id }}">Start</router-link>
+                  <router-link class="btn btn-primary" :to="{ name: 'DeterminedExamEdit', params: { examId: Exam._id }}">Wijzigen</router-link>
+              </span>
+              <div>{{ Exam.exam_title }}</div>
+              <div>Cohort: {{ Exam.exam_cohort }}</div>
+          </div>
       </div>
     </div>
+    <router-link class="btn btn-primary" :to="{ name: 'DeterminedExamAdd'}">Nieuw vastgesteld examen</router-link>
+
+    <!--WIP-->
+    <!--&lt;!&ndash; Modal &ndash;&gt;-->
+    <!--<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">-->
+      <!--<div class="modal-dialog" role="document">-->
+        <!--<div class="modal-content">-->
+          <!--<div class="modal-header">-->
+            <!--<h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>-->
+            <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+              <!--<span aria-hidden="true">&times;</span>-->
+            <!--</button>-->
+          <!--</div>-->
+          <!--<div class="modal-body">-->
+            <!--hoi-->
+          <!--</div>-->
+          <!--<div class="modal-footer">-->
+            <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+            <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -55,7 +85,5 @@
 </script>
 
 <style>
-  #DeterminedExams {
-    margin-top: 25px;
-  }
+
 </style>

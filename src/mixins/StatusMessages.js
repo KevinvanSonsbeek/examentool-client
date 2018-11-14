@@ -4,6 +4,7 @@ export default({
             statusMessages: [],
             statusMessagesStrings:
             {
+                code_0: 'Geen verbinding met de server',
                 code_404: 'Niet gevonden op server / fout bij communiceren met server',
                 code_505: 'Interne server fout',
             }

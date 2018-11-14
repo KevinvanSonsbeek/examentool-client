@@ -21,20 +21,16 @@ export default {
         <span></span>
         <ul id="menu">
           <li><router-link to="/" exact v-on:click.native="CloseMenu">Home</router-link></li>
-          <li><router-link to="/" exact v-on:click.native="CloseMenu">Exams</router-link></li>
           <li><router-link to="/" exact v-on:click.native="CloseMenu">About</router-link></li>
           <li><router-link to="/" exact v-on:click.native="CloseMenu">Students</router-link></li>
           <li><router-link :to="{ name: 'AssessmentsIndex'}" exact v-on:click.native="CloseMenu">Inhaken op afnamen</router-link></li>
-          <li><router-link to="/AddExam" exact v-on:click.native="CloseMenu">Add exam</router-link></li>
         </ul>
       </div>
       <div id="navBar">
           <router-link to="/" exact v-on:click.native="CloseMenu">Home</router-link>
-          <router-link to="/" exact v-on:click.native="CloseMenu">Exams</router-link>
           <router-link to="/" exact v-on:click.native="CloseMenu">About</router-link>
           <router-link to="/" exact v-on:click.native="CloseMenu">Students</router-link>
           <router-link :to="{ name: 'AssessmentsIndex'}" exact v-on:click.native="CloseMenu">Inhaken op afnamen</router-link>
-          <router-link to="/AddExam" exact v-on:click.native="CloseMenu">Add exam</router-link>
       </div>
     </nav>
 
@@ -95,9 +91,9 @@ export default {
 
 body
 {
-  overflow: hidden;
   margin: 0;
   padding: 0;
+  padding-bottom: 100px;
   background: #232323;
   color: #cdcdcd;
   font-family: "Avenir Next", "Avenir", sans-serif;
@@ -243,7 +239,7 @@ a:hover
   /* For the status messages */
   .statusMessages
   {
-    position: absolute;
+    position: fixed;
     right: 10px;
     width: 425px;
     max-width: 95%;
@@ -251,15 +247,14 @@ a:hover
 
 </style>
 <style>
-
   #DeterminedExams{
     width: 50%;
     margin: auto;
-    margin-top: 75px;
+    margin-top: 25px;
     background: lightyellow;
     min-width: 425px;
     padding: 30px;
-    padding-top: 40px;
+    padding-top: 25px;
     border-radius: 15px;
   }
   #DeterminedExams a{
@@ -275,16 +270,15 @@ a:hover
   #infoTable input {
     width: 200px;
   }
-  /*#sectionTables{*/
-    /*display: none;*/
-  /*}*/
-  .table{
-    max-width: 500px;
-    min-width: 200px;
+  #sectionTables{
+    width: 90%!important;
   }
+  .table{
+
+    }
   .sectionTable {
     margin: auto;
-    width: 800px!important;
+    width: 50%;
   }
   .sectionHeader {
     background: lightgrey;
