@@ -94,7 +94,7 @@
                     <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="true" type="radio"></td>
                     <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="false" type="radio"></td>
                     <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.doubt" type="checkbox"></td>
-                    <td><textarea rows="2" cols="12"></textarea></td>
+                    <td><textarea rows="2" cols="12" v-on:keyup="onChange()" v-model="criteria.note"></textarea></td>
                 </tr>
                 </tbody>
             </table>
