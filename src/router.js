@@ -42,6 +42,11 @@ export default new Router({
         path: '/determinedexam/add',
         name: 'DeterminedExamAdd',
         component: DeterminedExamAdd
-      }
+      },
+      {
+          path: '/',
+          name: 'Index',
+          component: AssessmentsIndex
+      },
   ]
 })
