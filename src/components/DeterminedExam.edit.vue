@@ -175,7 +175,5 @@
 </script>
 
 <style>
-    #DeterminedExam{
-        margin-top: 25px;
-    }
+
 </style>

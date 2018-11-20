@@ -34,7 +34,7 @@ export default {
   methods: {
       // Function for adding a new exam
       AddExam: function () {
-          // A check to see if everything is filled in 
+          // A check to see if everything is filled in
           if (this.exam_title && this.exam_description && this.exam_cohort) {
               // The post request to the backend with the paramenters for the new exam
               this.$http.post('http://localhost:8000/exam/create', {
@@ -53,23 +53,5 @@ export default {
 </script>
 
 <style>
-#textInput{    
-    width: 75%;
-    min-width: 100px;
-    max-width: 200px;
-    margin: auto;
-    margin-bottom: 10px;
-}
-#AddExam{
-    width: 50%;
-    margin: auto;
-    margin-top: 25px;
-    background: lightyellow;
-    min-width: 425px;
-    padding: 25px;
-    border-radius: 15px;
-}
-#AddExam a{
-    color: black;
-}
+
 </style>
