@@ -1,13 +1,13 @@
 <template>
     <!-- Creates the form for add exam -->
     <div id="AddExam">
-        <h3>Add exam:</h3><br>
-        <div id="form">
-            <p>Exam title:</p><br>
-            <input type="text" id="textInput" class="form-control" v-model="exam_title" placeholder="Exam title">
-            <p>Exam description:</p><br>
-            <input type="text" id="textInput" class="form-control" v-model="exam_description" placeholder="Exam description">
-            <p>Exam cohort:</p><br>
+        <h3>Nieuw examen toevoegen</h3><br>
+        <!-- <div id="form">
+            <p>Titel:</p><br>
+            <input type="text" id="textInput" class="form-control" v-model="exam_title" placeholder="Title...">
+            <p>Beschrijving:</p><br>
+            <input type="text" id="textInput" class="form-control" v-model="exam_description" placeholder="Beschrijving...">
+            <p>Cohort:</p><br>
             <select v-model="exam_cohort">
                 <option value="2014">2014</option>
                 <option value="2015">2015</option>
@@ -15,9 +15,31 @@
                 <option value="2017">2017</option>
                 <option value="2018">2018</option>
             </select>
-        </div><br>
+        </div><br> -->
         <!-- Calls the add exam function -->
-        <button class="btn btn-dark" v-on:click="AddExam()">Add new exam</button>
+        <!-- <button class="btn btn-dark" v-on:click="AddExam()">Toevoegen</button> -->
+        <form>
+            <div class="form-group">
+                <label>Titel:</label>
+                <input type="textarea" class="form-control" placeholder="Titel...">
+            </div>
+            <div class="form-group">
+                <label for="comment">Beschrijving:</label>
+                <textarea class="form-control" rows="5" placeholder="Beschrijving..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Cohort:</label>
+                <select class="form-control">
+                    <option>2014</option>
+                    <option>2015</option>
+                    <option>2016</option>
+                    <option>2017</option>
+                    <option>2018</option>
+                    <option>2019</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Toevoegen</button>
+        </form>
     </div>
 </template>
 

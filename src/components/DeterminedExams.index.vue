@@ -1,12 +1,12 @@
 <template>
   <div id="DeterminedExams">
     <h2>Vastgesteld examens</h2>
-    <input type="text" id="examSearch" class="form-control" v-model="search" placeholder="Zoeken..."/>
+    <input type="text" id="examSearch" class="form-control" style="margin-bottom: 5px;" v-model="search" placeholder="Zoeken..."/>
     <div class="list-group">
       <div v-for="(Exam, index) in FilteredExams" :key="index">
-          <div class="list-group-item clearfix align-items-center justify-content-between">
+          <div class="list-group-item clearfix align-items-center justify-content-between" style="margin-bottom: 5px;">
               <span class="pull-right">
-                  <router-link class="btn btn-primary" :to="{ name: 'AssessmentsNew', params: { examId: Exam._id }}">Start</router-link>
+                  <router-link class="btn btn-primary" :to="{ name: 'AssessmentsNew', params: { examId: Exam._id }}" style="margin-right: 5px;">Start</router-link>
                   <router-link class="btn btn-primary" :to="{ name: 'DeterminedExamEdit', params: { examId: Exam._id }}">Wijzigen</router-link>
               </span>
               <div>{{ Exam.exam_title }}</div>
