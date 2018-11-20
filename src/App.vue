@@ -33,25 +33,21 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/" exact>Home</router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link" :to="{ name: 'AssessmentsIndex'}" exact>Inhaken op afnamen</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/AddExam" exact>Add exam</router-link>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Afnamens</a>
+            <div class="dropdown-menu" aria-labelledby="dropdown01">
+              <router-link class="dropdown-item" :to="{ name: 'AssessmentsIndex'}" exact>Starten</router-link>
+              <router-link class="dropdown-item" :to="{ name: 'AssessmentsIndex'}" exact>Inhaken</router-link>
+            </div>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Vastgestelde examens</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
+              <router-link class="dropdown-item" :to="{ name: 'DeterminedExams'}" exact>Overzicht</router-link>
+              <router-link class="dropdown-item" :to="{ name: 'DeterminedExamAdd'}" exact>Toevoegen</router-link>
             </div>
           </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
       </div>
     </nav>
 
