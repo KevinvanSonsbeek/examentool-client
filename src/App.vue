@@ -14,7 +14,7 @@
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Afnamens</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <router-link class="dropdown-item" :to="{ name: 'AssessmentsIndex'}" exact>Starten</router-link>
+              <router-link class="dropdown-item" :to="{ name: 'AssessmentsStart'}" exact>Starten</router-link>
               <router-link class="dropdown-item" :to="{ name: 'AssessmentsIndex'}" exact>Inhaken</router-link>
             </div>
           </li>
@@ -63,3 +63,16 @@
   </div>
 </template>
 
+<style>
+  .title {
+    margin-bottom: 15px;
+  }
+
+  .searchBar {
+    margin-bottom: 15px;
+  }
+
+  .exam {
+    margin-bottom: 5px!important;
+  }
+</style>

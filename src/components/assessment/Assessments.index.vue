@@ -1,10 +1,16 @@
 <template>
   <div id="DeterminedExams">
-    <input type="text" id="examSearch" class="form-control" v-model="search" placeholder="Search for exam.."/>
+    <h2 class="title">Inhaken op examen</h2>
+    <input type="text" id="examSearch" class="form-control searchBar" v-model="search" placeholder="Zoeken..."/>
     <div class="list-group">
-      <div v-for="Exam in FilteredExams" class="">
-        <!--<a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenter">{{ Exam.exam_title }}</a>-->
-        <router-link :to="{ name: 'AssessmentsJoin', params: { examId: Exam._id }}">{{ Exam.exam_title }}</router-link>
+      <div v-for="(Exam, index) in FilteredExams" :key="index">
+          <div class="list-group-item clearfix align-items-center justify-content-between exam">
+              <span class="pull-right">
+                  <router-link class="btn btn-primary float-right" :to="{ name: 'AssessmentsJoin', params: { examId: Exam._id }}" style="margin-top: 5px;">Inhaken</router-link>
+              </span>
+              <div>{{ Exam.exam_title }}</div>
+              <div>Cohort: {{ Exam.exam_cohort }}</div>
+          </div>
       </div>
     </div>
   </div>

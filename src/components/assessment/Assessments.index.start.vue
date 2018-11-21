@@ -6,36 +6,13 @@
       <div v-for="(Exam, index) in FilteredExams" :key="index">
           <div class="list-group-item clearfix align-items-center justify-content-between exam">
               <span class="pull-right">
-                  <router-link class="btn btn-primary float-right" :to="{ name: 'DeterminedExamEdit', params: { examId: Exam._id }}" style="margin-right: 5px; margin-top: 5px;">Wijzigen</router-link>
+                  <router-link class="btn btn-primary float-right" :to="{ name: 'AssessmentsNew', params: { examId: Exam._id }}" style="margin-top: 5px;">Start</router-link>
               </span>
               <div>{{ Exam.exam_title }}</div>
               <div>Cohort: {{ Exam.exam_cohort }}</div>
           </div>
       </div>
     </div>
-    <router-link class="btn btn-primary" :to="{ name: 'DeterminedExamAdd'}" style="margin-bottom: 15px;">Nieuw vastgesteld examen</router-link>
-
-    <!--WIP-->
-    <!--&lt;!&ndash; Modal &ndash;&gt;-->
-    <!--<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">-->
-      <!--<div class="modal-dialog" role="document">-->
-        <!--<div class="modal-content">-->
-          <!--<div class="modal-header">-->
-            <!--<h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>-->
-            <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-              <!--<span aria-hidden="true">&times;</span>-->
-            <!--</button>-->
-          <!--</div>-->
-          <!--<div class="modal-body">-->
-            <!--hoi-->
-          <!--</div>-->
-          <!--<div class="modal-footer">-->
-            <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
-            <!--<button type="button" class="btn btn-primary">Save changes</button>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-    <!--</div>-->
   </div>
 </template>
 
@@ -43,11 +20,6 @@
     export default {
         name: 'DeterminedExam',
         search: '',
-        head: {
-            script: [
-                {src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'},
-            ]
-        },
         // Function needed for the data
         data () {
             return {
@@ -81,12 +53,4 @@
             }
         }
     }
-
-    // $('#exampleModalCenter').on('shown.bs.modal', function () {
-    //     $('#exampleModalLong').trigger('focus')
-    // })
 </script>
-
-<style>
-
-</style>
