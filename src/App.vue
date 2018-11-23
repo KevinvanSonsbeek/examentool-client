@@ -75,4 +75,13 @@
   .exam {
     margin-bottom: 5px!important;
   }
+
+  /* For the status messages */
+  .statusMessages
+  {
+    position: fixed;
+    right: 10px;
+    width: 425px;
+    max-width: 95%;
+  }
 </style>
