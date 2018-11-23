@@ -1,6 +1,36 @@
 <template>
     <!-- Creates the form for add exam -->
     <div id="AddExam">
+        <!--TODO: Find a way to make it dry-->
+        <div class="statusMessages">
+            <div v-for="statusMessage in statusMessages" :key="statusMessage.index">
+                <div v-if="statusMessage.type === 'success'" class="alert alert-success alert-dismissible" role="alert">
+                    <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div v-if="statusMessage.type === 'info'" class="alert alert-info alert-dismissible" role="alert">
+                    <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div v-if="statusMessage.type === 'warning'" class="alert alert-warning alert-dismissible" role="alert">
+                    <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div v-if="statusMessage.type === 'responseor'" class="alert alert-danger alert-dismissible" role="alert">
+                    <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <h3>Nieuw examen toevoegen</h3><br>
         <form>
             <div class="form-group">
@@ -22,7 +52,7 @@
                     <option value="2019">2019</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary" v-on:click="AddExam()">Toevoegen</button>
+            <a class="btn btn-primary" v-on:click="AddExam()">Toevoegen</a>
         </form>
     </div>
 </template>
@@ -40,16 +70,31 @@ export default {
   methods: {
       // Function for adding a new exam
       AddExam: function () {
+          //TODO:
+          //Change alerts to alert system!!!
+
+
           // A check to see if everything is filled in
           if (this.exam_title && this.exam_description && this.exam_cohort) {
+              let postData = {};
+              postData['exam_title'] = this.exam_title;
+              postData['exam_description'] = this.exam_description;
+              postData['exam_cohort'] = this.exam_cohort;
               // The post request to the backend with the paramenters for the new exam
-              this.$http.post('http://localhost:8000/exam/create', {
-                  exam_title: this.exam_title,
-                  exam_description: this.exam_description,
-                  exam_cohort: this.exam_cohort
-              });
+              this.$http.post('http://localhost:8000/exam/create',  postData)
+              .then(response => {
+                  if(response.status === 200) {
+                    alert("success");
+                    this.$router.push('/');
+                  } else if(response.status === 500) {
+                    alert("Internal server error!");
+                  }
+              }).catch(err => {
+                  if(err.status === 0) {
+                      alert("No internet connection!");
+                  }
+              })
               // Send the user to the home page
-              this.$router.push('/');
           } else {
               alert("Nog niet alle velden zijn ingevuld.")
           }
