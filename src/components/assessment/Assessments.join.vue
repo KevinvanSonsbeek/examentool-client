@@ -37,11 +37,24 @@
     margin-bottom: 30px;
 }
 .progress{
-    max-width: 750px;
-    margin:auto;
+    width: 50%;
+    left: 25%;
+    position: fixed;
 }
 .progress-bar{
     width: 0%;
+}
+@media screen and (max-width: 900px){
+    .progress{
+        width: 70%;
+        left: 15%;
+    }
+}
+@media screen and (max-width: 700px){
+    .progress{
+        width: 95%;
+        left: 2.5%;
+    }
 }
 </style>
 
