@@ -85,7 +85,7 @@ export default {
               .then(response => {
                   if(response.status === 200) {
                     alert("success");
-                    this.$router.push('/');
+                    this.$router.push('/determinedexam');
                   } else if(response.status === 500) {
                     alert("Internal server error!");
                   }
