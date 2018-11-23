@@ -1,6 +1,6 @@
 <template>
   <div id="DeterminedExams">
-    <h2 class="title">Vastgesteld examens</h2>
+    <h2 class="title">Nieuwe afnamen</h2>
     <input type="text" id="examSearch" class="form-control searchBar" v-model="search" placeholder="Zoeken..."/>
     <div class="list-group">
       <div v-for="(Exam, index) in FilteredExams" :key="index">
