@@ -31,14 +31,14 @@
             </div>
         </div>
 
-        <h3>Nieuw examen toevoegen</h3><br>
+        <h2>Nieuw examen toevoegen</h2>
         <form>
             <div class="form-group">
                 <label>Titel:</label>
                 <input type="textarea" v-model="exam_title" class="form-control" placeholder="Titel...">
             </div>
             <div class="form-group">
-                <label for="comment">Beschrijving:</label>
+                <label>Beschrijving:</label>
                 <textarea class="form-control" v-model="exam_description" rows="5" placeholder="Beschrijving..."></textarea>
             </div>
             <div class="form-group">
