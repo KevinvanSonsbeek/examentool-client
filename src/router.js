@@ -55,4 +55,4 @@ export default new Router({
         component: AssessmentsIndex
       },
   ]
-})
+});

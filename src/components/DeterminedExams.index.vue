@@ -81,10 +81,6 @@
             }
         }
     }
-
-    // $('#exampleModalCenter').on('shown.bs.modal', function () {
-    //     $('#exampleModalLong').trigger('focus')
-    // })
 </script>
 
 <style>
