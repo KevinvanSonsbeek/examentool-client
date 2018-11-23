@@ -1,45 +1,55 @@
 <style>
-  #infoTable {
+#infoTable {
     width: 50%;
     max-width: 600px;
     min-width: 200px;
     margin: auto;
     margin-top: 5px;
   }
-  #infoTable input {
+#infoTable input {
     width: 200px;
   }
-  .table{
+.table{
     max-width: 500px;
     min-width: 200px;
   }
-  .sectionTable {
+.sectionTable {
     margin: auto;
     width: 800px!important;
   }
-  .sectionHeader {
+.sectionHeader {
     background: lightgrey;
     width: 100%;
   }
-  .card {
+.card {
     border: 1px solid lightgray;
     border-radius: 5px;
     padding: 15px 0px 5px 0px;
     margin: 0px auto;
     vertical-align: middle!important;
     background: white;
-  }
-  #examSearch{
-      width: 75%;
-      min-width: 100px;
-      max-width: 200px;
-      margin: auto;
-      margin-bottom: 30px;
-  }
+}
+#examSearch{
+    width: 75%;
+    min-width: 100px;
+    max-width: 200px;
+    margin: auto;
+    margin-bottom: 30px;
+}
+.progress{
+    max-width: 750px;
+    margin:auto;
+}
+.progress-bar{
+    width: 0%;
+}
 </style>
 
 <template>
     <div id="DeterminedExams">
+        <div class="progress">
+            <div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
         <div id="sectionsDiv">
             <!--TODO: Find a way to make it dry-->
             <div class="statusMessages">
@@ -134,6 +144,9 @@
                 this.sections = data.exam_criteria;
             });
         },
+        updated () {
+            this.updateProgressBar();
+        },
         methods: {
             setWebStorage(data) {
                 return new Promise(
@@ -222,23 +235,24 @@
                 //     console.log("test:", error);
                 // });
             },
-            onChange() {
-                this.setData(this.assessment);
+            updateProgressBar() {                
                 //calculate assassment completion percentage
                 this.criterias = 0, this.criteriasFilled = 0;
-                for(let section in this.assessment.exam_criteria)
-                {
-                    for(let criteria in this.assessment.exam_criteria[section].criteria)
-                    {
+                for(let section in this.assessment.exam_criteria){
+                    for(let criteria in this.assessment.exam_criteria[section].criteria){
                         this.criterias++;
-                        if(this.assessment.exam_criteria[section].criteria[criteria].answer != null)
-                        {
+                        if(this.assessment.exam_criteria[section].criteria[criteria].answer != null && this.assessment.exam_criteria[section].criteria[criteria].doubt != true){
                             this.criteriasFilled++;
                         }
                     }
                 }
-                console.log('total: ' + this.criterias + ', filled: ' + this.criteriasFilled);
-                console.log("Completion percentage: " + (this.criteriasFilled / this.criterias) * 100 + "%");
+                var percentageFilled = (this.criteriasFilled / this.criterias) * 100 + '%';
+                let progressBar = document.getElementById("progressBar");
+                progressBar.style.width = percentageFilled;
+                progressBar.innerHTML = percentageFilled;
+            },
+            onChange() {
+                this.setData(this.assessment);
             }
         }
     }
