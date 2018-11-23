@@ -1,3 +1,43 @@
+<style>
+  #infoTable {
+    width: 50%;
+    max-width: 600px;
+    min-width: 200px;
+    margin: auto;
+    margin-top: 5px;
+  }
+  #infoTable input {
+    width: 200px;
+  }
+  .table{
+    max-width: 500px;
+    min-width: 200px;
+  }
+  .sectionTable {
+    margin: auto;
+    width: 800px!important;
+  }
+  .sectionHeader {
+    background: lightgrey;
+    width: 100%;
+  }
+  .card {
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    padding: 15px 0px 5px 0px;
+    margin: 0px auto;
+    vertical-align: middle!important;
+    background: white;
+  }
+  #examSearch{
+      width: 75%;
+      min-width: 100px;
+      max-width: 200px;
+      margin: auto;
+      margin-bottom: 30px;
+  }
+</style>
+
 <template>
     <div id="DeterminedExams">
         <div id="sectionsDiv">
@@ -31,39 +71,7 @@
                 </div>
             </div>
 
-            <div class="sectionTable" v-for="section in sections" :key="section.index">
-                <table class="table">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">{{ section.title }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Vraag:</th>
-                            <td>Wel:</td>
-                            <td>Niet:</td>
-                            <td>Twijfel:</td>
-                            <td>Notitie:</td>
-                        </tr>
-                        <tr v-for="(criteria, index) in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
-                            <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_description }}
-                                <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
-                                <b-card>
-                                    <p class="card-text">{{ criteria.criteria_description }}</p>
-                                </b-card>
-                                </b-collapse>
-                            </td>
-                            <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="true" type="radio"></td>
-                            <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="false" type="radio"></td>
-                            <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.doubt" type="checkbox"></td>
-                            <td><textarea rows="2" cols="12" v-on:keyup="onChange()" v-model="criteria.note"></textarea></td>
-                        </tr>                        
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- <table id="sectionTables" class="table sectionTable">
+            <table id="sectionTables" class="table sectionTable">
                 <tbody class="" v-for="section in sections" :key="section.index"><br><br>
                 <tr>
                     <td class="sectionHeader">{{ section.title }}</td>
@@ -75,11 +83,11 @@
                     <td>Twijfel:</td>
                     <td>Notitie:</td>
                 </tr>
-                <tr v-for="(criteria, index) in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
-                    <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_name }}
+                <tr v-for="criteria in section.criteria" v-bind:id="criteria.criteria_name + 'Element'">
+                    <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_name }}                    
                         <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
                         <b-card>
-                            <p class="card-text">{{ criteria.criteria_description }}</p>
+                            <p class="card-text">{{ criteria.criteria_description }}</p>      
                         </b-card>
                         </b-collapse>
                     </td>
@@ -89,7 +97,7 @@
                     <td><textarea rows="2" cols="12" v-on:keyup="onChange()" v-model="criteria.note"></textarea></td>
                 </tr>
                 </tbody>
-            </table> -->
+            </table>
         </div>
         <div id="cardDiv"></div>
     </div>
@@ -108,6 +116,8 @@
 
                 assessment: null,
                 sections: null,
+                criterias: 0,
+                criteriasFilled: 0,
             }
         },
         computed: {
@@ -214,6 +224,21 @@
             },
             onChange() {
                 this.setData(this.assessment);
+                //calculate assassment completion percentage
+                this.criterias = 0, this.criteriasFilled = 0;
+                for(let section in this.assessment.exam_criteria)
+                {
+                    for(let criteria in this.assessment.exam_criteria[section].criteria)
+                    {
+                        this.criterias++;
+                        if(this.assessment.exam_criteria[section].criteria[criteria].answer != null)
+                        {
+                            this.criteriasFilled++;
+                        }
+                    }
+                }
+                console.log('total: ' + this.criterias + ', filled: ' + this.criteriasFilled);
+                console.log("Completion percentage: " + (this.criteriasFilled / this.criterias) * 100 + "%");
             }
         }
     }
