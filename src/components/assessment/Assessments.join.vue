@@ -93,7 +93,7 @@
                     <td>Twijfel:</td>
                     <td>Notitie:</td>
                 </tr>
-                <tr v-for="criteria in section.criteria" v-bind:id="criteria.criteria_name + 'Element'">
+                <tr v-for="criteria in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="criteria.index">
                     <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_name }}                    
                         <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
                         <b-card>
