@@ -1,6 +1,7 @@
 <template>
     <div id="DeterminedExams">
-        <div id="sectionsDiv">
+        <button type="button" v-on:click="filterCriteria()" class="btn btn-primary float-right" style="position:relative;left:100px;">Filter</button>
+        <div id="sectionsDiv" style="position:relative;bottom:40px;">
             <!--TODO: Find a way to make it dry-->
             <div class="statusMessages">
                 <div v-for="statusMessage in statusMessages" :key="statusMessage.index">
@@ -46,7 +47,7 @@
                             <td>Twijfel:</td>
                             <td>Notitie:</td>
                         </tr>
-                        <tr v-for="(criteria, index) in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
+                        <tr v-for="(criteria, index) in filterCriteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
                             <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_description }}
                                 <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
                                 <b-card>
@@ -91,7 +92,6 @@
                 </tbody>
             </table> -->
         </div>
-        <div id="cardDiv"></div>
     </div>
 </template>
 
@@ -113,6 +113,19 @@
         computed: {
             webStorageName: function () {
                 return 'assessment-' + this.$route.params.examId + '-' + this.examiner;
+            },
+            filterCriteria() {
+                var filteredCriteria = [];
+                for (let section in this.assessment.exam_criteria) {
+                    for (let criteria in this.assessment.exam_criteria[section].criteria) {
+                        var currentCriteria = this.assessment.exam_criteria[section].criteria[criteria];
+                        if (currentCriteria.answer === null && currentCriteria.doubt === true) {
+                            filteredCriteria.push(currentCriteria)
+                        }
+                    }
+                }
+                console.log(filteredCriteria)
+                return filteredCriteria;
             }
         },
         // Function called at creation of the page
@@ -214,7 +227,7 @@
             },
             onChange() {
                 this.setData(this.assessment);
-            }
+            },
         }
     }
 </script>
