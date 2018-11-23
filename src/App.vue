@@ -12,14 +12,14 @@
             <router-link class="nav-link" :to="{ name: 'Index'}" exact>Home</router-link>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Afnamens</a>
+            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Afnamens</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
               <router-link class="dropdown-item" :to="{ name: 'AssessmentsStart'}" exact>Starten</router-link>
               <router-link class="dropdown-item" :to="{ name: 'AssessmentsIndex'}" exact>Inhaken</router-link>
             </div>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Vastgestelde examens</a>
+            <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Vastgestelde examens</a>
             <div class="dropdown-menu" aria-labelledby="dropdown01">
               <router-link class="dropdown-item" :to="{ name: 'DeterminedExams'}" exact>Overzicht</router-link>
               <router-link class="dropdown-item" :to="{ name: 'DeterminedExamAdd'}" exact>Toevoegen</router-link>
@@ -74,5 +74,14 @@
 
   .exam {
     margin-bottom: 5px!important;
+  }
+
+  /* For the status messages */
+  .statusMessages
+  {
+    position: fixed;
+    right: 10px;
+    width: 425px;
+    max-width: 95%;
   }
 </style>
