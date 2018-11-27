@@ -84,9 +84,9 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <!--<a type="button" class="btn btn-primary float-right" v-on:click="addCriteria(index)">Criteria toevoegen</a>-->
+                        <a type="button" class="btn btn-primary float-right" v-on:click="addCriteria(index)">Criteria toevoegen</a>
                     </div>
-                    <!--<a type="button" class="btn btn-primary" v-on:click="addSection()">Sectie toevoegen</a>-->
+                    <a type="button" class="btn btn-primary" v-on:click="addSection()">Sectie toevoegen</a>
                 </div>
                 <a type="button" class="btn btn-primary" v-on:click="updateDeterminedExam()">Update</a>
             </form>
