@@ -47,7 +47,7 @@
                             <td>Twijfel:</td>
                             <td>Notitie:</td>
                         </tr>
-                        <tr v-for="(criteria, index) in filterCriteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
+                        <tr v-for="(criteria, index) in filteredCriteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
                             <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_description }}
                                 <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
                                 <b-card>
@@ -105,27 +105,9 @@
                 // Check if there is web storage support
                 webStorageSupport: typeof(Storage) !== undefined,
                 examiner: '',
-
                 assessment: null,
                 sections: null,
-            }
-        },
-        computed: {
-            webStorageName: function () {
-                return 'assessment-' + this.$route.params.examId + '-' + this.examiner;
-            },
-            filterCriteria() {
-                var filteredCriteria = [];
-                for (let section in this.assessment.exam_criteria) {
-                    for (let criteria in this.assessment.exam_criteria[section].criteria) {
-                        var currentCriteria = this.assessment.exam_criteria[section].criteria[criteria];
-                        if (currentCriteria.answer === null && currentCriteria.doubt === true) {
-                            filteredCriteria.push(currentCriteria)
-                        }
-                    }
-                }
-                console.log(filteredCriteria)
-                return filteredCriteria;
+                filteredCriteria: [],
             }
         },
         // Function called at creation of the page
@@ -135,7 +117,19 @@
             this.getData().then((data) => {
                 this.assessment = data;
                 this.sections = data.exam_criteria;
+                for (var e = 0; e < 2; e++) {
+                    for (var i = 0; i < 2; i++) {
+                        console.log(data.exam_criteria[e].criteria[i])
+                        this.filteredCriteria.push(data.exam_criteria[e].criteria[i])
+                    }
+                }
+                console.log(this.filteredCriteria)
             });
+        },
+        computed: {
+            webStorageName: function () {
+                return 'assessment-' + this.$route.params.examId + '-' + this.examiner;
+            },
         },
         methods: {
             setWebStorage(data) {
@@ -228,6 +222,18 @@
             onChange() {
                 this.setData(this.assessment);
             },
+            filterCriteria() {
+                var newFilteredCriteria = [];
+                for (let section in this.assessment.exam_criteria) {
+                    for (let criteria in this.assessment.exam_criteria[section].criteria) {
+                        var currentCriteria = this.assessment.exam_criteria[section].criteria[criteria];
+                        if (currentCriteria.answer === null && currentCriteria.doubt === false || currentCriteria.doubt === true) {
+                            newFilteredCriteria.push(currentCriteria)
+                        }
+                    }
+                }
+                this.filteredCriteria = newFilteredCriteria;
+            }
         }
     }
 </script>
