@@ -109,7 +109,6 @@
             this.$http.get(`http://localhost:8000/exam/` + this.$route.params.examId)
                 .then(response => {
                     this.DeterminedExam = response.body;
-                    console.log(response.body);
                 })
                 .catch(response => {
                     console.log(response);
@@ -148,10 +147,17 @@
                     })
             },
             addSection: function() {
+                //Check if array containing criteria sections already exits
+                if (typeof this.DeterminedExam.exam_criteria == "undefined" || !(this.DeterminedExam.exam_criteria instanceof Array)) {
+                    this.DeterminedExam.exam_criteria = [];
+                }
+
                 this.DeterminedExam.exam_criteria.push({title: null, criteria: []});
+                this.$forceUpdate();
             },
             addCriteria: function(index) {
                 this.DeterminedExam.exam_criteria[index].criteria.push({criteria_description: null, criteria_name: null, rating_group: null, show_stopper: false});
+                this.$forceUpdate();
             },
             // Check if there are empty fields.
             checkData: function() {
