@@ -3,6 +3,7 @@
     width: 50%;
     left: 25%;
     position: fixed;
+    z-index: 1;
 }
 .progress-bar{
     width: 0%;
@@ -222,7 +223,7 @@
                         }
                     }
                 }
-                var percentageFilled = (this.criteriasFilled / this.criterias) * 100 + '%';
+                var percentageFilled = Math.round((parseFloat(this.criteriasFilled / this.criterias) * 100)) + '%';
                 let progressBar = document.getElementById("progressBar");
                 progressBar.style.width = percentageFilled;
                 progressBar.innerHTML = percentageFilled;
