@@ -172,7 +172,7 @@
             getServerData()  {
                 return new Promise(
                     (resolve, reject) => {
-                        this.$http.post('http://localhost:8000/assessment/' + this.$route.params.examId + '/join', {examinator_name: this.examiner}).then(response => {
+                        this.$http.post('http://localhost:8000/assessment/' + this.$route.params.examId + '/join', {examiner_name: this.examiner_name}).then(response => {
                             response.body.updated_at = new Date(response.body.updated_at).getTime(); //Convert to unix timestamp
                             resolve(response.body);
                         }, response => {
@@ -214,26 +214,18 @@
             onChange() {
                 this.setData(this.assessment);
             },
-            // filterCriteria() {
-            //     if (this.toggle === 0) {
-            //         console.log(0)
-            //         var newFilteredCriteria = [];
-            //         for (let section in this.assessment.exam_criteria) {
-            //             for (let criteria in this.assessment.exam_criteria[section].criteria) {
-            //                 var currentCriteria = this.assessment.exam_criteria[section].criteria[criteria];
-            //                 if (currentCriteria.answer === null && currentCriteria.doubt === false || currentCriteria.doubt === true) {
-            //                     newFilteredCriteria.push(currentCriteria)
-            //                 }
-            //             }
-            //         }
-            //         this.filteredCriteria = newFilteredCriteria;
-            //         this.toggle = 1;
-            //     } else {
-            //         console.log(1);
-            //         this.filteredCriteria = this.sections;
-            //         this.toggle = 0;
-            //     }
-            // }
+            filterCriteria() {
+                var newFilteredCriteria = [];
+                for (let section in this.assessment.exam_criteria) {
+                    for (let criteria in this.assessment.exam_criteria[section].criteria) {
+                        var currentCriteria = this.assessment.exam_criteria[section].criteria[criteria];
+                        if (currentCriteria.answer === null && currentCriteria.doubt === false || currentCriteria.doubt === true) {
+                            newFilteredCriteria.push(currentCriteria)
+                        }
+                    }
+                }
+                this.filteredCriteria = newFilteredCriteria;
+            }
         }
     }
 </script>
