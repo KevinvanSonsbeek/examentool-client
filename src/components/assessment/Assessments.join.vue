@@ -221,7 +221,7 @@
                 // });
             },
             updateProgressBar() {                
-                //calculate assassment completion percentage
+                //calculate assessment completion percentage
                 this.criterias = 0;
                 this.criteriasFilled = 0;
                 for(let section in this.assessment.exam_criteria){
