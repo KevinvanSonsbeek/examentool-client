@@ -1,5 +1,5 @@
 <template>
-    <div id="DeterminedExam">
+    <div id="determinedExam">
         <!--TODO: Find a way to make it dry-->
         <div class="statusMessages">
             <div v-for="statusMessage in statusMessages" :key="statusMessage.index">
@@ -35,25 +35,32 @@
                 <div>
                     <div class="form-group">
                         <label for="exam_title">Examen Titel</label>
-                        <input id="exam_title" v-model="DeterminedExam.exam_title" class="form-control">
+                        <input id="exam_title" v-model="determinedExam.exam_title" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <label for="exam_title">Examen Beschrijving</label>
-                        <textarea id="exam_description" v-model="DeterminedExam.exam_description" class="form-control" rows="3"></textarea>
+                        <label for="exam_description">Examen Beschrijving</label>
+                        <textarea id="exam_description" v-model="determinedExam.exam_description" class="form-control" rows="3"></textarea>
                     </div>
 
                     <div class="form-group">
                         <label for="exam_cohort">Examen Cohort</label>
-                        <input id="exam_cohort" v-model="DeterminedExam.exam_cohort" type="number" class="form-control">
+                        <select id="exam_cohort" class="form-control" v-model="determinedExam.exam_cohort">
+                            <option value="2014">2014</option>
+                            <option value="2015">2015</option>
+                            <option value="2016">2016</option>
+                            <option value="2017">2017</option>
+                            <option value="2018">2018</option>
+                            <option value="2019">2019</option>
+                        </select>
                     </div>
                 </div>
                 <hr>
                 <div class="form-group">
                     <h1>Examen Criteria</h1>
-                    <div v-for="(criteria_section, index) in DeterminedExam.exam_criteria" :key="index">
-                        <label>Criteria sectie</label>
-                        <input v-model="criteria_section.title" class="form-control">
+                    <div v-for="(criteria_section, index) in determinedExam.exam_criteria" :key="index">
+                        <label for="criteria_section_title">Criteria sectie</label>
+                        <input id="criteria_section_title" v-model="criteria_section.title" class="form-control">
                         <table class="table">
                             <thead>
                                 <tr>
@@ -101,18 +108,31 @@
         data () {
             return {
                 msg: 'updateDeterminedExam',
-                DeterminedExam: {},
+                determinedExam: {},
                 isActive: false
             }
         },
         created() {
+            //Get determinedExam
             this.$http.get(`http://localhost:8000/exam/` + this.$route.params.examId)
                 .then(response => {
-                    this.DeterminedExam = response.body;
+                    if(response.status === 200) {
+                        this.determinedExam = response.body;
+                    }
                 })
                 .catch(response => {
-                    console.log(response);
-                    this._addStatusMessage('responseor', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                    if(response.status === 0) {
+                        this._addStatusMessage('warning', 'Geen verbinding met server');
+                    } else if(response.status === 404){
+                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                    } else if(response.status === 405){
+                        this._addStatusMessage('warning', 'Examen mag niet aangepast worden. Er is een lopende afnamen van dit examen.');
+                    } else if(response.status === 500){
+                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                    } else {
+                        this._addStatusMessage('error', 'Onbekende foutmelding');
+                        console.log(new Error(response))
+                    }
                 })
         },
         methods: {
@@ -120,12 +140,14 @@
              * Send update for determined exam
              */
             updateDeterminedExam: function() {
+                //Check for empty fields
                 if (!this.checkData()) {
                     this._addStatusMessage('warning', 'Lege velden. Vul deze in a.u.b. in.');
                     return false
                 }
 
-                this.$http.put(`http://localhost:8000/exam/${this.DeterminedExam._id}`, this.DeterminedExam)
+                //Update request
+                this.$http.put(`http://localhost:8000/exam/${this.determinedExam._id}`, this.determinedExam)
                     .then(response => {
                         if(response.status === 200) {
                             this._addStatusMessage('success', 'Succesvol opgeslagen');
@@ -148,29 +170,31 @@
             },
             addSection: function() {
                 //Check if array containing criteria sections already exits
-                if (typeof this.DeterminedExam.exam_criteria == "undefined" || !(this.DeterminedExam.exam_criteria instanceof Array)) {
-                    this.DeterminedExam.exam_criteria = [];
+                if (typeof this.determinedExam.exam_criteria === undefined || !(this.determinedExam.exam_criteria instanceof Array)) {
+                    this.determinedExam.exam_criteria = [];
                 }
 
-                this.DeterminedExam.exam_criteria.push({title: null, criteria: []});
+                //Make new empty criteria section
+                this.determinedExam.exam_criteria.push({title: null, criteria: []});
                 this.$forceUpdate();
             },
             addCriteria: function(index) {
-                this.DeterminedExam.exam_criteria[index].criteria.push({criteria_description: null, criteria_name: null, rating_group: null, show_stopper: false});
+                //Push empty criteria into section
+                this.determinedExam.exam_criteria[index].criteria.push({criteria_description: null, criteria_name: null, rating_group: null, show_stopper: false});
                 this.$forceUpdate();
             },
             // Check if there are empty fields.
             checkData: function() {
-                if (!this.DeterminedExam.exam_title) {return false}
-                if (!this.DeterminedExam.exam_cohort) {return false}
-                if (!this.DeterminedExam.exam_description) {return false}
-                if (this.DeterminedExam.exam_criteria) {
-                    for (let indexSection = 0; indexSection < this.DeterminedExam.exam_criteria.length; indexSection++) {
-                        if (!this.DeterminedExam.exam_criteria[indexSection].title) {return false}
-                        for (let indexCriteria = 0; indexCriteria < this.DeterminedExam.exam_criteria[indexSection].criteria.length; indexCriteria++) {
-                            if (!this.DeterminedExam.exam_criteria[indexSection].criteria[indexCriteria].criteria_name) {return false}
-                            if (!this.DeterminedExam.exam_criteria[indexSection].criteria[indexCriteria].criteria_description) {return false}
-                            if (!this.DeterminedExam.exam_criteria[indexSection].criteria[indexCriteria].rating_group) {return false}
+                if (!this.determinedExam.exam_title) {return false}
+                if (!this.determinedExam.exam_cohort) {return false}
+                if (!this.determinedExam.exam_description) {return false}
+                if (this.determinedExam.exam_criteria) {
+                    for (let indexSection = 0; indexSection < this.determinedExam.exam_criteria.length; indexSection++) {
+                        if (!this.determinedExam.exam_criteria[indexSection].title) {return false}
+                        for (let indexCriteria = 0; indexCriteria < this.determinedExam.exam_criteria[indexSection].criteria.length; indexCriteria++) {
+                            if (!this.determinedExam.exam_criteria[indexSection].criteria[indexCriteria].criteria_name) {return false}
+                            if (!this.determinedExam.exam_criteria[indexSection].criteria[indexCriteria].criteria_description) {return false}
+                            if (!this.determinedExam.exam_criteria[indexSection].criteria[indexCriteria].rating_group) {return false}
                         }
                     }
                 }
