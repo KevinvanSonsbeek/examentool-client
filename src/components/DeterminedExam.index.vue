@@ -21,7 +21,7 @@
                 <hr>
                 <div class="form-group">
                     <h1>Examen Criteria</h1>
-                    <div v-for="criteria_section in DeterminedExam.exam_criteria">
+                    <div v-for="criteria_section in DeterminedExam.exam_criteria" :key="criteria_section.index">
                         <label>Criteria sectie</label>
                         <input v-model="criteria_section.title" class="form-control">
                         <table class="table">
@@ -34,7 +34,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="criteria in criteria_section.criteria">
+                                <tr v-for="criteria in criteria_section.criteria" :key="criteria.index">
                                     <td>
                                         <input v-model="criteria.criteria_name" class="form-control">
                                     </td>
