@@ -222,16 +222,17 @@
             },
             updateProgressBar() {                
                 //calculate assassment completion percentage
-                this.criterias = 0, this.criteriasFilled = 0;
+                this.criterias = 0;
+                this.criteriasFilled = 0;
                 for(let section in this.assessment.exam_criteria){
                     for(let criteria in this.assessment.exam_criteria[section].criteria){
                         this.criterias++;
-                        if(this.assessment.exam_criteria[section].criteria[criteria].answer != null && this.assessment.exam_criteria[section].criteria[criteria].doubt != true){
+                        if(this.assessment.exam_criteria[section].criteria[criteria].answer !== null && this.assessment.exam_criteria[section].criteria[criteria].doubt !== true){
                             this.criteriasFilled++;
                         }
                     }
                 }
-                var percentageFilled = Math.round((parseFloat(this.criteriasFilled / this.criterias) * 100)) + '%';
+                let percentageFilled = Math.round((parseFloat(this.criteriasFilled / this.criterias) * 100)) + '%';
                 let progressBar = document.getElementById("progressBar");
                 progressBar.style.width = percentageFilled;
                 progressBar.innerHTML = percentageFilled;
