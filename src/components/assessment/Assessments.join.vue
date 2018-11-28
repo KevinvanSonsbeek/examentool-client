@@ -1,6 +1,6 @@
 <template>
     <div id="DeterminedExams">
-        <button type="button" v-on:click="filterCriteria()" class="btn btn-primary float-right" style="position:relative;left:100px;">Filter</button>
+        <button type="button" v-on:click="filterCriteria()" class="btn btn-primary float-right" style="position:relative;left:100px;" id="filter">Filter</button>
         <div id="sectionsDiv" style="position:relative;bottom:40px;">
             <!--TODO: Find a way to make it dry-->
             <div class="statusMessages">
@@ -47,7 +47,7 @@
                             <td>Twijfel:</td>
                             <td>Notitie:</td>
                         </tr>
-                        <tr v-for="(criteria, index) in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
+                        <tr v-if="criteria.show" v-for="(criteria, index) in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
                             <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_description }}
                                 <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
                                 <b-card>
@@ -106,7 +106,8 @@
                 webStorageSupport: typeof(Storage) !== undefined,
                 examiner: '',
                 assessment: null,
-                sections: null
+                sections: null,
+                toggle: 0
             }
         },
         // Function called at creation of the page
@@ -116,6 +117,12 @@
             this.getData().then((data) => {
                 this.assessment = data;
                 this.sections = data.exam_criteria;
+                // Creates the property show and sets it to true
+                for (var i = 0; i < this.sections.length; i++) {
+                    for (var e = 0; e < this.sections[i].criteria.length; e++) {
+                        this.sections[i].criteria[e].show = true;
+                    }
+                }
             });
         },
         computed: {
@@ -214,15 +221,29 @@
             onChange() {
                 this.setData(this.assessment);
             },
+            // loop through the sections array and sets the propery "show" to false if "tijfel" or "not answered"
             filterCriteria() {
-                for (var i = 0; i < this.sections.length; i++) {
-                    console.log(this.sections[i].criteria.length)
-                    for (let criteria in this.assessment.exam_criteria[section].criteria) {
-                        var currentCriteria = this.assessment.exam_criteria[section].criteria[criteria];
-                        if (currentCriteria.answer === null && currentCriteria.doubt === false || currentCriteria.doubt === true) {
-                            console.log(currentCriteria)
+                if (this.toggle === 0) {
+                    for (var i = 0; i < this.sections.length; i++) {
+                        for (var e = 0; e < this.sections[i].criteria.length; e++) {
+                            var criteria = this.sections[i].criteria[e];
+                            if (criteria.answer === null || criteria.doubt === true) {
+                                
+                            } else {
+                                this.sections[i].criteria[e].show = false;
+                            }
                         }
                     }
+                    $("#filter").html("unfilter");
+                    this.toggle = 1;
+                } else {
+                    for (var i = 0; i < this.sections.length; i++) {
+                        for (var e = 0; e < this.sections[i].criteria.length; e++) {
+                            this.sections[i].criteria[e].show = true;
+                        }
+                    }
+                    $("#filter").html("filter");
+                    this.toggle = 0;
                 }
             }
         }
