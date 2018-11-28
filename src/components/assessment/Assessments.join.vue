@@ -172,7 +172,7 @@
             getServerData()  {
                 return new Promise(
                     (resolve, reject) => {
-                        this.$http.post('http://localhost:8000/assessment/' + this.$route.params.examId + '/join', {examiner_name: this.examiner_name}).then(response => {
+                        this.$http.post('http://localhost:8000/assessment/' + this.$route.params.examId + '/join', {examiner_name: this.examiner}).then(response => {
                             response.body.updated_at = new Date(response.body.updated_at).getTime(); //Convert to unix timestamp
                             resolve(response.body);
                         }, response => {
