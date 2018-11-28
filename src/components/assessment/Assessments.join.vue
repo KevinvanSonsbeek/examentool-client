@@ -1,5 +1,32 @@
+<style>
+.progress{
+    width: 50%;
+    left: 25%;
+    position: fixed;
+    z-index: 1;
+}
+.progress-bar{
+    width: 0%;
+}
+@media screen and (max-width: 900px){
+    .progress{
+        width: 70%;
+        left: 15%;
+    }
+}
+@media screen and (max-width: 700px){
+    .progress{
+        width: 95%;
+        left: 2.5%;
+    }
+}
+</style>
+
 <template>
     <div id="DeterminedExams">
+        <div class="progress">
+            <div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
         <div id="sectionsDiv">
             <!--TODO: Find a way to make it dry-->
             <div class="statusMessages">
@@ -31,39 +58,7 @@
                 </div>
             </div>
 
-            <div class="sectionTable" v-for="section in sections" :key="section.index">
-                <table class="table">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">{{ section.title }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th scope="row">Vraag:</th>
-                            <td>Wel:</td>
-                            <td>Niet:</td>
-                            <td>Twijfel:</td>
-                            <td>Notitie:</td>
-                        </tr>
-                        <tr v-for="(criteria, index) in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
-                            <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_description }}
-                                <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
-                                <b-card>
-                                    <p class="card-text">{{ criteria.criteria_description }}</p>
-                                </b-card>
-                                </b-collapse>
-                            </td>
-                            <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="true" type="radio"></td>
-                            <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="false" type="radio"></td>
-                            <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.doubt" type="checkbox"></td>
-                            <td><textarea rows="2" cols="12" v-on:keyup="onChange()" v-model="criteria.note"></textarea></td>
-                        </tr>                        
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- <table id="sectionTables" class="table sectionTable">
+            <table id="sectionTables" class="table sectionTable">
                 <tbody class="" v-for="section in sections" :key="section.index"><br><br>
                 <tr>
                     <td class="sectionHeader">{{ section.title }}</td>
@@ -75,11 +70,11 @@
                     <td>Twijfel:</td>
                     <td>Notitie:</td>
                 </tr>
-                <tr v-for="(criteria, index) in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
-                    <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_name }}
+                <tr v-for="criteria in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="criteria.index">
+                    <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_name }}                    
                         <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
                         <b-card>
-                            <p class="card-text">{{ criteria.criteria_description }}</p>
+                            <p class="card-text">{{ criteria.criteria_description }}</p>      
                         </b-card>
                         </b-collapse>
                     </td>
@@ -89,7 +84,7 @@
                     <td><textarea rows="2" cols="12" v-on:keyup="onChange()" v-model="criteria.note"></textarea></td>
                 </tr>
                 </tbody>
-            </table> -->
+            </table>
         </div>
         <div id="cardDiv"></div>
     </div>
@@ -108,6 +103,8 @@
 
                 assessment: null,
                 sections: null,
+                criterias: 0,
+                criteriasFilled: 0,
             }
         },
         computed: {
@@ -123,6 +120,9 @@
                 this.assessment = data;
                 this.sections = data.exam_criteria;
             });
+        },
+        updated () {
+            this.updateProgressBar();
         },
         methods: {
             setWebStorage(data) {
@@ -211,6 +211,22 @@
                 // this.setWebStorage(data).catch(function (error) {
                 //     console.log("test:", error);
                 // });
+            },
+            updateProgressBar() {                
+                //calculate assassment completion percentage
+                this.criterias = 0, this.criteriasFilled = 0;
+                for(let section in this.assessment.exam_criteria){
+                    for(let criteria in this.assessment.exam_criteria[section].criteria){
+                        this.criterias++;
+                        if(this.assessment.exam_criteria[section].criteria[criteria].answer != null && this.assessment.exam_criteria[section].criteria[criteria].doubt != true){
+                            this.criteriasFilled++;
+                        }
+                    }
+                }
+                var percentageFilled = Math.round((parseFloat(this.criteriasFilled / this.criterias) * 100)) + '%';
+                let progressBar = document.getElementById("progressBar");
+                progressBar.style.width = percentageFilled;
+                progressBar.innerHTML = percentageFilled;
             },
             onChange() {
                 this.setData(this.assessment);
