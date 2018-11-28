@@ -215,16 +215,15 @@
                 this.setData(this.assessment);
             },
             filterCriteria() {
-                var newFilteredCriteria = [];
-                for (let section in this.assessment.exam_criteria) {
+                for (var i = 0; i < this.sections.length; i++) {
+                    console.log(this.sections[i].criteria.length)
                     for (let criteria in this.assessment.exam_criteria[section].criteria) {
                         var currentCriteria = this.assessment.exam_criteria[section].criteria[criteria];
                         if (currentCriteria.answer === null && currentCriteria.doubt === false || currentCriteria.doubt === true) {
-                            newFilteredCriteria.push(currentCriteria)
+                            console.log(currentCriteria)
                         }
                     }
                 }
-                this.filteredCriteria = newFilteredCriteria;
             }
         }
     }
