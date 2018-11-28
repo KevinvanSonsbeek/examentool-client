@@ -45,7 +45,7 @@
 
                     <div class="form-group">
                         <label for="exam_cohort">Examen Cohort</label>
-                        <select id="exam_cohort" class="form-control" v-model="determinedExam.exam_cohort">
+                        <select id="exam_cohort" v-model="determinedExam.exam_cohort" class="form-control">
                             <option value="2014">2014</option>
                             <option value="2015">2015</option>
                             <option value="2016">2016</option>
@@ -64,10 +64,10 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col">Criteria naam</th>
-                                    <th scope="col">Criteria beschrijving</th>
-                                    <th scope="col">Criteria cesuur groep</th>
-                                    <th scope="col">Showstopper</th>
+                                    <th class="criteriaName" scope="col">Criteria naam</th>
+                                    <th class="criteriaDescription" scope="col">Criteria beschrijving</th>
+                                    <th class="criteriaCaesuraGroup" scope="col">Criteria cesuur groep</th>
+                                    <th class="criteriaShowStopper" scope="col">Showstopper</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -203,5 +203,20 @@
 </script>
 
 <style>
-
+.criteriaName
+{
+    width: 12.5%;
+}
+.criteriaDescription
+{
+    width: 25%;
+}
+.criteriaCaesuraGroup
+{
+    width: 10%;
+}
+.criteriaShowStopper
+{
+    width: 1%;
+}
 </style>
