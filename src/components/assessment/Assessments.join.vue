@@ -47,7 +47,7 @@
                             <td>Twijfel:</td>
                             <td>Notitie:</td>
                         </tr>
-                        <tr v-for="(criteria, index) in filteredCriteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
+                        <tr v-for="(criteria, index) in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
                             <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_description }}
                                 <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
                                 <b-card>
@@ -106,8 +106,7 @@
                 webStorageSupport: typeof(Storage) !== undefined,
                 examiner: '',
                 assessment: null,
-                sections: null,
-                filteredCriteria: [],
+                sections: null
             }
         },
         // Function called at creation of the page
@@ -117,13 +116,6 @@
             this.getData().then((data) => {
                 this.assessment = data;
                 this.sections = data.exam_criteria;
-                for (var e = 0; e < 2; e++) {
-                    for (var i = 0; i < 2; i++) {
-                        console.log(data.exam_criteria[e].criteria[i])
-                        this.filteredCriteria.push(data.exam_criteria[e].criteria[i])
-                    }
-                }
-                console.log(this.filteredCriteria)
             });
         },
         computed: {
@@ -222,18 +214,26 @@
             onChange() {
                 this.setData(this.assessment);
             },
-            filterCriteria() {
-                var newFilteredCriteria = [];
-                for (let section in this.assessment.exam_criteria) {
-                    for (let criteria in this.assessment.exam_criteria[section].criteria) {
-                        var currentCriteria = this.assessment.exam_criteria[section].criteria[criteria];
-                        if (currentCriteria.answer === null && currentCriteria.doubt === false || currentCriteria.doubt === true) {
-                            newFilteredCriteria.push(currentCriteria)
-                        }
-                    }
-                }
-                this.filteredCriteria = newFilteredCriteria;
-            }
+            // filterCriteria() {
+            //     if (this.toggle === 0) {
+            //         console.log(0)
+            //         var newFilteredCriteria = [];
+            //         for (let section in this.assessment.exam_criteria) {
+            //             for (let criteria in this.assessment.exam_criteria[section].criteria) {
+            //                 var currentCriteria = this.assessment.exam_criteria[section].criteria[criteria];
+            //                 if (currentCriteria.answer === null && currentCriteria.doubt === false || currentCriteria.doubt === true) {
+            //                     newFilteredCriteria.push(currentCriteria)
+            //                 }
+            //             }
+            //         }
+            //         this.filteredCriteria = newFilteredCriteria;
+            //         this.toggle = 1;
+            //     } else {
+            //         console.log(1);
+            //         this.filteredCriteria = this.sections;
+            //         this.toggle = 0;
+            //     }
+            // }
         }
     }
 </script>
