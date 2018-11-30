@@ -33,7 +33,7 @@
         </div>
         <div id="sectionsDiv">
         <button type="button" v-on:click="setShowProperty()" class="btn btn-primary float-right" style="position:relative;left:100px;" id="filter">Filter</button>
-        <button type="button" v-on:click="showAllCriteria()" class="btn btn-primary float-right" id="removeFilter">remove filter</button>
+        <button type="button" v-on:click="showAllCriteria()" class="btn btn-primary float-right" id="removeFilter">Verwijder filter</button>
         <!--<div id="sectionsDiv" style="position:relative;bottom:40px;">-->
             <!--TODO: Find a way to make it dry-->
             <div class="statusMessages">
@@ -254,9 +254,9 @@
             },
             // Sets the criterion property "show" to false if already answereed.
             setShowProperty() {
-                for (var i = 0; i < this.sections.length; i++) {
-                    for (var e = 0; e < this.sections[i].criteria.length; e++) {
-                        var criteria = this.sections[i].criteria[e];
+                for (let i = 0; i < this.sections.length; i++) {
+                    for (let e = 0; e < this.sections[i].criteria.length; e++) {
+                        let criteria = this.sections[i].criteria[e];
                         if (criteria.answer === null || criteria.doubt === true) {
                         } else {
                             this.sections[i].criteria[e].show = false;
@@ -269,8 +269,8 @@
             },
             // Sets the property "show" of all criteria to true so they will all be shown
             showAllCriteria() {
-                for (var i = 0; i < this.sections.length; i++) {
-                    for (var e = 0; e < this.sections[i].criteria.length; e++) {
+                for (let i = 0; i < this.sections.length; i++) {
+                    for (let e = 0; e < this.sections[i].criteria.length; e++) {
                         this.sections[i].criteria[e].show = true;
                     }
                 }
