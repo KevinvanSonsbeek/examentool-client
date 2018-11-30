@@ -1,6 +1,7 @@
 <template>
     <div id="DeterminedExams">
-        <button type="button" v-on:click="filterCriteria()" class="btn btn-primary float-right" style="position:relative;left:100px;" id="filter">Filter</button>
+        <button type="button" v-on:click="setShowProperty()" class="btn btn-primary float-right" style="position:relative;left:100px;" id="filter">Filter</button>
+        <button type="button" v-on:click="showAllCriteria()" class="btn btn-primary float-right" id="removeFilter">remove filter</button>
         <div id="sectionsDiv" style="position:relative;bottom:40px;">
             <!--TODO: Find a way to make it dry-->
             <div class="statusMessages">
@@ -63,34 +64,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <!-- <table id="sectionTables" class="table sectionTable">
-                <tbody class="" v-for="section in sections" :key="section.index"><br><br>
-                <tr>
-                    <td class="sectionHeader">{{ section.title }}</td>
-                </tr>
-                <tr>
-                    <td>Vraag:</td>
-                    <td>Wel:</td>
-                    <td>Niet:</td>
-                    <td>Twijfel:</td>
-                    <td>Notitie:</td>
-                </tr>
-                <tr v-for="(criteria, index) in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
-                    <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_name }}
-                        <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
-                        <b-card>
-                            <p class="card-text">{{ criteria.criteria_description }}</p>
-                        </b-card>
-                        </b-collapse>
-                    </td>
-                    <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="true" type="radio"></td>
-                    <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="false" type="radio"></td>
-                    <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.doubt" type="checkbox"></td>
-                    <td><textarea rows="2" cols="12" v-on:keyup="onChange()" v-model="criteria.note"></textarea></td>
-                </tr>
-                </tbody>
-            </table> -->
         </div>
     </div>
 </template>
@@ -107,7 +80,7 @@
                 examiner: '',
                 assessment: null,
                 sections: null,
-                toggle: 0
+                toggle: false
             }
         },
         // Function called at creation of the page
@@ -220,32 +193,49 @@
             },
             onChange() {
                 this.setData(this.assessment);
-            },
-            // loop through the sections array and sets the propery "show" to false if "tijfel" or "not answered"
-            filterCriteria() {
-                if (this.toggle === 0) {
-                    for (var i = 0; i < this.sections.length; i++) {
-                        for (var e = 0; e < this.sections[i].criteria.length; e++) {
-                            var criteria = this.sections[i].criteria[e];
-                            if (criteria.answer === null || criteria.doubt === true) {
-                                
-                            } else {
-                                this.sections[i].criteria[e].show = false;
-                            }
-                        }
-                    }
-                    $("#filter").html("unfilter");
-                    this.toggle = 1;
-                } else {
-                    for (var i = 0; i < this.sections.length; i++) {
-                        for (var e = 0; e < this.sections[i].criteria.length; e++) {
-                            this.sections[i].criteria[e].show = true;
-                        }
-                    }
-                    $("#filter").html("filter");
-                    this.toggle = 0;
+                if (this.toggle === true) {
+                    // Adds a delay of 10 seconds
+                    setTimeout(() => this.setShowProperty(), 10000)
                 }
+            },
+            // Sets the criterion property "show" to false if already answereed.
+            setShowProperty() {
+                for (var i = 0; i < this.sections.length; i++) {
+                    for (var e = 0; e < this.sections[i].criteria.length; e++) {
+                        var criteria = this.sections[i].criteria[e];
+                        if (criteria.answer === null || criteria.doubt === true) {
+                        } else {
+                            this.sections[i].criteria[e].show = false;
+                        }
+                    }
+                }
+                this.toggle = true;
+                $("#filter").hide("slow");
+                $("#removeFilter").show("slow");
+            },
+            // Sets the property "show" of all criteria to true so they will all be shown
+            showAllCriteria() {
+                for (var i = 0; i < this.sections.length; i++) {
+                    for (var e = 0; e < this.sections[i].criteria.length; e++) {
+                        this.sections[i].criteria[e].show = true;
+                    }
+                }
+                this.toggle = false;
+                $("#removeFilter").hide("slow");
+                $("#filter").show("slow");
             }
         }
     }
 </script>
+
+<style>
+    #removeFilter {
+        position:relative;
+        left:100px;
+        display: none;
+    }
+    #filter {
+        position:relative;
+        left:100px;
+    }
+</style>
