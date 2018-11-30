@@ -64,19 +64,19 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th class="criteriaName" scope="col">Criteria naam</th>
-                                    <th class="criteriaDescription" scope="col">Criteria beschrijving</th>
+                                    <th class="criteriaName" scope="col">Criteria + uitleg</th>
                                     <th class="criteriaCaesuraGroup" scope="col">Criteria cesuur groep</th>
                                     <th class="criteriaShowStopper" scope="col">Showstopper</th>
+                                </tr>
+                                <tr>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(criteria, index) in criteria_section.criteria" :key="index">
                                     <td>
-                                        <input v-model="criteria.criteria_name" class="form-control">
-                                    </td>
-                                    <td>
-                                        <textarea v-model="criteria.criteria_description" class="form-control"></textarea>
+                                        <textarea placeholder="Criteria" v-model="criteria.criteria_name" class="form-control"></textarea>
+                                        <textarea placeholder="Uitleg" v-model="criteria.criteria_description" class="form-control"></textarea>
                                     </td>
                                     <td>
                                         <select class="form-control" v-model="criteria.rating_group">
@@ -209,14 +209,15 @@
 }
 .criteriaDescription
 {
-    width: 25%;
+    padding: 10px 0px 0px 0px;
+    font-weight: bold;
 }
 .criteriaCaesuraGroup
 {
-    width: 10%;
+    width: 3%;
 }
 .criteriaShowStopper
 {
-    width: 1%;
+    width: 0.1%;
 }
 </style>
