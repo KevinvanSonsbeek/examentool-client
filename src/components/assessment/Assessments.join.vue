@@ -32,6 +32,9 @@
             <div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <div id="sectionsDiv">
+        <button type="button" v-on:click="setShowProperty()" class="btn btn-primary float-right" style="position:relative;left:100px;" id="filter">Filter</button>
+        <button type="button" v-on:click="showAllCriteria()" class="btn btn-primary float-right" id="removeFilter">remove filter</button>
+        <!--<div id="sectionsDiv" style="position:relative;bottom:40px;">-->
             <!--TODO: Find a way to make it dry-->
             <div class="statusMessages">
                 <div v-for="statusMessage in statusMessages" :key="statusMessage.index">
@@ -70,16 +73,16 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <th scope="row">Vraag:</th>
-                        <td>Wel:</td>
-                        <td>Niet:</td>
-                        <td>Twijfel:</td>
-                        <td>Notitie:</td>
-                    </tr>
-                    <tr v-for="(criteria, index) in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
-                        <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_description }}
-                            <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
+                        <tr>
+                            <th scope="row">Vraag:</th>
+                            <td>Wel:</td>
+                            <td>Niet:</td>
+                            <td>Twijfel:</td>
+                            <td>Notitie:</td>
+                        </tr>
+                        <tr v-if="criteria.show" v-for="(criteria, index) in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
+                            <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_description }}
+                                <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
                                 <b-card>
                                     <p class="card-text">{{ criteria.criteria_description }}</p>
                                 </b-card>
@@ -94,7 +97,6 @@
                 </table>
             </div>
         </div>
-        <div id="cardDiv"></div>
     </div>
 </template>
 
@@ -108,11 +110,11 @@
                 // Check if there is web storage support
                 webStorageSupport: typeof(Storage) !== undefined,
                 examiner: '',
-
                 assessment: null,
                 sections: null,
                 criterias: 0,
                 criteriasFilled: 0,
+                toggle: false,
             }
         },
         computed: {
@@ -127,6 +129,12 @@
             this.getData().then((data) => {
                 this.assessment = data;
                 this.sections = data.exam_criteria;
+                // Creates the property show and sets it to true
+                for (var i = 0; i < this.sections.length; i++) {
+                    for (var e = 0; e < this.sections[i].criteria.length; e++) {
+                        this.sections[i].criteria[e].show = true;
+                    }
+                }
             });
         },
         updated () {
@@ -181,7 +189,7 @@
             getServerData()  {
                 return new Promise(
                     (resolve, reject) => {
-                        this.$http.post('http://localhost:8000/assessment/' + this.$route.params.examId + '/join', {examinator_name: this.examiner}).then(response => {
+                        this.$http.post('http://localhost:8000/assessment/' + this.$route.params.examId + '/join', {examiner_name: this.examiner}).then(response => {
                             response.body.updated_at = new Date(response.body.updated_at).getTime(); //Convert to unix timestamp
                             resolve(response.body);
                         }, response => {
@@ -220,7 +228,7 @@
                 //     console.log("test:", error);
                 // });
             },
-            updateProgressBar() {                
+            updateProgressBar() {
                 //calculate assessment completion percentage
                 this.criterias = 0;
                 this.criteriasFilled = 0;
@@ -239,7 +247,49 @@
             },
             onChange() {
                 this.setData(this.assessment);
+                if (this.toggle === true) {
+                    // Adds a delay of 10 seconds
+                    setTimeout(() => this.setShowProperty(), 10000)
+                }
+            },
+            // Sets the criterion property "show" to false if already answereed.
+            setShowProperty() {
+                for (var i = 0; i < this.sections.length; i++) {
+                    for (var e = 0; e < this.sections[i].criteria.length; e++) {
+                        var criteria = this.sections[i].criteria[e];
+                        if (criteria.answer === null || criteria.doubt === true) {
+                        } else {
+                            this.sections[i].criteria[e].show = false;
+                        }
+                    }
+                }
+                this.toggle = true;
+                $("#filter").hide("slow");
+                $("#removeFilter").show("slow");
+            },
+            // Sets the property "show" of all criteria to true so they will all be shown
+            showAllCriteria() {
+                for (var i = 0; i < this.sections.length; i++) {
+                    for (var e = 0; e < this.sections[i].criteria.length; e++) {
+                        this.sections[i].criteria[e].show = true;
+                    }
+                }
+                this.toggle = false;
+                $("#removeFilter").hide("slow");
+                $("#filter").show("slow");
             }
         }
     }
 </script>
+
+<style>
+    #removeFilter {
+        position:relative;
+        left:100px;
+        display: none;
+    }
+    #filter {
+        position:relative;
+        left:100px;
+    }
+</style>
