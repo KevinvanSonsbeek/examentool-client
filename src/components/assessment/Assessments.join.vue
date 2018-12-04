@@ -38,9 +38,9 @@
             <div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <div id="sectionsDiv">
-        <button type="button" v-on:click="setShowProperty()" class="btn btn-primary float-right" id="filter">Filter</button>
-        <button type="button" v-on:click="showAllCriteria()" class="btn btn-primary float-right" id="removeFilter">remove filter</button>
         <button type="button" v-on:click="handInAssassment()" class="btn btn-primary float-right" id="handIn">Lever in</button>
+        <button type="button" v-on:click="setShowProperty()" class="btn btn-primary float-right" id="filter">Filter</button>
+        <button type="button" v-on:click="showAllCriteria()" class="btn btn-primary float-right" id="removeFilter">Verwijder filter</button>
         <!--<div id="sectionsDiv" style="position:relative;bottom:40px;">-->
             <!--TODO: Find a way to make it dry-->
             <div class="statusMessages">
@@ -285,29 +285,30 @@
             },
             // Sets the criterion property "show" to false if already answereed.
             setShowProperty() {
-                for (var i = 0; i < this.sections.length; i++) {
-                    for (var e = 0; e < this.sections[i].criteria.length; e++) {
-                        var criteria = this.sections[i].criteria[e];
-                        if (criteria.answer === null || criteria.doubt === true) {
-                        } else {
+                for (let i = 0; i < this.sections.length; i++) {
+                    for (let e = 0; e < this.sections[i].criteria.length; e++) {
+                        let criteria = this.sections[i].criteria[e];
+                        if (criteria.answer !== null && criteria.doubt === false) {
                             this.sections[i].criteria[e].show = false;
                         }
                     }
                 }
                 this.toggle = true;
-                $("#filter").hide("slow");
-                $("#removeFilter").show("slow");
+                global.$("#filter").hide("slow");
+                global.$("#removeFilter").show("slow");
+                this.$forceUpdate();
             },
             // Sets the property "show" of all criteria to true so they will all be shown
             showAllCriteria() {
-                for (var i = 0; i < this.sections.length; i++) {
-                    for (var e = 0; e < this.sections[i].criteria.length; e++) {
+                for (let i = 0; i < this.sections.length; i++) {
+                    for (let e = 0; e < this.sections[i].criteria.length; e++) {
                         this.sections[i].criteria[e].show = true;
                     }
                 }
                 this.toggle = false;
-                $("#removeFilter").hide("slow");
-                $("#filter").show("slow");
+                global.$("#removeFilter").hide("slow");
+                global.$("#filter").show("slow");
+                this.$forceUpdate();
             },
             handInAssassment() {
                 if(this.percentageFilled === 100)
