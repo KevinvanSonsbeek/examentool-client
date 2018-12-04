@@ -12,6 +12,12 @@
 #sectionsDiv {
     margin-top: 25px;
 }
+#removeFilter {
+    display: none;
+}
+#handIn {
+    margin-right: 10px;
+}
 @media screen and (max-width: 900px){
     .progress{
         width: 70%;
@@ -32,8 +38,9 @@
             <div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <div id="sectionsDiv">
-        <button type="button" v-on:click="setShowProperty()" class="btn btn-primary float-right" style="position:relative;left:100px;" id="filter">Filter</button>
+        <button type="button" v-on:click="setShowProperty()" class="btn btn-primary float-right" id="filter">Filter</button>
         <button type="button" v-on:click="showAllCriteria()" class="btn btn-primary float-right" id="removeFilter">remove filter</button>
+        <button type="button" v-on:click="handInAssassment()" class="btn btn-primary float-right" id="handIn">Lever in</button>
         <!--<div id="sectionsDiv" style="position:relative;bottom:40px;">-->
             <!--TODO: Find a way to make it dry-->
             <div class="statusMessages">
@@ -138,6 +145,7 @@
                 criterias: 0,
                 criteriasFilled: 0,
                 toggle: false,
+                percentageFilled: 0,
             }
         },
         computed: {
@@ -263,10 +271,10 @@
                         }
                     }
                 }
-                let percentageFilled = Math.round((parseFloat(this.criteriasFilled / this.criterias) * 100)) + '%';
+                this.percentageFilled = Math.round((parseFloat(this.criteriasFilled / this.criterias) * 100));
                 let progressBar = document.getElementById("progressBar");
-                progressBar.style.width = percentageFilled;
-                progressBar.innerHTML = percentageFilled;
+                progressBar.style.width = this.percentageFilled + '%';
+                progressBar.innerHTML = this.percentageFilled + '%';
             },
             onChange() {
                 this.setData(this.assessment);
@@ -300,19 +308,16 @@
                 this.toggle = false;
                 $("#removeFilter").hide("slow");
                 $("#filter").show("slow");
+            },
+            handInAssassment() {
+                if(this.percentageFilled === 100)
+                {
+                    this._addStatusMessage('success', "Alle criteria zijn ingevuld!");
+                }else
+                {
+                    this._addStatusMessage('warning', "Nog niet alle criteria zijn ingevuld!");
+                }
             }
         }
     }
 </script>
-
-<style>
-    #removeFilter {
-        position:relative;
-        left:100px;
-        display: none;
-    }
-    #filter {
-        position:relative;
-        left:100px;
-    }
-</style>
