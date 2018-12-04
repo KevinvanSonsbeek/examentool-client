@@ -100,7 +100,7 @@
                         <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.doubt" type="checkbox"></td>
                         <td>
                             <button v-if="!criteria.note" class="btn btn-secondary" type="button" data-toggle="modal" :data-target="'#myModal-' + sectionIndex + '-' + criterionIndex"><span class="oi oi-pencil"></span></button>
-                            <button v-else class="btn btn-primary" type="button" data-toggle="modal" v-bind:data-target="'#myModal-' + sectionIndex + '-' + criterionIndex"><span class="oi oi-pencil"></span></button>
+                            <button v-else class="btn btn-primary" type="button" data-toggle="modal" :data-target="'#myModal-' + sectionIndex + '-' + criterionIndex"><span class="oi oi-pencil"></span></button>
                         </td>
                         <div class="modal fade" v-bind:id="'myModal-' + sectionIndex + '-' + criterionIndex" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
