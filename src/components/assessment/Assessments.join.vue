@@ -65,7 +65,7 @@
                 </div>
             </div>
 
-            <div class="sectionTable" v-for="section in sections" :key="section.index">
+            <div class="sectionTable" v-for="(section, sectionIndex) in sections" :key="section.sectionIndex">
                 <table class="table">
                     <thead class="thead-dark">
                     <tr>
@@ -80,7 +80,7 @@
                             <td>Twijfel:</td>
                             <td>Notitie:</td>
                         </tr>
-                        <tr v-if="criteria.show" v-for="(criteria, index) in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="index">
+                        <tr v-if="criteria.show" v-for="(criteria, criterionIndex) in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="criterionIndex">
                             <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_description }}
                                 <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
                                 <b-card>
@@ -91,7 +91,30 @@
                         <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="true" type="radio"></td>
                         <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="false" type="radio"></td>
                         <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.doubt" type="checkbox"></td>
-                        <td><textarea rows="2" cols="12" v-on:keyup="onChange()" v-model="criteria.note"></textarea></td>
+                        <td>
+                            <button v-if="!criteria.note" class="btn btn-secondary" type="button" data-toggle="modal" :data-target="'#myModal-' + sectionIndex + '-' + criterionIndex"><span class="oi oi-pencil"></span></button>
+                            <button v-else class="btn btn-primary" type="button" data-toggle="modal" v-bind:data-target="'#myModal-' + sectionIndex + '-' + criterionIndex"><span class="oi oi-pencil"></span></button>
+                        </td>
+                        <div class="modal fade" v-bind:id="'myModal-' + sectionIndex + '-' + criterionIndex" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel"><label :for="'noteTextArea-' + sectionIndex + '-' + criterionIndex">Notities</label></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <textarea class="form-control" :id="'noteTextArea-' + sectionIndex + '-' + criterionIndex" rows="3" v-on:keyup="onChange()" v-model="criteria.note"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </tr>
                     </tbody>
                 </table>
