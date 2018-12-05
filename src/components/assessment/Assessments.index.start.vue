@@ -1,10 +1,16 @@
 <template>
   <div id="DeterminedExams">
-    <input type="text" id="examSearch" class="form-control" v-model="search" placeholder="Search for exam.."/>
+    <h2 class="title">Nieuwe afnamen</h2>
+    <input type="text" id="examSearch" class="form-control searchBar" v-model="search" placeholder="Zoeken..."/>
     <div class="list-group">
-      <div v-for="Exam in FilteredExams" class="">
-        <!--<a href="#" class="list-group-item list-group-item-action" data-toggle="modal" data-target="#exampleModalCenter">{{ Exam.exam_title }}</a>-->
-        <router-link :to="{ name: 'AssessmentsJoin', params: { examId: Exam._id }}">{{ Exam.exam_title }}</router-link>
+      <div v-for="(Exam, index) in FilteredExams" :key="index">
+          <div class="list-group-item clearfix align-items-center justify-content-between exam">
+              <span class="pull-right">
+                  <router-link class="btn btn-primary float-right" :to="{ name: 'AssessmentsNew', params: { examId: Exam._id }}" style="margin-top: 5px;">Start</router-link>
+              </span>
+              <div>{{ Exam.exam_title }}</div>
+              <div>Cohort: {{ Exam.exam_cohort }}</div>
+          </div>
       </div>
     </div>
   </div>
@@ -14,11 +20,6 @@
     export default {
         name: 'DeterminedExam',
         search: '',
-        head: {
-            script: [
-                {src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'},
-            ]
-        },
         // Function needed for the data
         data () {
             return {
@@ -29,7 +30,7 @@
         // Function called at creation of the page
         created () {
             // API call
-            this.$http.get('http://localhost:8000/assessments').then(response => {
+            this.$http.get('http://localhost:8000/exams/full').then(response => {
                 // Succeed
                 this.DeterminedExams = response.body
             }, response => {
@@ -44,7 +45,7 @@
             });
         },
         computed: {
-            // For filtering the exam's for the search function
+            // For filtering the examns for the search function
             FilteredExams() {
                 return this.DeterminedExams.filter(Exam => {
                     return Exam.exam_title.toLowerCase().includes(this.search.toLowerCase())
@@ -53,10 +54,3 @@
         }
     }
 </script>
-
-<style>
-    .list-group
-    {
-        margin-top: 25px;
-    }
-</style>

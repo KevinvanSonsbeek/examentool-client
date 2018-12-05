@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import DeterminedExams from './views/DeterminedExams.index.vue'
-import AssessmentsIndex from './views/assessment/Assessments.index.vue'
+import AssessmentsIndex from './views/assessment/Assessments.index.join.vue'
+import AssessmentsStart from './views/assessment/Assessments.index.start.vue'
 import AssessmentsNew from './views/assessment/Assessments.new.vue'
 import AssessmentsJoin from './views/assessment/Assessments.join.vue'
 import DeterminedExamAdd from './views/AddExam.index.vue'
@@ -14,7 +15,7 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
       {
-        path: '/',
+        path: '/determinedexam/',
         name: 'DeterminedExams',
         component: DeterminedExams
       },
@@ -24,9 +25,14 @@ export default new Router({
         component: DeterminedExamEdit
       },
       {
-        path: '/assessments',
+        path: '/assessments/join',
         name: 'AssessmentsIndex',
         component: AssessmentsIndex
+      },
+      {
+        path: '/assessments/start',
+        name: 'AssessmentsStart',
+        component: AssessmentsStart
       },
       {
         path: '/assessments/:examId/start',
@@ -42,6 +48,11 @@ export default new Router({
         path: '/determinedexam/add',
         name: 'DeterminedExamAdd',
         component: DeterminedExamAdd
-      }
+      },
+      {
+        path: '/',
+        name: 'Index',
+        component: AssessmentsIndex
+      },
   ]
 });

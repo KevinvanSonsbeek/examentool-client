@@ -1,46 +1,47 @@
 <style>
-  #infoTable {
+.progress{
     width: 50%;
-    max-width: 600px;
-    min-width: 200px;
-    margin: auto;
-    margin-top: 5px;
-  }
-  #infoTable input {
-    width: 200px;
-  }
-  .table{
-    max-width: 500px;
-    min-width: 200px;
-  }
-  .sectionTable {
-    margin: auto;
-    width: 800px!important;
-  }
-  .sectionHeader {
-    background: lightgrey;
-    width: 100%;
-  }
-  .card {
-    border: 1px solid lightgray;
-    border-radius: 5px;
-    padding: 15px 0px 5px 0px;
-    margin: 0px auto;
-    vertical-align: middle!important;
-    background: white;
-  }
-  #examSearch{
-      width: 75%;
-      min-width: 100px;
-      max-width: 200px;
-      margin: auto;
-      margin-bottom: 30px;
-  }
+    left: 25%;
+    position: fixed;
+    z-index: 1;
+    top: 75px;
+}
+.progress-bar{
+    width: 0%;
+}
+#sectionsDiv {
+    margin-top: 25px;
+}
+#removeFilter {
+    display: none;
+}
+#handIn {
+    margin-right: 10px;
+}
+@media screen and (max-width: 900px){
+    .progress{
+        width: 70%;
+        left: 15%;
+    }
+}
+@media screen and (max-width: 700px){
+    .progress{
+        width: 95%;
+        left: 2.5%;
+    }
+}
 </style>
 
 <template>
     <div id="DeterminedExams">
+        <div class="progress">
+            <div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
         <div id="sectionsDiv">
+        <button type="button" v-on:click="handInAssassment()" class="btn btn-primary float-right" id="handIn">Lever in</button>
+        <button type="button" v-on:click="setShowProperty()" class="btn btn-primary float-right" id="filter">Filter</button>
+        <button type="button" v-on:click="showAllCriteria()" class="btn btn-primary float-right" id="removeFilter">Verwijder filter</button>
+        <!--<div id="sectionsDiv" style="position:relative;bottom:40px;">-->
             <!--TODO: Find a way to make it dry-->
             <div class="statusMessages">
                 <div v-for="statusMessage in statusMessages" :key="statusMessage.index">
@@ -71,35 +72,61 @@
                 </div>
             </div>
 
-            <table id="sectionTables" class="table sectionTable">
-                <tbody class="" v-for="section in sections" :key="section.index"><br><br>
-                <tr>
-                    <td class="sectionHeader">{{ section.title }}</td>
-                </tr>
-                <tr>
-                    <td>Vraag:</td>
-                    <td>Wel:</td>
-                    <td>Niet:</td>
-                    <td>Twijfel:</td>
-                    <td>Notitie:</td>
-                </tr>
-                <tr v-for="criteria in section.criteria" v-bind:id="criteria.criteria_name + 'Element'">
-                    <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_name }}                    
-                        <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
-                        <b-card>
-                            <p class="card-text">{{ criteria.criteria_description }}</p>      
-                        </b-card>
-                        </b-collapse>
-                    </td>
-                    <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="true" type="radio"></td>
-                    <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="false" type="radio"></td>
-                    <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.doubt" type="checkbox"></td>
-                    <td><textarea rows="2" cols="12" v-on:keyup="onChange()" v-model="criteria.note"></textarea></td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="sectionTable" v-for="(section, sectionIndex) in sections" :key="section.sectionIndex">
+                <table class="table">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">{{ section.title }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Vraag:</th>
+                            <td>Wel:</td>
+                            <td>Niet:</td>
+                            <td>Twijfel:</td>
+                            <td>Notitie:</td>
+                        </tr>
+                        <tr v-if="criteria.show" v-for="(criteria, criterionIndex) in section.criteria" v-bind:id="criteria.criteria_name + 'Element'" :key="criterionIndex">
+                            <td v-b-toggle="criteria.criteria_name" variant="primary">{{ criteria.criteria_description }}
+                                <b-collapse v-bind:id="criteria.criteria_name" class="mt-2">
+                                <b-card>
+                                    <p class="card-text">{{ criteria.criteria_description }}</p>
+                                </b-card>
+                            </b-collapse>
+                        </td>
+                        <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="true" type="radio"></td>
+                        <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="false" type="radio"></td>
+                        <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.doubt" type="checkbox"></td>
+                        <td>
+                            <button v-if="!criteria.note" class="btn btn-secondary" type="button" data-toggle="modal" :data-target="'#myModal-' + sectionIndex + '-' + criterionIndex"><span class="oi oi-pencil"></span></button>
+                            <button v-else class="btn btn-primary" type="button" data-toggle="modal" :data-target="'#myModal-' + sectionIndex + '-' + criterionIndex"><span class="oi oi-pencil"></span></button>
+                        </td>
+                        <div class="modal fade" v-bind:id="'myModal-' + sectionIndex + '-' + criterionIndex" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel"><label :for="'noteTextArea-' + sectionIndex + '-' + criterionIndex">Notities</label></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <textarea class="form-control" :id="'noteTextArea-' + sectionIndex + '-' + criterionIndex" rows="3" v-on:keyup="onChange()" v-model="criteria.note"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Sluiten</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div id="cardDiv"></div>
     </div>
 </template>
 
@@ -113,9 +140,12 @@
                 // Check if there is web storage support
                 webStorageSupport: typeof(Storage) !== undefined,
                 examiner: '',
-
                 assessment: null,
                 sections: null,
+                criterias: 0,
+                criteriasFilled: 0,
+                toggle: false,
+                percentageFilled: 0,
             }
         },
         computed: {
@@ -130,7 +160,16 @@
             this.getData().then((data) => {
                 this.assessment = data;
                 this.sections = data.exam_criteria;
+                // Creates the property show and sets it to true
+                for (var i = 0; i < this.sections.length; i++) {
+                    for (var e = 0; e < this.sections[i].criteria.length; e++) {
+                        this.sections[i].criteria[e].show = true;
+                    }
+                }
             });
+        },
+        updated () {
+            this.updateProgressBar();
         },
         methods: {
             setWebStorage(data) {
@@ -181,7 +220,7 @@
             getServerData()  {
                 return new Promise(
                     (resolve, reject) => {
-                        this.$http.post('http://localhost:8000/assessment/' + this.$route.params.examId + '/join', {examinator_name: this.examiner}).then(response => {
+                        this.$http.post('http://localhost:8000/assessment/' + this.$route.params.examId + '/join', {examiner_name: this.examiner}).then(response => {
                             response.body.updated_at = new Date(response.body.updated_at).getTime(); //Convert to unix timestamp
                             resolve(response.body);
                         }, response => {
@@ -220,8 +259,65 @@
                 //     console.log("test:", error);
                 // });
             },
+            updateProgressBar() {
+                //calculate assessment completion percentage
+                this.criterias = 0;
+                this.criteriasFilled = 0;
+                for(let section in this.assessment.exam_criteria){
+                    for(let criteria in this.assessment.exam_criteria[section].criteria){
+                        this.criterias++;
+                        if(this.assessment.exam_criteria[section].criteria[criteria].answer !== null && this.assessment.exam_criteria[section].criteria[criteria].doubt !== true){
+                            this.criteriasFilled++;
+                        }
+                    }
+                }
+                this.percentageFilled = Math.round((parseFloat(this.criteriasFilled / this.criterias) * 100));
+                let progressBar = document.getElementById("progressBar");
+                progressBar.style.width = this.percentageFilled + '%';
+                progressBar.innerHTML = this.percentageFilled + '%';
+            },
             onChange() {
                 this.setData(this.assessment);
+                if (this.toggle === true) {
+                    // Adds a delay of 10 seconds
+                    setTimeout(() => this.setShowProperty(), 10000)
+                }
+            },
+            // Sets the criterion property "show" to false if already answereed.
+            setShowProperty() {
+                for (let i = 0; i < this.sections.length; i++) {
+                    for (let e = 0; e < this.sections[i].criteria.length; e++) {
+                        let criteria = this.sections[i].criteria[e];
+                        if (criteria.answer !== null && criteria.doubt === false) {
+                            this.sections[i].criteria[e].show = false;
+                        }
+                    }
+                }
+                this.toggle = true;
+                global.$("#filter").hide("slow");
+                global.$("#removeFilter").show("slow");
+                this.$forceUpdate();
+            },
+            // Sets the property "show" of all criteria to true so they will all be shown
+            showAllCriteria() {
+                for (let i = 0; i < this.sections.length; i++) {
+                    for (let e = 0; e < this.sections[i].criteria.length; e++) {
+                        this.sections[i].criteria[e].show = true;
+                    }
+                }
+                this.toggle = false;
+                global.$("#removeFilter").hide("slow");
+                global.$("#filter").show("slow");
+                this.$forceUpdate();
+            },
+            handInAssassment() {
+                if(this.percentageFilled === 100)
+                {
+                    this._addStatusMessage('success', "Alle criteria zijn ingevuld!");
+                }else
+                {
+                    this._addStatusMessage('warning', "Nog niet alle criteria zijn ingevuld!");
+                }
             }
         }
     }
