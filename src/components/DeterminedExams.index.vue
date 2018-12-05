@@ -3,6 +3,35 @@
     <h2 class="title">Vastgesteld examens</h2>
     <input type="text" id="examSearch" class="form-control searchBar" v-model="search" placeholder="Zoeken..."/>
     <div class="list-group">
+        <!--TODO: Find a way to make it dry-->
+        <div class="statusMessages">
+            <div v-for="statusMessage in statusMessages" :key="statusMessage.index">
+                <div v-if="statusMessage.type === 'success'" class="alert alert-success alert-dismissible" role="alert">
+                    <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div v-if="statusMessage.type === 'info'" class="alert alert-info alert-dismissible" role="alert">
+                    <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div v-if="statusMessage.type === 'warning'" class="alert alert-warning alert-dismissible" role="alert">
+                    <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div v-if="statusMessage.type === 'error'" class="alert alert-danger alert-dismissible" role="alert">
+                    <strong v-if="statusMessage.code">{{ statusMessage.code }}: </strong>{{ statusMessage.message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
       <div v-for="(Exam, index) in FilteredExams" :key="index">
           <div class="modal fade" v-bind:id="'myModal-' + Exam._id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
@@ -103,17 +132,21 @@
                   //Succeed
                   if (response.status === 200) {
                       this.getExams();
-                      //failed
-                  } else if (response.status === 404) {
+                  }
+              //failed
+              }).catch((response => {
+                  if (response.status === 404) {
                       this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
                   } else if (response.status === 500) {
                       this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                  } else if (response.status === 405) {
+                      this._addStatusMessage('warning', 'Er is nog een lopende afname. Kan het examen niet archiveren');
                   } else {
                       this._addStatusMessage('error', 'Onbekende foutmelding');
                       console.log(new Error(response));
                   }
-              });
-          }  
+              }));
+          }
         },
         computed: {
             // For filtering the examns for the search function
