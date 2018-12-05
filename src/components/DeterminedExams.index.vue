@@ -4,8 +4,29 @@
     <input type="text" id="examSearch" class="form-control searchBar" v-model="search" placeholder="Zoeken..."/>
     <div class="list-group">
       <div v-for="(Exam, index) in FilteredExams" :key="index">
+          <div class="modal fade" v-bind:id="'myModal-' + Exam._id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Weet u het zeker?</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                           <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">
+                          <p>Weet u zeker dat u '{{ Exam.exam_title }}' wilt archiveren?</p>
+                          <p>Als u dit examen archiveert, kunt u dit examen niet meer zien, wijzigen of gebruiken voor afnames.</p>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
+                          <button type="button" class="btn btn-danger" v-on:click="archiveExam(Exam._id)" data-dismiss="modal">Archiveren</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
           <div class="list-group-item clearfix align-items-center justify-content-between exam">
               <span class="pull-right">
+                  <button type="button" class="btn btn-danger float-right" data-toggle="modal" :data-target="'#myModal-' + Exam._id" style="margin-right: 5px; margin-top: 5px;">Archiveren</button>
                   <router-link class="btn btn-primary float-right" :to="{ name: 'DeterminedExamEdit', params: { examId: Exam._id }}" style="margin-right: 5px; margin-top: 5px;">Wijzigen</router-link>
               </span>
               <div>{{ Exam.exam_title }}</div>
@@ -57,20 +78,42 @@
         },
         // Function called at creation of the page
         created () {
-            // API call
-            this.$http.get('http://localhost:8000/exams/full').then(response => {
-                // Succeed
-                this.DeterminedExams = response.body
-            }, response => {
-                // Failed
-                if (response.status === 404) {
-                    alert(404)
-                } else if (response.status === 500) {
-                    alert(500)
-                } else {
-                    alert("unknown error")
-                }
-            });
+            this.getExams();
+        },
+        methods:{
+          getExams:function(){
+              // API call
+              this.$http.get('http://localhost:8000/exams/full').then(response => {
+                  // Succeed
+                  this.DeterminedExams = response.body
+              }, response => {
+                  // Failed
+                  if (response.status === 404) {
+                      this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                  } else if (response.status === 500) {
+                      this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                  } else {
+                      this._addStatusMessage('error', 'Onbekende foutmelding');
+                      console.log(new Error(response));
+                  }
+              });
+          },
+          archiveExam:function (id) {
+              this.$http.get('http://localhost:8000/exam/'+ id +'/archive').then(response => {
+                  //Succeed
+                  if (response.status === 200) {
+                      this.getExams();
+                      //failed
+                  } else if (response.status === 404) {
+                      this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                  } else if (response.status === 500) {
+                      this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                  } else {
+                      this._addStatusMessage('error', 'Onbekende foutmelding');
+                      console.log(new Error(response));
+                  }
+              });
+          }  
         },
         computed: {
             // For filtering the examns for the search function
