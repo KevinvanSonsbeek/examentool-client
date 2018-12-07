@@ -13,7 +13,6 @@ Vue.use(VueResource);
 Vue.use(BootstrapVue);
 
 Vue.config.productionTip = false;
-Vue.config.serverUrl = 'http://localhost:8000';
 
 Vue.mixin(StatusMessageMixin);
 
