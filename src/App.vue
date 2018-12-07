@@ -80,8 +80,10 @@
   .statusMessages
   {
     position: fixed;
+    top: 75px;
     right: 10px;
     width: 425px;
     max-width: 95%;
+    z-index: 2;
   }
 </style>

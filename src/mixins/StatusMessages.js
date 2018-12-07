@@ -21,6 +21,9 @@ export default({
         // Return: nothing
         _addStatusMessage(type, message, code = undefined) {
             this.statusMessages.push({type: type, code: code, message: message});
+            setTimeout(() => {
+                this.statusMessages.shift();
+            }, 3500);
         },
         // * Check if there is a user friendly text message available *
         // Input:
