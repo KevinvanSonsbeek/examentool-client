@@ -93,11 +93,6 @@
     export default {
         name: 'DeterminedExam',
         search: '',
-        head: {
-            script: [
-                {src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'},
-            ]
-        },
         // Function needed for the data
         data () {
             return {
@@ -111,41 +106,47 @@
         },
         methods:{
           getExams:function(){
-              // API call
-              this.$http.get('http://localhost:8000/exams/full').then(response => {
-                  // Succeed
-                  this.DeterminedExams = response.body
-              }, response => {
-                  // Failed
-                  if (response.status === 404) {
-                      this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                  } else if (response.status === 500) {
-                      this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                  } else {
-                      this._addStatusMessage('error', 'Onbekende foutmelding');
-                      console.log(new Error(response));
-                  }
-              });
+              // Get all Determined Exams
+              this.$http.get(`${this.url}/exams/full`)
+                  .then(response => {
+                      // Succeed
+                      if(response.status === 200){
+                          this.DeterminedExams = response.body;
+                      }
+                  })
+                  .catch(response => {
+                      // Failed
+                      if(response.status === 0) {
+                          this._addStatusMessage('warning', 'Geen verbinding met server');
+                      } else if(response.status === 500){
+                          this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                      } else {
+                          this._addStatusMessage('error', 'Onbekende foutmelding');
+                          console.log(new Error(response))
+                      }
+                  });
           },
           archiveExam:function (id) {
-              this.$http.get('http://localhost:8000/exam/'+ id +'/archive').then(response => {
-                  //Succeed
-                  if (response.status === 200) {
-                      this.getExams();
-                  }
-              //failed
-              }).catch((response => {
-                  if (response.status === 404) {
-                      this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                  } else if (response.status === 500) {
-                      this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                  } else if (response.status === 405) {
-                      this._addStatusMessage('warning', 'Er is nog een lopende afname. Kan het examen niet archiveren');
-                  } else {
-                      this._addStatusMessage('error', 'Onbekende foutmelding');
-                      console.log(new Error(response));
-                  }
-              }));
+              this.$http.get(`${this.url}/exam/${id}/archive`)
+                  .then(response => {
+                      //Succeed
+                      if (response.status === 200) {
+                          this.getExams();
+                      }
+                  })
+                  .catch(response => {
+                      //failed
+                      if (response.status === 404) {
+                          this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                      } else if (response.status === 500) {
+                          this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                      } else if (response.status === 405) {
+                          this._addStatusMessage('warning', 'Er is nog een lopende afname. Kan het examen niet archiveren');
+                      } else {
+                          this._addStatusMessage('error', 'Onbekende foutmelding');
+                          console.log(new Error(response));
+                      }
+                  });
           }
         },
         computed: {

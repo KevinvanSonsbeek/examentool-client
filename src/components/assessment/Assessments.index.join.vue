@@ -20,11 +20,6 @@
     export default {
         name: 'DeterminedExam',
         search: '',
-        head: {
-            script: [
-                {src: 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'},
-            ]
-        },
         // Function needed for the data
         data () {
             return {
@@ -35,19 +30,26 @@
         // Function called at creation of the page
         created () {
             // API call
-            this.$http.get('http://localhost:8000/assessments').then(response => {
-                // Succeed
-                this.DeterminedExams = response.body
-            }, response => {
-                // Failed
-                if (response.status === 404) {
-                    alert(404)
-                } else if (response.status === 500) {
-                    alert(500)
-                } else {
-                    alert("unknown error")
-                }
-            });
+            this.$http.get(`${this.url}/assessments`)
+                .then(response => {
+                    // Succeed
+                    if(response.status === 200) {
+                        this.DeterminedExams = response.body;
+                    }
+                })
+                .catch(response => {
+                    // Failed
+                    if(response.status === 0) {
+                        this._addStatusMessage('warning', 'Geen verbinding met server');
+                    } else if(response.status === 404){
+                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                    } else if(response.status === 500){
+                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                    } else {
+                        this._addStatusMessage('error', 'Onbekende foutmelding');
+                        console.log(new Error(response))
+                    }
+                });
         },
         computed: {
             // For filtering the exam's for the search function

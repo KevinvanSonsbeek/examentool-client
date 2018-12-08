@@ -4,6 +4,7 @@ import VueResource from 'vue-resource'
 import BootstrapVue from 'bootstrap-vue'
 import router from './router'
 import StatusMessageMixin from './mixins/StatusMessages'
+import ServerUrlMixin from './mixins/ServerUrl'
 import jQuery from 'jquery'
 
 global.jQuery = jQuery;
@@ -15,6 +16,7 @@ Vue.use(BootstrapVue);
 Vue.config.productionTip = false;
 
 Vue.mixin(StatusMessageMixin);
+Vue.mixin(ServerUrlMixin);
 
 new Vue({
   router,

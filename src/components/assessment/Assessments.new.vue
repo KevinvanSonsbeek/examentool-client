@@ -20,20 +20,21 @@
             this.webStorageSupport = typeof(Storage) !== "undefined";
 
             // API call
-            this.$http.get('http://localhost:8000/exam/' + this.$route.params.examId + '/start').then((data) => {
-                // Succeed
-
-                this.$router.push({ name: 'AssessmentsJoin', params: { examId: data.body._id }})
-            }, response => {
-                // Failed
-                if (response.status === 404) {
-                    alert(404)
-                } else if (response.status === 500) {
-                    alert(500)
-                } else {
-                    alert("unknown error")
-                }
-            });
+            this.$http.get(`${this.url}/exam/${this.$route.params.examId}/start`)
+                .then((response) => {
+                    this.$router.push({ name: 'AssessmentsJoin', params: { examId: response.body._id }})
+                })
+                .catch(response => {
+                    // Failed
+                    if (response.status === 404) {
+                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                    } else if (response.status === 500) {
+                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                    } else {
+                        this._addStatusMessage('error', 'Onbekende foutmelding');
+                        console.log(new Error(response));
+                    }
+                });
         }
     }
 </script>

@@ -150,23 +150,24 @@
         },
         computed: {
             webStorageName: function () {
-                return 'assessment-' + this.$route.params.examId + '-' + this.examiner;
+                return `assessment-${this.$route.params.examId}-${this.examiner}`;
             }
         },
         // Function called at creation of the page
         created () {
             this.examiner = prompt("Please enter your name:");
 
-            this.getData().then((data) => {
-                this.assessment = data;
-                this.sections = data.exam_criteria;
-                // Creates the property show and sets it to true
-                for (var i = 0; i < this.sections.length; i++) {
-                    for (var e = 0; e < this.sections[i].criteria.length; e++) {
-                        this.sections[i].criteria[e].show = true;
+            this.getData()
+                .then((data) => {
+                    this.assessment = data;
+                    this.sections = data.exam_criteria;
+                    // Creates the property show and sets it to true
+                    for (var i = 0; i < this.sections.length; i++) {
+                        for (var e = 0; e < this.sections[i].criteria.length; e++) {
+                            this.sections[i].criteria[e].show = true;
+                        }
                     }
-                }
-            });
+                });
         },
         updated () {
             this.updateProgressBar();
@@ -176,16 +177,17 @@
                 return new Promise(
                     (resolve, reject) => {
                         if (this.webStorageSupport) {
-                            this.getWebStorage().then((localData => {
-                                // When there is no web storage, prevent using current date and use data from data
-                                if (localData === null) {
-                                    data.updated_at = new Date(data.updated_at).getTime(); //Convert to unix timestamp
-                                } else {
-                                    data.updated_at = Date.now();
-                                }
-                                localStorage.setItem(this.webStorageName, JSON.stringify(data));
-                                resolve(data);
-                            }));
+                            this.getWebStorage()
+                                .then((localData => {
+                                    // When there is no web storage, prevent using current date and use data from data
+                                    if (localData === null) {
+                                        data.updated_at = new Date(data.updated_at).getTime(); //Convert to unix timestamp
+                                    } else {
+                                        data.updated_at = Date.now();
+                                    }
+                                    localStorage.setItem(this.webStorageName, JSON.stringify(data));
+                                    resolve(data);
+                                }));
                         } else {
                             reject(new Error("Web storage is not supported"));
                         }
@@ -208,25 +210,31 @@
             setServerData(data) {
                 return new Promise(
                     (resolve, reject) => {
-                        this.$http.put('http://localhost:8000/assessment/' + this.assessment._id + '/update', data).then(response => {
-                            resolve(response.body);
-                        }, response => {
-                            this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                            reject(new Error(response))
-                        })
+                        this.$http.put(`${this.url}/assessment/${this.assessment._id}/update`, data)
+                            .then(response => {
+                                resolve(response.body);
+                            })
+                            .catch(response => {
+                                this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                                reject(new Error(response))
+                            });
                     }
                 );
             },
             getServerData()  {
                 return new Promise(
                     (resolve, reject) => {
-                        this.$http.post('http://localhost:8000/assessment/' + this.$route.params.examId + '/join', {examiner_name: this.examiner}).then(response => {
-                            response.body.updated_at = new Date(response.body.updated_at).getTime(); //Convert to unix timestamp
-                            resolve(response.body);
-                        }, response => {
-                            this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                            reject(new Error(response))
-                        })
+                        let data = {};
+                        data.examiner_name = this.examiner;
+                        this.$http.post(`${this.url}/assessment/${this.$route.params.examId}/join`, data)
+                            .then(response => {
+                                response.body.updated_at = new Date(response.body.updated_at).getTime(); //Convert to unix timestamp
+                                resolve(response.body);
+                            })
+                            .catch(response => {
+                                this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                                reject(new Error(response))
+                            });
                     }
                 );
             },
@@ -311,11 +319,9 @@
                 this.$forceUpdate();
             },
             handInAssassment() {
-                if(this.percentageFilled === 100)
-                {
+                if(this.percentageFilled === 100) {
                     this._addStatusMessage('success', "Alle criteria zijn ingevuld!");
-                }else
-                {
+                }else {
                     this._addStatusMessage('warning', "Nog niet alle criteria zijn ingevuld!");
                 }
             }

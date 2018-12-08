@@ -76,24 +76,27 @@ export default {
 
           // A check to see if everything is filled in
           if (this.exam_title && this.exam_description && this.exam_cohort) {
-              let postData = {};
-              postData['exam_title'] = this.exam_title;
-              postData['exam_description'] = this.exam_description;
-              postData['exam_cohort'] = this.exam_cohort;
-              // The post request to the backend with the paramenters for the new exam
-              this.$http.post('http://localhost:8000/exam/create',  postData)
-              .then(response => {
-                  if(response.status === 200) {
-                    alert("success");
-                    this.$router.push('/determinedexam');
-                  } else if(response.status === 500) {
-                    alert("Internal server error!");
-                  }
-              }).catch(err => {
-                  if(err.status === 0) {
-                      alert("No internet connection!");
-                  }
-              })
+              let data = {};
+              data['exam_title'] = this.exam_title;
+              data['exam_description'] = this.exam_description;
+              data['exam_cohort'] = this.exam_cohort;
+              // The post request to the backend with the parameters for the new exam
+              this.$http.post(`${this.url}/exam/create`,  data)
+                  .then(response => {
+                      if(response.status === 200) {
+                        this.$router.push('/determinedexam');
+                      }
+                  })
+                  .catch(response => {
+                      if(response.status === 0) {
+                          this._addStatusMessage('warning', 'Geen verbinding met server');
+                      } else if(response.status === 500){
+                          this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                      } else {
+                          this._addStatusMessage('error', 'Onbekende foutmelding');
+                          console.log(new Error(response))
+                      }
+                  });
               // Send the user to the home page
           } else {
               alert("Nog niet alle velden zijn ingevuld.")

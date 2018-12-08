@@ -114,7 +114,7 @@
         },
         created() {
             //Get determinedExam
-            this.$http.get(`http://localhost:8000/exam/` + this.$route.params.examId)
+            this.$http.get(`${this.url}/exam/${this.$route.params.examId}`)
                 .then(response => {
                     if(response.status === 200) {
                         this.determinedExam = response.body;
@@ -125,15 +125,13 @@
                         this._addStatusMessage('warning', 'Geen verbinding met server');
                     } else if(response.status === 404){
                         this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                    } else if(response.status === 405){
-                        this._addStatusMessage('warning', 'Examen mag niet aangepast worden. Er is een lopende afnamen van dit examen.');
                     } else if(response.status === 500){
                         this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
                     } else {
                         this._addStatusMessage('error', 'Onbekende foutmelding');
                         console.log(new Error(response))
                     }
-                })
+                });
         },
         methods: {
             /**
@@ -147,7 +145,7 @@
                 }
 
                 //Update request
-                this.$http.put(`http://localhost:8000/exam/${this.determinedExam._id}`, this.determinedExam)
+                this.$http.put(`${this.url}/exam/${this.determinedExam._id}`, this.determinedExam)
                     .then(response => {
                         if(response.status === 200) {
                             this._addStatusMessage('success', 'Succesvol opgeslagen');
@@ -166,7 +164,7 @@
                            this._addStatusMessage('error', 'Onbekende foutmelding');
                            console.log(new Error(response))
                        }
-                    })
+                    });
             },
             addSection: function() {
                 //Check if array containing criteria sections already exits
