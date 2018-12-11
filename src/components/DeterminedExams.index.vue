@@ -56,7 +56,7 @@
           <div class="list-group-item clearfix align-items-center justify-content-between exam">
               <span class="pull-right">
                   <button type="button" class="btn btn-danger float-right" data-toggle="modal" :data-target="'#myModal-' + Exam._id" style="margin-right: 5px; margin-top: 5px;">Archiveren</button>
-                  <button type="button" class="btn btn-warning float-right" v-on:click="copyExam(Exam._id)" style="margin-right: 5px; margin-top: 5px;">Copy</button>
+                  <button type="button" class="btn btn-warning float-right" v-on:click="copyExam(Exam._id)" style="margin-right: 5px; margin-top: 5px;">Kopieer</button>
                   <router-link class="btn btn-primary float-right" :to="{ name: 'DeterminedExamEdit', params: { examId: Exam._id }}" v-bind:class="{disabled: !Exam.editable }" style="margin-right: 5px; margin-top: 5px;">Wijzigen</router-link>
               </span>
               <div>{{ Exam.exam_title }}</div>
