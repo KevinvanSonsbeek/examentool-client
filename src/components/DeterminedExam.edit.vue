@@ -57,10 +57,10 @@
                 </div>
                 <hr>
                 <div class="form-group">
-                    <h1>Examen Criteria</h1>
-                    <div v-for="(criteria_section, sectionIndex) in determinedExam.exam_criteria" :key="sectionIndex">
-                        <label for="criteria_section_title">Criteria sectie</label>
-                        <input id="criteria_section_title" v-model="criteria_section.title" class="form-control">
+                    <h1 style="margin-bottom:25px;">Examen Criteria</h1>
+                    <div style="margin-bottom:100px;" v-for="(criteria_section, sectionIndex) in determinedExam.exam_criteria" :key="sectionIndex">
+                        <th for="criteria_section_title">Criteria sectie naam</th>
+                        <input id="criteria_section_title" v-model="criteria_section.title" class="form-control sectionName">
                         <table class="table">
                             <thead>
                                 <tr>
@@ -75,8 +75,8 @@
                             <tbody>
                                 <tr v-for="(criteria, index) in criteria_section.criteria" :key="index">
                                     <td>
-                                        <textarea placeholder="Criteria" v-model="criteria.criteria_name" class="form-control"></textarea>
-                                        <textarea placeholder="Uitleg" v-model="criteria.criteria_description" class="form-control"></textarea>
+                                        <textarea placeholder="Criteria" v-model="criteria.criteria_name" class="form-control texterea"></textarea>
+                                        <textarea placeholder="Uitleg" v-model="criteria.criteria_description" class="form-control texterea"></textarea>
                                     </td>
                                     <td>
                                         <select class="form-control" v-model="criteria.rating_group">
@@ -108,11 +108,11 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <a type="button" class="btn btn-primary float-right" v-on:click="addCriteria(sectionIndex)">Criteria toevoegen</a>
+                        <button type="button" class="btn btn-primary float-right" v-on:click="addCriterion(sectionIndex)">Criteria toevoegen</button>
                     </div>
-                    <a type="button" class="btn btn-primary" v-on:click="addSection()">Sectie toevoegen</a>
+                    <button type="button" class="btn btn-primary" v-on:click="addSection()">Sectie toevoegen</button>
                 </div>
-                <a type="button" class="btn btn-primary" v-on:click="updateDeterminedExam()">Update</a>
+                <button type="button" class="btn btn-primary" v-on:click="updateDeterminedExam()" style="margin-bottom: 25px;">Opslaan</button>
             </form>
         </div>
     </div>
@@ -193,7 +193,7 @@
                 this.determinedExam.exam_criteria.push({title: null, criteria: []});
                 this.$forceUpdate();
             },
-            addCriteria: function(sectionIndex) {
+            addCriterion: function(sectionIndex) {
                 //Push empty criteria into section
                 this.determinedExam.exam_criteria[sectionIndex].criteria.push({criteria_description: null, criteria_name: null, rating_group: null, show_stopper: false});
                 this.$forceUpdate();
@@ -248,5 +248,13 @@
     position: relative;
     left: 145px;
     bottom: 38px;
+}
+.sectionName
+{
+    margin-bottom: 10px;
+}
+.texterea
+{
+    margin-bottom: 10px;
 }
 </style>

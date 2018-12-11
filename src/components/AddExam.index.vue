@@ -43,7 +43,7 @@
             </div>
             <div class="form-group">
                 <label>Cohort:</label>
-                <select class="form-control" v-model="exam_cohort">
+                <select class="form-control" v-model="exam_cohort" placeholder="2018">
                     <option value="2014">2014</option>
                     <option value="2015">2015</option>
                     <option value="2016">2016</option>
@@ -52,7 +52,7 @@
                     <option value="2019">2019</option>
                 </select>
             </div>
-            <a class="btn btn-primary" v-on:click="AddExam()">Toevoegen</a>
+            <button type="button" class="btn btn-primary" v-on:click="AddExam()">Toevoegen</button>
         </form>
     </div>
 </template>
