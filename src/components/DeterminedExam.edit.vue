@@ -58,7 +58,7 @@
                 <hr>
                 <div class="form-group">
                     <h1>Examen Criteria</h1>
-                    <div v-for="(criteria_section, index) in determinedExam.exam_criteria" :key="index">
+                    <div v-for="(criteria_section, sectionIndex) in determinedExam.exam_criteria" :key="sectionIndex">
                         <label for="criteria_section_title">Criteria sectie</label>
                         <input id="criteria_section_title" v-model="criteria_section.title" class="form-control">
                         <table class="table">
@@ -69,7 +69,7 @@
                                     <th class="criteriaShowStopper" scope="col">Showstopper</th>
                                 </tr>
                                 <tr>
-                                    
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -87,11 +87,28 @@
                                     </td>
                                     <td>
                                         <input type="checkbox" v-model="criteria.show_stopper" class="form-control">
+                                        <button type="button" class="btn btn-danger removeCriterion" data-toggle="modal" :data-target="'#myModal-' + sectionIndex + index">Verwijder</button>
                                     </td>
+                                    <div class="modal fade" v-bind:id="'myModal-' + sectionIndex + index" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Weet u zeker dat u het criterium wilt verwijderen?</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
+                                                    <button type="button" class="btn btn-danger" v-on:click="removeCriterion(sectionIndex, index)" data-dismiss="modal">Verwijder</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </tr>
                             </tbody>
                         </table>
-                        <a type="button" class="btn btn-primary float-right" v-on:click="addCriteria(index)">Criteria toevoegen</a>
+                        <a type="button" class="btn btn-primary float-right" v-on:click="addCriteria(sectionIndex)">Criteria toevoegen</a>
                     </div>
                     <a type="button" class="btn btn-primary" v-on:click="addSection()">Sectie toevoegen</a>
                 </div>
@@ -176,10 +193,17 @@
                 this.determinedExam.exam_criteria.push({title: null, criteria: []});
                 this.$forceUpdate();
             },
-            addCriteria: function(index) {
+            addCriteria: function(sectionIndex) {
                 //Push empty criteria into section
-                this.determinedExam.exam_criteria[index].criteria.push({criteria_description: null, criteria_name: null, rating_group: null, show_stopper: false});
+                this.determinedExam.exam_criteria[sectionIndex].criteria.push({criteria_description: null, criteria_name: null, rating_group: null, show_stopper: false});
                 this.$forceUpdate();
+            },
+            // Remove criterion
+            removeCriterion: function(sectionIndex, index) {
+                let array = this.determinedExam.exam_criteria[sectionIndex].criteria;
+                let itemtoRemove = this.determinedExam.exam_criteria[sectionIndex].criteria[index];
+                // Removes the criterion from the array.
+                array.splice(global.$.inArray(itemtoRemove, array),1);
             },
             // Check if there are empty fields.
             checkData: function() {
@@ -219,5 +243,10 @@
 .criteriaShowStopper
 {
     width: 0.1%;
+}
+.removeCriterion {
+    position: relative;
+    left: 145px;
+    bottom: 38px;
 }
 </style>
