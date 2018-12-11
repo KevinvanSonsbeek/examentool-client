@@ -93,14 +93,10 @@
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Weet u het zeker?</h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">Weet u zeker dat u het criterium wilt verwijderen?</h5>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">&times;</span>
                                                     </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p>Weet u zeker dat u het criterion wilt verwijderen?</p>
-                                                    <p>Als u dit criterion verwijderd, kunt u het niet meer zien, wijzigen of gebruiken voor afnames.</p>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
