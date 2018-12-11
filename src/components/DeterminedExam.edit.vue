@@ -87,8 +87,28 @@
                                     </td>
                                     <td>
                                         <input type="checkbox" v-model="criteria.show_stopper" class="form-control">
-                                        <button type="button" class="btn btn-danger removeCriteria" v-on:click="removeCriterion(sectionIndex, index)">Verwijder</button>
+                                        <button type="button" class="btn btn-danger removeCriterion" data-toggle="modal" :data-target="'#myModal-' + sectionIndex + index">Verwijder</button>
                                     </td>
+                                    <div class="modal fade" v-bind:id="'myModal-' + sectionIndex + index" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Weet u het zeker?</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Weet u zeker dat u het criterion wilt verwijderen?</p>
+                                                    <p>Als u dit criterion verwijderd, kunt u het niet meer zien, wijzigen of gebruiken voor afnames.</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
+                                                    <button type="button" class="btn btn-danger" v-on:click="removeCriterion(sectionIndex, index)" data-dismiss="modal">Verwijder</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </tr>
                             </tbody>
                         </table>
@@ -211,7 +231,7 @@
 </script>
 
 <style>
-    .removeCriteria {
+    .removeCriterion {
         position: relative;
         left: 145px;
         bottom: 38px;
