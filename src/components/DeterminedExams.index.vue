@@ -56,6 +56,7 @@
           <div class="list-group-item clearfix align-items-center justify-content-between exam">
               <span class="pull-right">
                   <button type="button" class="btn btn-danger float-right" data-toggle="modal" :data-target="'#myModal-' + Exam._id" style="margin-right: 5px; margin-top: 5px;">Archiveren</button>
+                  <button type="button" class="btn btn-warning float-right" v-on:click="copyExam(Exam._id)" style="margin-right: 5px; margin-top: 5px;">Kopiëren</button>
                   <router-link class="btn float-right" :to="{ name: 'DeterminedExamEdit', params: { examId: Exam._id }}" v-bind:class="{disabled: !Exam.editable, 'btn-primary': Exam.editable, 'btn-secondary': !Exam.editable }" style="margin-right: 5px; margin-top: 5px;">Wijzigen</router-link>
               </span>
               <div>{{ Exam.exam_title }}</div>
@@ -147,6 +148,53 @@
                           console.log(new Error(response));
                       }
                   });
+          },
+          copyExam:function (id) {
+              this.$http.get(`${this.url}/exam/${id}`)
+                .then(response => {
+                    if(response.status === 200) {
+                        this.examToBeCopied = response.body;
+
+                        let data = {};
+                        data['exam_title'] = this.examToBeCopied.exam_title;
+                        data['exam_description'] = this.examToBeCopied.exam_description;
+                        data['exam_cohort'] = this.examToBeCopied.exam_cohort;
+                        data['exam_criteria'] = this.examToBeCopied.exam_criteria;
+                        // The post request to the backend with the parameters for the new exam
+                        this.$http.post(`${this.url}/exam/create`,  data)
+                            .then(response => {
+                                if(response.status === 200) {
+                                    this.$router.push('/determinedexam');
+                                    this.getExams();
+                                }
+                            })
+                            .catch(response => {
+                                if(response.status === 0) {
+                                    this._addStatusMessage('warning', 'Geen verbinding met server');
+                                } else if(response.status === 500){
+                                    this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                                } else {
+                                    this._addStatusMessage('error', 'Onbekende foutmelding');
+                                    console.log(new Error(response))
+                                }
+                            });
+                        // Send the user to the home page
+                        } else {
+                            alert("Nog niet alle velden zijn ingevuld.")
+                        }
+                })
+                .catch(response => {
+                    if(response.status === 0) {
+                        this._addStatusMessage('warning', 'Geen verbinding met server');
+                    } else if(response.status === 404){
+                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                    } else if(response.status === 500){
+                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                    } else {
+                        this._addStatusMessage('error', 'Onbekende foutmelding');
+                        console.log(new Error(response))
+                    }
+                });
           }
         },
         computed: {
@@ -157,7 +205,7 @@
                 })
             }
         }
-    }
+}
 </script>
 
 <style>
