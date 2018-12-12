@@ -1,5 +1,6 @@
 <template>
     <div id="determinedExam">
+        <h2 class="title">Wijzigen</h2>
         <!--TODO: Find a way to make it dry-->
         <div class="statusMessages">
             <div v-for="statusMessage in statusMessages" :key="statusMessage.index">
@@ -57,7 +58,7 @@
                 </div>
                 <hr>
                 <div class="form-group">
-                    <h1>Examen Criteria</h1>
+                    <h2>Examen Criteria</h2>
                     <div v-for="(criteria_section, index) in determinedExam.exam_criteria" :key="index">
                         <label for="criteria_section_title">Criteria sectie</label>
                         <input id="criteria_section_title" v-model="criteria_section.title" class="form-control">

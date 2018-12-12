@@ -164,8 +164,7 @@
                         this.$http.post(`${this.url}/exam/create`,  data)
                             .then(response => {
                                 if(response.status === 200) {
-                                    this.$router.push('/determinedexam');
-                                    this.getExams();     
+                                    this.$router.push('/determinedexam/' + response.body._id + '/edit');
                                 }
                             })
                             .catch(response => {
