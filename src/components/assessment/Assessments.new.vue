@@ -25,15 +25,7 @@
                     this.$router.push({ name: 'AssessmentsJoin', params: { examId: response.body._id }})
                 })
                 .catch(response => {
-                    // Failed
-                    if (response.status === 404) {
-                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                    } else if (response.status === 500) {
-                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                    } else {
-                        this._addStatusMessage('error', 'Onbekende foutmelding');
-                        console.log(new Error(response));
-                    }
+                    this._catchException(response);
                 });
         }
     }

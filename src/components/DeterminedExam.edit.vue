@@ -138,16 +138,7 @@
                     }
                 })
                 .catch(response => {
-                    if(response.status === 0) {
-                        this._addStatusMessage('warning', 'Geen verbinding met server');
-                    } else if(response.status === 404){
-                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                    } else if(response.status === 500){
-                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                    } else {
-                        this._addStatusMessage('error', 'Onbekende foutmelding');
-                        console.log(new Error(response))
-                    }
+                    this._catchException(response);
                 });
         },
         methods: {
@@ -169,18 +160,7 @@
                         }
                     })
                     .catch(response => {
-                       if(response.status === 0) {
-                           this._addStatusMessage('warning', 'Geen verbinding met server');
-                       } else if(response.status === 404){
-                           this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                       } else if(response.status === 405){
-                           this._addStatusMessage('warning', 'Examen mag niet aangepast worden. Er is een lopende afnamen van dit examen.');
-                       } else if(response.status === 500){
-                           this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                       } else {
-                           this._addStatusMessage('error', 'Onbekende foutmelding');
-                           console.log(new Error(response))
-                       }
+                        this._catchException(response);
                     });
             },
             addSection: function() {

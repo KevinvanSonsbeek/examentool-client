@@ -116,15 +116,7 @@
                       }
                   })
                   .catch(response => {
-                      // Failed
-                      if(response.status === 0) {
-                          this._addStatusMessage('warning', 'Geen verbinding met server');
-                      } else if(response.status === 500){
-                          this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                      } else {
-                          this._addStatusMessage('error', 'Onbekende foutmelding');
-                          console.log(new Error(response))
-                      }
+                      this._catchException(response);
                   });
           },
           archiveExam:function (id) {
@@ -136,17 +128,7 @@
                       }
                   })
                   .catch(response => {
-                      //failed
-                      if (response.status === 404) {
-                          this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                      } else if (response.status === 500) {
-                          this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                      } else if (response.status === 405) {
-                          this._addStatusMessage('warning', 'Er is nog een lopende afname. Kan het examen niet archiveren');
-                      } else {
-                          this._addStatusMessage('error', 'Onbekende foutmelding');
-                          console.log(new Error(response));
-                      }
+                      this._catchException(response);
                   });
           },
           copyExam:function (id) {
@@ -156,10 +138,10 @@
                         this.examToBeCopied = response.body;
 
                         let data = {};
-                        data['exam_title'] = this.examToBeCopied.exam_title;
-                        data['exam_description'] = this.examToBeCopied.exam_description;
-                        data['exam_cohort'] = this.examToBeCopied.exam_cohort;
-                        data['exam_criteria'] = this.examToBeCopied.exam_criteria;
+                        data.exam_title = this.examToBeCopied.exam_title;
+                        data.exam_description = this.examToBeCopied.exam_description;
+                        data.exam_cohort = this.examToBeCopied.exam_cohort;
+                        data.exam_criteria = this.examToBeCopied.exam_criteria;
                         // The post request to the backend with the parameters for the new exam
                         this.$http.post(`${this.url}/exam/create`,  data)
                             .then(response => {
@@ -169,14 +151,7 @@
                                 }
                             })
                             .catch(response => {
-                                if(response.status === 0) {
-                                    this._addStatusMessage('warning', 'Geen verbinding met server');
-                                } else if(response.status === 500){
-                                    this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                                } else {
-                                    this._addStatusMessage('error', 'Onbekende foutmelding');
-                                    console.log(new Error(response))
-                                }
+                                this._catchException(response);
                             });
                         // Send the user to the home page
                         } else {
@@ -184,16 +159,7 @@
                         }
                 })
                 .catch(response => {
-                    if(response.status === 0) {
-                        this._addStatusMessage('warning', 'Geen verbinding met server');
-                    } else if(response.status === 404){
-                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                    } else if(response.status === 500){
-                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                    } else {
-                        this._addStatusMessage('error', 'Onbekende foutmelding');
-                        console.log(new Error(response))
-                    }
+                    this._catchException(response);
                 });
           }
         },
