@@ -15,8 +15,8 @@
 #removeFilter {
     display: none;
 }
-#handIn {
-    margin-right: 10px;
+.assessmentButtons * {
+    margin: 0 2px;
 }
 @media screen and (max-width: 900px){
     .progress{
@@ -38,9 +38,12 @@
             <div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <div id="sectionsDiv">
-        <button type="button" v-on:click="handInAssassment()" class="btn btn-primary float-right" id="handIn">Lever in</button>
-        <button type="button" v-on:click="setShowProperty()" class="btn btn-primary float-right" id="filter">Filter</button>
-        <button type="button" v-on:click="showAllCriteria()" class="btn btn-primary float-right" id="removeFilter">Verwijder filter</button>
+            <div class="assessmentButtons float-right">
+                <b-button variant="info" v-on:click="setShowProperty()" id="filter">Filter</b-button>
+                <b-button variant="info" v-on:click="showAllCriteria()" id="removeFilter">Verwijder filter</b-button>
+                <b-button variant="warning" v-on:click="showMinutesModal()">Proces verbaal</b-button>
+                <b-button variant="success" v-on:click="handInAssassment()"  id="handIn">Lever in</b-button>
+            </div>
             <!--TODO: Find a way to make it dry-->
             <div class="statusMessages">
                 <div v-for="statusMessage in statusMessages" :key="statusMessage.index">
@@ -110,6 +113,10 @@
                     </tbody>
                 </table>
             </div>
+            <b-modal :id="'minutesModal'" title="Proces verbaal" ok-only ok-title="Verstuur"
+                     @shown="focusMinutesTextAreaInModal()">
+                <textarea class="form-control" :id="'noteTextArea'" rows="3" v-on:keyup="onChange()" v-model="minutesTextArea"></textarea>
+            </b-modal>
         </div>
     </div>
 </template>
@@ -130,6 +137,7 @@
                 criteriasFilled: 0,
                 toggle: false,
                 percentageFilled: 0,
+                minutesTextArea: null,
             }
         },
         computed: {
@@ -315,6 +323,44 @@
             },
             focusNoteTextAreaInModal(modalId) {
                 global.$('#noteTextArea-' + modalId).focus();
+            },
+            getMinutes() {
+                return new Promise(
+                    (resolve, reject) => {
+                        let data = {};
+                        data.examiner_name = this.examiner;
+                        this.$http.get(`${this.url}/assessment/${this.$route.params.examId}/minutes`, data)
+                            .then(response => {
+                                resolve(response.body);
+                            })
+                            .catch(response => {
+                                this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                                reject(new Error(response))
+                            });
+                    }
+                );
+            },
+            setMinutes() {
+                return new Promise(
+                    (resolve, reject) => {
+                        let data = {};
+                        data.minutesTextArea = this.minutesTextArea;
+                        this.$http.put(`${this.url}/assessment/${this.$route.params.examId}/minutes`, data)
+                            .then(response => {
+                                resolve(response.body);
+                            })
+                            .catch(response => {
+                                this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                                reject(new Error(response))
+                            });
+                    }
+                );
+            },
+            showMinutesModal() {
+                this.$root.$emit('bv::show::modal', 'minutesModal');
+            },
+            focusMinutesTextAreaInModal() {
+                global.$('#noteTextArea').focus();
             },
         }
     }
