@@ -109,6 +109,7 @@
                             </tbody>
                         </table>
                         <button type="button" class="btn btn-primary float-right" v-on:click="addCriterion(sectionIndex)">Criteria toevoegen</button>
+                        <button type="button" class="btn btn-danger float-right" style="margin-right:5px;" v-on:click="removeSection(sectionIndex)" data-dismiss="modal">Verwijder sectie</button>
                     </div>
                     <button type="button" class="btn btn-primary" v-on:click="addSection()">Sectie toevoegen</button>
                 </div>
@@ -204,6 +205,12 @@
                 let itemtoRemove = this.determinedExam.exam_criteria[sectionIndex].criteria[index];
                 // Removes the criterion from the array.
                 array.splice(global.$.inArray(itemtoRemove, array),1);
+            },
+            removeSection: function(index) {
+                let array = this.determinedExam.exam_criteria;
+                let itemToRemove = this.determinedExam.exam_criteria[index];
+                // Removes the section from the array.
+                array.splice(global.$.inArray(itemToRemove, array),1);
             },
             // Check if there are empty fields.
             checkData: function() {
