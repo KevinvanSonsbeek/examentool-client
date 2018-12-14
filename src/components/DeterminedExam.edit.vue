@@ -100,7 +100,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
-                                                    <button type="button" class="btn btn-danger" v-on:click="removeCriterion(sectionIndex, index)" data-dismiss="modal">Verwijder</button>
+                                                    <button type="button" class="btn btn-danger" v-on:click="removeExamItem(sectionIndex, index)" data-dismiss="modal">Verwijder</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -109,7 +109,7 @@
                             </tbody>
                         </table>
                         <button type="button" class="btn btn-primary float-right" v-on:click="addCriterion(sectionIndex)">Criteria toevoegen</button>
-                        <button type="button" class="btn btn-danger float-right" style="margin-right:5px;" v-on:click="removeSection(sectionIndex)" data-dismiss="modal">Verwijder sectie</button>
+                        <button type="button" class="btn btn-danger float-right" style="margin-right:5px;" v-on:click="removeExamItem(sectionIndex, index, 'section')" data-dismiss="modal">Verwijder sectie</button>
                     </div>
                     <button type="button" class="btn btn-primary" v-on:click="addSection()">Sectie toevoegen</button>
                 </div>
@@ -199,16 +199,17 @@
                 this.determinedExam.exam_criteria[sectionIndex].criteria.push({criteria_description: null, criteria_name: null, rating_group: null, show_stopper: false});
                 this.$forceUpdate();
             },
-            // Remove criterion
-            removeCriterion: function(sectionIndex, index) {
-                let array = this.determinedExam.exam_criteria[sectionIndex].criteria;
-                let itemtoRemove = this.determinedExam.exam_criteria[sectionIndex].criteria[index];
-                // Removes the criterion from the array.
-                array.splice(global.$.inArray(itemtoRemove, array),1);
-            },
-            removeSection: function(index) {
-                let array = this.determinedExam.exam_criteria;
-                let itemToRemove = this.determinedExam.exam_criteria[index];
+            // Removes criterion or section from exam.
+            removeExamItem: function(sectionIndex, index, item) {
+                let array;
+                let itemToRemove;
+                if (item === "section") {
+                    array = this.determinedExam.exam_criteria;
+                    itemToRemove = this.determinedExam.exam_criteria[index];
+                } else {
+                    array = this.determinedExam.exam_criteria[sectionIndex].criteria;
+                    itemToRemove = this.determinedExam.exam_criteria[sectionIndex].criteria[index];
+                }
                 // Removes the section from the array.
                 array.splice(global.$.inArray(itemToRemove, array),1);
             },
