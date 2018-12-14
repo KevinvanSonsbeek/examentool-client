@@ -33,29 +33,35 @@
             </div>
         </div>
       <div v-for="(Exam, index) in FilteredExams" :key="index">
-          <div class="modal fade" v-bind:id="'myModal-' + Exam._id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalLabel">Weet u het zeker?</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                           <span aria-hidden="true">&times;</span>
-                          </button>
-                      </div>
-                      <div class="modal-body">
-                          <p>Weet u zeker dat u '{{ Exam.exam_title }}' wilt archiveren?</p>
-                          <p>Als u dit examen archiveert, kunt u dit examen niet meer zien, wijzigen of gebruiken voor afnames.</p>
-                      </div>
-                      <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
-                          <button type="button" class="btn btn-danger" v-on:click="archiveExam(Exam._id)" data-dismiss="modal">Archiveren</button>
-                      </div>
-                  </div>
-              </div>
-          </div>
+          <!--<div class="modal fade" v-bind:id="'myModal-' + Exam._id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+              <!--<div class="modal-dialog" role="document">-->
+                  <!--<div class="modal-content">-->
+                      <!--<div class="modal-header">-->
+                          <!--<h5 class="modal-title" id="exampleModalLabel">Weet u het zeker?</h5>-->
+                          <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+                           <!--<span aria-hidden="true">&times;</span>-->
+                          <!--</button>-->
+                      <!--</div>-->
+                      <!--<div class="modal-body">-->
+                          <!--<p>Weet u zeker dat u '{{ Exam.exam_title }}' wilt archiveren?</p>-->
+                          <!--<p>Als u dit examen archiveert, kunt u dit examen niet meer zien, wijzigen of gebruiken voor afnames.</p>-->
+                      <!--</div>-->
+                      <!--<div class="modal-footer">-->
+                          <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>-->
+                          <!--<button type="button" class="btn btn-danger" v-on:click="archiveExam(Exam._id)" data-dismiss="modal">Archiveren</button>-->
+                      <!--</div>-->
+                  <!--</div>-->
+              <!--</div>-->
+          <!--</div>-->
+
+          <b-modal :id="'archiveModal-' + Exam._id" title="Weet u het zeker?" @ok="archiveExam(Exam._id)" ok-title="Archiveren"
+                   ok-variant="danger" cancel-title="Sluiten">
+              <p>Weet u zeker dat u '{{ Exam.exam_title }}' wilt archiveren?</p>
+              <p>Als u dit examen archiveert, kunt u dit examen niet meer zien, wijzigen of gebruiken voor afnames.</p>
+          </b-modal>
           <div class="list-group-item clearfix align-items-center justify-content-between exam">
               <span class="pull-right">
-                  <button type="button" class="btn btn-danger float-right" data-toggle="modal" :data-target="'#myModal-' + Exam._id" style="margin-right: 5px; margin-top: 5px;">Archiveren</button>
+                  <b-btn variant="danger" class="float-right" v-b-modal="'archiveModal-' + Exam._id" style="margin-right: 5px; margin-top: 5px;">Archiveren</b-btn>
                   <button type="button" class="btn btn-warning float-right" v-on:click="copyExam(Exam._id)" style="margin-right: 5px; margin-top: 5px;">Kopiëren</button>
                   <router-link class="btn float-right" :to="{ name: 'DeterminedExamEdit', params: { examId: Exam._id }}" v-bind:class="{disabled: !Exam.editable, 'btn-primary': Exam.editable, 'btn-secondary': !Exam.editable }" style="margin-right: 5px; margin-top: 5px;">Wijzigen</router-link>
               </span>
