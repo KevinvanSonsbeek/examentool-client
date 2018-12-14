@@ -41,7 +41,6 @@
         <button type="button" v-on:click="handInAssassment()" class="btn btn-primary float-right" id="handIn">Lever in</button>
         <button type="button" v-on:click="setShowProperty()" class="btn btn-primary float-right" id="filter">Filter</button>
         <button type="button" v-on:click="showAllCriteria()" class="btn btn-primary float-right" id="removeFilter">Verwijder filter</button>
-        <!--<div id="sectionsDiv" style="position:relative;bottom:40px;">-->
             <!--TODO: Find a way to make it dry-->
             <div class="statusMessages">
                 <div v-for="statusMessage in statusMessages" :key="statusMessage.index">
