@@ -1,33 +1,21 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <router-link class="navbar-brand" :to="{ name: 'Index'}" exact>Examen afnemen</router-link>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <router-link class="nav-link" :to="{ name: 'Index'}" exact>Home</router-link>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Afnamens</a>
-            <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <router-link class="dropdown-item" :to="{ name: 'AssessmentsStart'}" exact>Starten</router-link>
-              <router-link class="dropdown-item" :to="{ name: 'AssessmentsIndex'}" exact>Inhaken</router-link>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Vastgestelde examens</a>
-            <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <router-link class="dropdown-item" :to="{ name: 'DeterminedExams'}" exact>Overzicht</router-link>
-              <router-link class="dropdown-item" :to="{ name: 'DeterminedExamAdd'}" exact>Toevoegen</router-link>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </nav>
+    <b-navbar toggleable="md" type="dark" variant="dark" fixed>
+      <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+      <b-navbar-brand :to="{name: 'Index'}">Examen afnemen</b-navbar-brand>
+      <b-collapse is-nav id="nav_collapse">
+        <b-navbar-nav>
+          <b-nav-item-dropdown text="Afnamens" right>
+            <b-dropdown-item :to="{name: 'AssessmentsStart'}">Starten</b-dropdown-item>
+            <b-dropdown-item :to="{name: 'AssessmentsIndex'}">Inhaken</b-dropdown-item>
+          </b-nav-item-dropdown>
+          <b-nav-item-dropdown text="Vastgestelde examens" right>
+            <b-dropdown-item :to="{name: 'DeterminedExams'}">Overzicht</b-dropdown-item>
+            <b-dropdown-item :to="{name: 'DeterminedExamAdd'}">Toevoegen</b-dropdown-item>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
 
     <!--TODO: Find a way to make it dry-->
     <!--<div class="statusMessages">-->
