@@ -102,7 +102,8 @@
                             <b-button @click="openNoteModal(sectionIndex + '-' + criterionIndex)" v-else variant="primary"><span class="oi oi-pencil"></span></b-button>
                         </td>
 
-                        <b-modal :id="'modal-' + sectionIndex + '-' + criterionIndex" @shown="focusNoteTextAreaInModal(sectionIndex + '-' + criterionIndex)" title="Notities" ok-only>
+                        <b-modal :id="'modal-' + sectionIndex + '-' + criterionIndex" title="Notities" ok-only ok-title="Sluiten"
+                                 @shown="focusNoteTextAreaInModal(sectionIndex + '-' + criterionIndex)">
                             <textarea class="form-control" :id="'noteTextArea-' + sectionIndex + '-' + criterionIndex" rows="3" v-on:keyup="onChange()" v-model="criteria.note"></textarea>
                         </b-modal>
                     </tr>
