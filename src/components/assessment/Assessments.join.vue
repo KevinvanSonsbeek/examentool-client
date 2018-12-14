@@ -98,29 +98,13 @@
                         <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="false" type="radio"></td>
                         <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.doubt" type="checkbox"></td>
                         <td>
-                            <button v-if="!criteria.note" class="btn btn-secondary" type="button" data-toggle="modal" :data-target="'#myModal-' + sectionIndex + '-' + criterionIndex"><span class="oi oi-pencil"></span></button>
-                            <button v-else class="btn btn-primary" type="button" data-toggle="modal" :data-target="'#myModal-' + sectionIndex + '-' + criterionIndex"><span class="oi oi-pencil"></span></button>
+                            <b-button @click="openNoteModal(sectionIndex + '-' + criterionIndex)" v-b-modal="" v-if="!criteria.note" variant="secondary"><span class="oi oi-pencil"></span></b-button>
+                            <b-button @click="openNoteModal(sectionIndex + '-' + criterionIndex)" v-else variant="primary"><span class="oi oi-pencil"></span></b-button>
                         </td>
-                        <div class="modal fade" v-bind:id="'myModal-' + sectionIndex + '-' + criterionIndex" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel"><label :for="'noteTextArea-' + sectionIndex + '-' + criterionIndex">Notities</label></h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <textarea class="form-control" :id="'noteTextArea-' + sectionIndex + '-' + criterionIndex" rows="3" v-on:keyup="onChange()" v-model="criteria.note"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Sluiten</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+                        <b-modal :id="'modal-' + sectionIndex + '-' + criterionIndex" @shown="focusNoteTextAreaInModal(sectionIndex + '-' + criterionIndex)" title="Notities" ok-only>
+                            <textarea class="form-control" :id="'noteTextArea-' + sectionIndex + '-' + criterionIndex" rows="3" v-on:keyup="onChange()" v-model="criteria.note"></textarea>
+                        </b-modal>
                     </tr>
                     </tbody>
                 </table>
@@ -323,7 +307,14 @@
                 }else {
                     this._addStatusMessage('warning', "Nog niet alle criteria zijn ingevuld!");
                 }
-            }
+            },
+            openNoteModal(modalId) {
+                this.$root.$emit('bv::show::modal', 'modal-' + modalId);
+
+            },
+            focusNoteTextAreaInModal(modalId) {
+                global.$('#noteTextArea-' + modalId).focus();
+            },
         }
     }
 </script>
