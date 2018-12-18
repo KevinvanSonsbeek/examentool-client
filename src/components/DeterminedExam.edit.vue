@@ -88,7 +88,6 @@
                                     <td>
                                         <input type="checkbox" v-model="criteria.show_stopper" class="form-control">
                                         <b-button class="btn btn-danger float-right removeCriterion" @click="openNoteModal(sectionIndex + '-' + index)">Verwijder</b-button>
-                                        <!-- <button type="button" class="btn btn-danger float-right removeCriterion" v-on:click="removeExamItem(sectionIndex, index)">Verwijder</button> -->
                                     </td>
                                     <b-modal :id="'modal-' + sectionIndex + '-' + index" title="Notities" ok-variant="danger" ok-title="Verwijderen" cancel-title="Annuleren" @ok="removeExamItem(sectionIndex, index)">
                                         <p>Weet u zeker dat u dit criterium wilt verwijderen?</p>
@@ -97,7 +96,10 @@
                             </tbody>
                         </table>
                         <button type="button" class="btn btn-primary float-right" v-on:click="addCriterion(sectionIndex)">Criteria toevoegen</button>
-                        <button type="button" class="btn btn-danger float-right" style="margin-right:5px;" v-on:click="removeExamItem(sectionIndex, index, 'section')">Verwijder sectie</button>
+                        <b-button class="btn btn-danger float-right" style="margin-right:5px;" @click="openNoteModal(sectionIndex)">Verwijder sectie</b-button>
+                        <b-modal :id="'modal-' + sectionIndex" title="Notities" ok-variant="danger" ok-title="Verwijderen" cancel-title="Annuleren" @ok="removeExamItem(sectionIndex, index, 'section')">
+                            <p>Weet u zeker dat u deze sectie wilt verwijderen?</p>
+                        </b-modal>
                     </div>
                     <button type="button" class="btn btn-primary" v-on:click="addSection()">Sectie toevoegen</button>
                 </div>
