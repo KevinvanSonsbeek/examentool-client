@@ -113,9 +113,18 @@
                     </tbody>
                 </table>
             </div>
-            <b-modal :id="'minutesModal'" title="Proces verbaal" ok-only ok-title="Verstuur"
-                     @shown="focusMinutesTextAreaInModal()">
-                <textarea class="form-control" :id="'noteTextArea'" rows="3" v-on:keyup="onChange()" v-model="minutesTextArea"></textarea>
+            <b-modal :id="'minutesModal'" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
+                     @shown="focusMinutesTextAreaInModal" @ok="confirmMinutes">
+                <textarea class="form-control" :id="'noteTextArea'" rows="3" v-on:keyup="onChange()"
+                          v-model="minutes">
+                </textarea>
+            </b-modal>
+            <b-modal :id="'minutesModalConfirmation'" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
+                     @cancel="showMinutesModal" @ok="sendMinutes">
+                <p>Weet u zeker dat u dit proces verbaal wilt indienen? De afnamen wordt dan gestopt.</p>
+            </b-modal>
+            <b-modal :id="'assessmentClosedModal'" title="Afnamen gesloten" ok-only @hide="closeExam">
+                <p>Dit afnamen is gesloten. U word doorgestuurd naar de homepagina.</p>
             </b-modal>
         </div>
     </div>
@@ -137,7 +146,7 @@
                 criteriasFilled: 0,
                 toggle: false,
                 percentageFilled: 0,
-                minutesTextArea: null,
+                minutes: null,
             }
         },
         computed: {
@@ -160,6 +169,11 @@
                         }
                     }
                 });
+
+            this.getMinutes()
+                .then((data) => {
+                    this.minutes = data.minutes;
+            });
         },
         updated () {
             this.updateProgressBar();
@@ -344,7 +358,7 @@
                 return new Promise(
                     (resolve, reject) => {
                         let data = {};
-                        data.minutesTextArea = this.minutesTextArea;
+                        data.minutes = this.minutes;
                         this.$http.put(`${this.url}/assessment/${this.$route.params.examId}/minutes`, data)
                             .then(response => {
                                 resolve(response.body);
@@ -361,6 +375,22 @@
             },
             focusMinutesTextAreaInModal() {
                 global.$('#noteTextArea').focus();
+            },
+            confirmMinutes() {
+                this.$root.$emit('bv::show::modal', 'minutesModalConfirmation');
+            },
+            sendMinutes() {
+                this.setMinutes()
+                    .then((data) => {
+                        this.minutes = data.minutes;
+                        this.closeExamModal()
+                    });
+            },
+            closeExamModal() {
+                this.$root.$emit('bv::show::modal', 'assessmentClosedModal');
+            },
+            closeExam() {
+                this.$router.push({ name: 'Index' })
             },
         }
     }
