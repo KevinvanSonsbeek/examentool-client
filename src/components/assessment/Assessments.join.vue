@@ -115,9 +115,11 @@
             </div>
             <b-modal :id="'minutesModal'" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
                      @shown="focusMinutesTextAreaInModal" @ok="confirmMinutes">
-                <textarea class="form-control" :id="'noteTextArea'" rows="3" v-on:keyup="onChange()"
-                          v-model="minutes">
-                </textarea>
+                <b-form-textarea novalidate validated="true" id="textarea1"
+                                 v-model="minutes"
+                                 :rows="8"
+                                 required>
+                </b-form-textarea>
             </b-modal>
             <b-modal :id="'minutesModalConfirmation'" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
                      @cancel="showMinutesModal" @ok="sendMinutes">
