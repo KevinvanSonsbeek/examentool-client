@@ -87,8 +87,12 @@
                                     </td>
                                     <td>
                                         <input type="checkbox" v-model="criteria.show_stopper" class="form-control">
-                                        <button type="button" class="btn btn-danger float-right removeCriterion" v-on:click="removeExamItem(sectionIndex, index)">Verwijder</button>
+                                        <b-button class="btn btn-danger float-right removeCriterion" @click="openNoteModal(sectionIndex + '-' + index)">Verwijder</b-button>
+                                        <!-- <button type="button" class="btn btn-danger float-right removeCriterion" v-on:click="removeExamItem(sectionIndex, index)">Verwijder</button> -->
                                     </td>
+                                    <b-modal :id="'modal-' + sectionIndex + '-' + index" title="Notities" ok-variant="danger" ok-title="Verwijderen" cancel-title="Annuleren" @ok="removeExamItem(sectionIndex, index)">
+                                        <p>Weet u zeker dat u dit criterium wilt verwijderen?</p>
+                                    </b-modal>
                                 </tr>
                             </tbody>
                         </table>
@@ -196,6 +200,9 @@
                 }
                 // Removes the section from the array.
                 array.splice(global.$.inArray(itemToRemove, array),1);
+            },
+            openNoteModal(modalId) {
+                this.$root.$emit('bv::show::modal', 'modal-' + modalId);
             },
             // Check if there are empty fields.
             checkData: function() {
