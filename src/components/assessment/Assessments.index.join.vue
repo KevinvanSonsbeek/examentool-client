@@ -6,7 +6,7 @@
       <div v-for="(Exam, index) in FilteredExams" :key="index">
           <div class="list-group-item clearfix align-items-center justify-content-between exam">
               <span class="pull-right">
-                  <router-link class="btn btn-primary float-right" :to="{ name: 'AssessmentsJoin', params: { examId: Exam._id }}" style="margin-top: 5px;">Inhaken</router-link>
+                  <router-link class="btn btn-primary float-right" :to="{ name: 'AssessmentsJoin', params: { examId: Exam._id }}" style="margin: 5px; margin-right: 0px;">Inhaken</router-link>
               </span>
               <div>{{ Exam.exam_title }}</div>
               <div>Cohort: {{ Exam.exam_cohort }}</div>
@@ -48,6 +48,7 @@
                     return Exam.exam_title.toLowerCase().includes(this.search.toLowerCase())
                 })
             }
+            
         }
     }
 </script>

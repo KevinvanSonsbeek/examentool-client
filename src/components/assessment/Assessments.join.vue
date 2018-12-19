@@ -341,6 +341,14 @@
             handInAssassment() {
                 if(this.percentageFilled === 100) {
                     this._addStatusMessage('success', "Alle criteria zijn ingevuld!");
+
+                    this.$http.get(`${this.url}/assessment/${this.$route.params.examId}/finish`, this.assessment)
+                        .then(response => {
+                            resolve(response.body);
+                        })
+                        .catch(response => {
+                            this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                        });
                 }else {
                     this._addStatusMessage('warning', "Nog niet alle criteria zijn ingevuld!");
                 }
