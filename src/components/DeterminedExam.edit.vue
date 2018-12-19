@@ -87,28 +87,19 @@
                                     </td>
                                     <td>
                                         <input type="checkbox" v-model="criteria.show_stopper" class="form-control">
-                                        <button type="button" class="btn btn-danger removeCriterion" data-toggle="modal" :data-target="'#myModal-' + sectionIndex + index">Verwijder</button>
+                                        <b-button class="btn btn-danger float-right removeCriterion" @click="openNoteModal(sectionIndex + '-' + index)">Verwijder</b-button>
                                     </td>
-                                    <div class="modal fade" v-bind:id="'myModal-' + sectionIndex + index" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Weet u zeker dat u het criterium wilt verwijderen?</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Sluiten</button>
-                                                    <button type="button" class="btn btn-danger" v-on:click="removeCriterion(sectionIndex, index)" data-dismiss="modal">Verwijder</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <b-modal :id="'modal-' + sectionIndex + '-' + index" title="Notities" ok-variant="danger" ok-title="Verwijderen" cancel-title="Annuleren" @ok="removeExamItem(sectionIndex, index)">
+                                        <p>Weet u zeker dat u dit criterium wilt verwijderen?</p>
+                                    </b-modal>
                                 </tr>
                             </tbody>
                         </table>
                         <button type="button" class="btn btn-primary float-right" v-on:click="addCriterion(sectionIndex)">Criteria toevoegen</button>
+                        <b-button class="btn btn-danger float-right" style="margin-right:5px;" @click="openNoteModal(sectionIndex)">Verwijder sectie</b-button>
+                        <b-modal :id="'modal-' + sectionIndex" title="Notities" ok-variant="danger" ok-title="Verwijderen" cancel-title="Annuleren" @ok="removeExamItem(sectionIndex, index, 'section')">
+                            <p>Weet u zeker dat u deze sectie wilt verwijderen?</p>
+                        </b-modal>
                     </div>
                     <button type="button" class="btn btn-primary" v-on:click="addSection()">Sectie toevoegen</button>
                 </div>
@@ -178,12 +169,22 @@
                 this.determinedExam.exam_criteria[sectionIndex].criteria.push({criteria_description: null, criteria_name: null, rating_group: null, show_stopper: false});
                 this.$forceUpdate();
             },
-            // Remove criterion
-            removeCriterion: function(sectionIndex, index) {
-                let array = this.determinedExam.exam_criteria[sectionIndex].criteria;
-                let itemtoRemove = this.determinedExam.exam_criteria[sectionIndex].criteria[index];
-                // Removes the criterion from the array.
-                array.splice(global.$.inArray(itemtoRemove, array),1);
+            // Removes criterion or section from exam.
+            removeExamItem: function(sectionIndex, index, item) {
+                let array;
+                let itemToRemove;
+                if (item === "section") {
+                    array = this.determinedExam.exam_criteria;
+                    itemToRemove = this.determinedExam.exam_criteria[index];
+                } else {
+                    array = this.determinedExam.exam_criteria[sectionIndex].criteria;
+                    itemToRemove = this.determinedExam.exam_criteria[sectionIndex].criteria[index];
+                }
+                // Removes the section from the array.
+                array.splice(global.$.inArray(itemToRemove, array),1);
+            },
+            openNoteModal(modalId) {
+                this.$root.$emit('bv::show::modal', 'modal-' + modalId);
             },
             // Check if there are empty fields.
             checkData: function() {
