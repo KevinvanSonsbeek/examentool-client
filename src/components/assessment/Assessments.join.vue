@@ -41,7 +41,7 @@
             <div class="assessmentButtons float-right">
                 <b-button variant="info" v-on:click="setShowProperty()" id="filter">Filter</b-button>
                 <b-button variant="info" v-on:click="showAllCriteria()" id="removeFilter">Verwijder filter</b-button>
-                <b-button variant="warning" v-on:click="showMinutesModal()">Proces verbaal</b-button>
+                <b-button variant="warning" v-on:click="showProcessReportModal()">Proces verbaal</b-button>
                 <b-button variant="success" v-on:click="handInAssassment()"  id="handIn">Lever in</b-button>
             </div>
             <!--TODO: Find a way to make it dry-->
@@ -113,19 +113,19 @@
                     </tbody>
                 </table>
             </div>
-            <b-modal :id="'minutesModal'" ref="minutesModal" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
-                     @shown="focusMinutesTextAreaInModal" @ok="validateMinutes">
-                <b-form-group :invalid-feedback="invalidMinutesFeedback">
+            <b-modal :id="'processReportModal'" ref="processReportModal" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
+                     @shown="focusProcessReportTextAreaInModal" @ok="validateProcessReport">
+                <b-form-group :invalid-feedback="invalidProcessReportFeedback">
                     <b-form-textarea id="noteTextArea"
-                                     v-model="minutes"
+                                     v-model="processReport"
                                      :rows="8"
-                                     :state="minutesState"
+                                     :state="processReportState"
                                      required>
                     </b-form-textarea>
                 </b-form-group>
             </b-modal>
-            <b-modal :id="'minutesModalConfirmation'" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
-                     @cancel="showMinutesModal" @ok="sendMinutes">
+            <b-modal :id="'processReportModalConfirmation'" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
+                     @cancel="showProcessReportModal" @ok="sendProcessReport">
                 <p>Weet u zeker dat u dit proces verbaal wilt indienen? De afnamen wordt dan gestopt.</p>
             </b-modal>
             <b-modal :id="'assessmentClosedModal'" title="Afnamen gesloten" ok-only @hide="closeExam">
@@ -151,20 +151,20 @@
                 criteriasFilled: 0,
                 toggle: false,
                 percentageFilled: 0,
-                minutes: null,
+                processReport: null,
             }
         },
         computed: {
             webStorageName: function () {
                 return `assessment-${this.$route.params.examId}-${this.examiner}`;
             },
-            minutesState() {
+            processReportState() {
                 // Vue validation in combination with Bootstrap validation.
                 // Can not be simplified! Will not work.
                 // noinspection RedundantConditionalExpressionJS
-                return !this.minutes ? false : true;
+                return !this.processReport ? false : true;
             },
-            invalidMinutesFeedback() {
+            invalidProcessReportFeedback() {
                 return 'Dit veld mag niet leeg zijn';
             },
         },
@@ -184,9 +184,9 @@
                     }
                 });
 
-            this.getMinutes()
+            this.getProcessReport()
                 .then((data) => {
-                    this.minutes = data.minutes;
+                    this.processReport = data.processReport;
             });
         },
         updated () {
@@ -352,12 +352,12 @@
             focusNoteTextAreaInModal(modalId) {
                 global.$('#noteTextArea-' + modalId).focus();
             },
-            getMinutes() {
+            getProcessReport() {
                 return new Promise(
                     (resolve, reject) => {
                         let data = {};
                         data.examiner_name = this.examiner;
-                        this.$http.get(`${this.url}/assessment/${this.$route.params.examId}/minutes`, data)
+                        this.$http.get(`${this.url}/assessment/${this.$route.params.examId}/processreport`, data)
                             .then(response => {
                                 resolve(response.body);
                             })
@@ -368,12 +368,12 @@
                     }
                 );
             },
-            setMinutes() {
+            setProcessReport() {
                 return new Promise(
                     (resolve, reject) => {
                         let data = {};
-                        data.minutes = this.minutes;
-                        this.$http.put(`${this.url}/assessment/${this.$route.params.examId}/minutes`, data)
+                        data.processReport = this.processReport;
+                        this.$http.put(`${this.url}/assessment/${this.$route.params.examId}/processreport`, data)
                             .then(response => {
                                 resolve(response.body);
                             })
@@ -384,26 +384,26 @@
                     }
                 );
             },
-            showMinutesModal() {
-                this.$root.$emit('bv::show::modal', 'minutesModal');
+            showProcessReportModal() {
+                this.$root.$emit('bv::show::modal', 'processReportModal');
             },
-            focusMinutesTextAreaInModal() {
+            focusProcessReportTextAreaInModal() {
                 global.$('#noteTextArea').focus();
             },
-            validateMinutes(evt) {
+            validateProcessReport(evt) {
                evt.preventDefault();
-               if (this.minutesState) {
-                   this.$refs.minutesModal.hide();
-                   this.confirmMinutes();
+               if (this.processReportState) {
+                   this.$refs.processReportModal.hide();
+                   this.confirmProcessReport();
                }
             },
-            confirmMinutes() {
-                this.$root.$emit('bv::show::modal', 'minutesModalConfirmation');
+            confirmProcessReport() {
+                this.$root.$emit('bv::show::modal', 'processReportModalConfirmation');
             },
-            sendMinutes() {
-                this.setMinutes()
+            sendProcessReport() {
+                this.setProcessReport()
                     .then((data) => {
-                        this.minutes = data.minutes;
+                        this.processReport = data.processReport;
                         this.closeExamModal()
                     });
             },
