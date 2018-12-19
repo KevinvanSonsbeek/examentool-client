@@ -15,8 +15,8 @@
 #removeFilter {
     display: none;
 }
-#handIn {
-    margin-right: 10px;
+.assessmentButtons * {
+    margin: 0 2px;
 }
 @media screen and (max-width: 900px){
     .progress{
@@ -38,9 +38,12 @@
             <div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <div id="sectionsDiv">
-        <button type="button" v-on:click="handInAssassment()" class="btn btn-primary float-right" id="handIn">Lever in</button>
-        <button type="button" v-on:click="setShowProperty()" class="btn btn-primary float-right" id="filter">Filter</button>
-        <button type="button" v-on:click="showAllCriteria()" class="btn btn-primary float-right" id="removeFilter">Verwijder filter</button>
+            <div class="assessmentButtons float-right">
+                <b-button variant="info" v-on:click="setShowProperty()" id="filter">Filter</b-button>
+                <b-button variant="info" v-on:click="showAllCriteria()" id="removeFilter">Verwijder filter</b-button>
+                <b-button variant="warning" v-on:click="showProcessReportModal()">Proces verbaal</b-button>
+                <b-button variant="success" v-on:click="handInAssassment()"  id="handIn">Lever in</b-button>
+            </div>
             <!--TODO: Find a way to make it dry-->
             <div class="statusMessages">
                 <div v-for="statusMessage in statusMessages" :key="statusMessage.index">
@@ -110,6 +113,24 @@
                     </tbody>
                 </table>
             </div>
+            <b-modal :id="'processReportModal'" ref="processReportModal" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
+                     @shown="focusProcessReportTextAreaInModal" @ok="validateProcessReport">
+                <b-form-group :invalid-feedback="invalidProcessReportFeedback">
+                    <b-form-textarea id="noteTextArea"
+                                     v-model="processReport"
+                                     :rows="8"
+                                     :state="processReportState"
+                                     required>
+                    </b-form-textarea>
+                </b-form-group>
+            </b-modal>
+            <b-modal :id="'processReportModalConfirmation'" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
+                     @cancel="showProcessReportModal" @ok="sendProcessReport">
+                <p>Weet u zeker dat u dit proces verbaal wilt indienen? De afnamen wordt dan gestopt.</p>
+            </b-modal>
+            <b-modal :id="'assessmentClosedModal'" title="Afnamen gesloten" ok-only @hide="closeExam">
+                <p>Dit afnamen is gesloten. U word doorgestuurd naar de homepagina.</p>
+            </b-modal>
         </div>
     </div>
 </template>
@@ -130,12 +151,22 @@
                 criteriasFilled: 0,
                 toggle: false,
                 percentageFilled: 0,
+                processReport: null,
             }
         },
         computed: {
             webStorageName: function () {
                 return `assessment-${this.$route.params.examId}-${this.examiner}`;
-            }
+            },
+            processReportState() {
+                // Vue validation in combination with Bootstrap validation.
+                // Can not be simplified! Will not work.
+                // noinspection RedundantConditionalExpressionJS
+                return !this.processReport ? false : true;
+            },
+            invalidProcessReportFeedback() {
+                return 'Dit veld mag niet leeg zijn';
+            },
         },
         // Function called at creation of the page
         created () {
@@ -152,6 +183,11 @@
                         }
                     }
                 });
+
+            this.getProcessReport()
+                .then((data) => {
+                    this.processReport = data.processReport;
+            });
         },
         updated () {
             this.updateProgressBar();
@@ -315,6 +351,67 @@
             },
             focusNoteTextAreaInModal(modalId) {
                 global.$('#noteTextArea-' + modalId).focus();
+            },
+            getProcessReport() {
+                return new Promise(
+                    (resolve, reject) => {
+                        let data = {};
+                        data.examiner_name = this.examiner;
+                        this.$http.get(`${this.url}/assessment/${this.$route.params.examId}/processreport`, data)
+                            .then(response => {
+                                resolve(response.body);
+                            })
+                            .catch(response => {
+                                this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                                reject(new Error(response))
+                            });
+                    }
+                );
+            },
+            setProcessReport() {
+                return new Promise(
+                    (resolve, reject) => {
+                        let data = {};
+                        data.processReport = this.processReport;
+                        this.$http.put(`${this.url}/assessment/${this.$route.params.examId}/processreport`, data)
+                            .then(response => {
+                                resolve(response.body);
+                            })
+                            .catch(response => {
+                                this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                                reject(new Error(response))
+                            });
+                    }
+                );
+            },
+            showProcessReportModal() {
+                this.$root.$emit('bv::show::modal', 'processReportModal');
+            },
+            focusProcessReportTextAreaInModal() {
+                global.$('#noteTextArea').focus();
+            },
+            validateProcessReport(evt) {
+               evt.preventDefault();
+               if (this.processReportState) {
+                   this.$refs.processReportModal.hide();
+                   this.confirmProcessReport();
+               }
+            },
+            confirmProcessReport() {
+                this.$root.$emit('bv::show::modal', 'processReportModalConfirmation');
+            },
+            sendProcessReport() {
+                this.setProcessReport()
+                    .then((data) => {
+                        this.processReport = data.processReport;
+                        this.closeExamModal()
+                    });
+            },
+            closeExamModal() {
+                this.$root.$emit('bv::show::modal', 'assessmentClosedModal');
+            },
+            closeExam() {
+                this.$router.push({ name: 'Index' })
             },
         }
     }
