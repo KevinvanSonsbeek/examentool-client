@@ -113,7 +113,7 @@
                     </tbody>
                 </table>
             </div>
-            <b-modal :id="'minutesModal'" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
+            <b-modal :id="'minutesModal'" ref="minutesModal" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
                      @shown="focusMinutesTextAreaInModal" @ok="validateMinutes">
                 <b-form-group :invalid-feedback="invalidMinutesFeedback">
                     <b-form-textarea id="noteTextArea"
@@ -392,9 +392,9 @@
             },
             validateMinutes(evt) {
                evt.preventDefault();
-               if (this.minutes) {
-                   this.$refs.modal.hide();
-                   this.confirmMinutes()
+               if (this.minutesState) {
+                   this.$refs.minutesModal.hide();
+                   this.confirmMinutes();
                }
             },
             confirmMinutes() {
