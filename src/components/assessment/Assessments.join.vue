@@ -114,12 +114,15 @@
                 </table>
             </div>
             <b-modal :id="'minutesModal'" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
-                     @shown="focusMinutesTextAreaInModal" @ok="confirmMinutes">
-                <b-form-textarea novalidate validated="true" id="textarea1"
-                                 v-model="minutes"
-                                 :rows="8"
-                                 required>
-                </b-form-textarea>
+                     @shown="focusMinutesTextAreaInModal" @ok="validateMinutes">
+                <b-form-group :invalid-feedback="invalidMinutesFeedback">
+                    <b-form-textarea id="textarea1"
+                                     v-model="minutes"
+                                     :rows="8"
+                                     :state="minutesState"
+                                     required>
+                    </b-form-textarea>
+                </b-form-group>
             </b-modal>
             <b-modal :id="'minutesModalConfirmation'" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
                      @cancel="showMinutesModal" @ok="sendMinutes">
@@ -154,7 +157,16 @@
         computed: {
             webStorageName: function () {
                 return `assessment-${this.$route.params.examId}-${this.examiner}`;
-            }
+            },
+            minutesState() {
+                // Vue validation in combination with Bootstrap validation.
+                // Can not be simplified! Will not work.
+                // noinspection RedundantConditionalExpressionJS
+                return !this.minutes ? false : true;
+            },
+            invalidMinutesFeedback() {
+                return 'Dit veld mag niet leeg zijn';
+            },
         },
         // Function called at creation of the page
         created () {
@@ -377,6 +389,13 @@
             },
             focusMinutesTextAreaInModal() {
                 global.$('#noteTextArea').focus();
+            },
+            validateMinutes(evt) {
+               evt.preventDefault();
+               if (this.minutes) {
+                   this.$refs.modal.hide();
+                   this.confirmMinutes()
+               }
             },
             confirmMinutes() {
                 this.$root.$emit('bv::show::modal', 'minutesModalConfirmation');
