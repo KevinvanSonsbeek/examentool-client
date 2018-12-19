@@ -9,8 +9,9 @@
             <b-dropdown-item :to="{name: 'AssessmentsStart'}">Starten</b-dropdown-item>
             <b-dropdown-item :to="{name: 'AssessmentsIndex'}">Inhaken</b-dropdown-item>
           </b-nav-item-dropdown>
-          <b-nav-item-dropdown text="Vastgestelde examens" right>
-            <b-dropdown-item :to="{name: 'DeterminedExams'}">Overzicht</b-dropdown-item>
+          <b-nav-item-dropdown text="Beheer" right>
+            <b-dropdown-item :to="{name: 'DeterminedExams'}">Vastgestelde examens</b-dropdown-item>
+            <b-dropdown-item :to="{name: 'Exams'}">Examens</b-dropdown-item>
             <b-dropdown-item :to="{name: 'DeterminedExamAdd'}">Toevoegen</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>

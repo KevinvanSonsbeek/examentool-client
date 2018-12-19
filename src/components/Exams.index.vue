@@ -1,7 +1,7 @@
 <template>
-  <div id="DeterminedExams">
-    <h2 class="title">Vastgesteld examens</h2>
-    <input type="text" id="examSearch" class="form-control searchBar" v-model="search" placeholder="Zoeken..."/>
+  <div id="Exams">
+      <h2 class="title">Examens</h2>
+      <input type="text" id="examSearch" class="form-control searchBar" v-model="search" placeholder="Zoeken..."/>
     <div class="list-group">
         <!--TODO: Find a way to make it dry-->
         <div class="statusMessages">
@@ -33,23 +33,16 @@
             </div>
         </div>
       <div v-for="(Exam, index) in FilteredExams" :key="index">
-          <b-modal :id="'archiveModal-' + Exam._id" title="Weet u het zeker?" @ok="archiveExam(Exam._id)" ok-title="Archiveren"
-                   ok-variant="danger" cancel-title="Sluiten">
-              <p>Weet u zeker dat u '{{ Exam.exam_title }}' wilt archiveren?</p>
-              <p>Als u dit examen archiveert, kunt u dit examen niet meer zien, wijzigen of gebruiken voor afnames.</p>
-          </b-modal>
           <div class="list-group-item clearfix align-items-center justify-content-between exam">
               <span class="pull-right">
-                  <b-btn variant="danger" class="float-right" v-b-modal="'archiveModal-' + Exam._id" style="margin-right: 5px; margin-top: 5px;">Archiveren</b-btn>
-                  <button type="button" class="btn btn-warning float-right" v-on:click="copyExam(Exam._id)" style="margin-right: 5px; margin-top: 5px;">Kopiëren</button>
-                  <!-- <router-link class="btn float-right" :to="{ name: 'DeterminedExamEdit', params: { examId: Exam._id }}" v-bind:class="{disabled: !Exam.editable, 'btn-primary': Exam.editable, 'btn-secondary': !Exam.editable }" style="margin-right: 5px; margin-top: 5px;">Wijzigen</router-link> -->
+                  <b-btn variant="info" class="float-right" v-on:click="establishExam(Exam._id)" style="margin-right: 5px; margin-top: 5px;">Vaststellen</b-btn>
+                  <router-link class="btn float-right" :to="{ name: 'DeterminedExamEdit', params: { examId: Exam._id }}" v-bind:class="{disabled: !Exam.editable, 'btn-primary': Exam.editable, 'btn-secondary': !Exam.editable }" style="margin-right: 5px; margin-top: 5px;">Wijzigen</router-link>
               </span>
               <div>{{ Exam.exam_title }}</div>
               <div>Cohort: {{ Exam.exam_cohort }}</div>
           </div>
       </div>
     </div>
-    <router-link class="btn btn-primary" :to="{ name: 'DeterminedExamAdd'}" style="margin-bottom: 15px;">Nieuw vastgesteld examen</router-link>
   </div>
 </template>
 
@@ -82,49 +75,16 @@
                       this._catchException(response);
                   });
           },
-          archiveExam:function (id) {
-              this.$http.get(`${this.url}/exam/${id}/archive`)
-                  .then(response => {
-                      //Succeed
-                      if (response.status === 200) {
-                          this.getExams();
-                      }
-                  })
-                  .catch(response => {
-                      this._catchException(response);
-                  });
+          establishExam:function(id) {
+              this.$http.get(`${this.url}/exam/${id}/establish`)
+              .then(response => {
+                  // Succeed
+                  console.log(response)
+              })
+              .catch(response => {
+                  this._catchException(response)
+              })
           },
-          copyExam:function (id) {
-              this.$http.get(`${this.url}/exam/${id}`)
-                .then(response => {
-                    if(response.status === 200) {
-                        this.examToBeCopied = response.body;
-
-                        let data = {};
-                        data.exam_title = this.examToBeCopied.exam_title;
-                        data.exam_description = this.examToBeCopied.exam_description;
-                        data.exam_cohort = this.examToBeCopied.exam_cohort;
-                        data.exam_criteria = this.examToBeCopied.exam_criteria;
-                        // The post request to the backend with the parameters for the new exam
-                        this.$http.post(`${this.url}/exam/create`,  data)
-                            .then(response => {
-                                if(response.status === 200) {
-                                    this.$router.push('/determinedexam');
-                                    this.getExams();
-                                }
-                            })
-                            .catch(response => {
-                                this._catchException(response);
-                            });
-                        // Send the user to the home page
-                        } else {
-                            alert("Nog niet alle velden zijn ingevuld.")
-                        }
-                })
-                .catch(response => {
-                    this._catchException(response);
-                });
-          }
         },
         computed: {
             // For filtering the examns for the search function
@@ -136,7 +96,3 @@
         }
 }
 </script>
-
-<style>
-
-</style>

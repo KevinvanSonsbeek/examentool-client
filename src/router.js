@@ -7,6 +7,7 @@ import AssessmentsNew from './views/assessment/Assessments.new.vue'
 import AssessmentsJoin from './views/assessment/Assessments.join.vue'
 import DeterminedExamAdd from './views/AddExam.index.vue'
 import DeterminedExamEdit from './views/DeterminedExam.edit.vue'
+import Exams from './views/Exams.index.vue'
 
 Vue.use(Router);
 
@@ -50,9 +51,14 @@ export default new Router({
         component: DeterminedExamAdd
       },
       {
+        path: '/exams',
+        name: 'Exams',
+        component: Exams
+      },
+      {
         path: '/',
         name: 'Index',
         component: AssessmentsIndex
-      },
+      }
   ]
 });
