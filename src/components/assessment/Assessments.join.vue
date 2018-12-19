@@ -116,7 +116,7 @@
             <b-modal :id="'minutesModal'" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
                      @shown="focusMinutesTextAreaInModal" @ok="validateMinutes">
                 <b-form-group :invalid-feedback="invalidMinutesFeedback">
-                    <b-form-textarea id="textarea1"
+                    <b-form-textarea id="noteTextArea"
                                      v-model="minutes"
                                      :rows="8"
                                      :state="minutesState"
