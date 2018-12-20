@@ -129,7 +129,7 @@
                 <p>Weet u zeker dat u dit proces verbaal wilt indienen? De afnamen wordt dan gestopt.</p>
             </b-modal>
             <b-modal :id="'assessmentClosedModal'" title="Afnamen gesloten" ok-only @hide="closeExam">
-                <p>Dit afnamen is gesloten. U word doorgestuurd naar de homepagina.</p>
+                <p>Deze afname is gesloten. U wordt doorgestuurd naar de homepagina.</p>
             </b-modal>
         </div>
     </div>
