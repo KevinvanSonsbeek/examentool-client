@@ -45,7 +45,7 @@
 
                     <div class="form-group">
                         <label for="exam_cohort">Examen Cohort</label>
-                        <select id="exam_cohort" class="form-control" v-model="determinedExam.exam_cohort">
+                        <select id="exam_cohort" v-model="determinedExam.exam_cohort" class="form-control">
                             <option value="2014">2014</option>
                             <option value="2015">2015</option>
                             <option value="2016">2016</option>
@@ -57,26 +57,26 @@
                 </div>
                 <hr>
                 <div class="form-group">
-                    <h1>Examen Criteria</h1>
-                    <div v-for="(criteria_section, index) in determinedExam.exam_criteria" :key="index">
-                        <label for="criteria_section_title">Criteria sectie</label>
-                        <input id="criteria_section_title" v-model="criteria_section.title" class="form-control">
+                    <h1 style="margin-bottom:25px;">Examen Criteria</h1>
+                    <div style="margin-bottom:100px;" v-for="(criteria_section, sectionIndex) in determinedExam.exam_criteria" :key="sectionIndex">
+                        <th for="criteria_section_title">Criteria sectie naam</th>
+                        <input id="criteria_section_title" v-model="criteria_section.title" class="form-control sectionName">
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col">Criteria naam</th>
-                                    <th scope="col">Criteria beschrijving</th>
-                                    <th scope="col">Criteria cesuur groep</th>
-                                    <th scope="col">Showstopper</th>
+                                    <th class="criteriaName" scope="col">Criteria + uitleg</th>
+                                    <th class="criteriaCaesuraGroup" scope="col">Criteria cesuur groep</th>
+                                    <th class="criteriaShowStopper" scope="col">Showstopper</th>
+                                </tr>
+                                <tr>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="(criteria, index) in criteria_section.criteria" :key="index">
                                     <td>
-                                        <input v-model="criteria.criteria_name" class="form-control">
-                                    </td>
-                                    <td>
-                                        <textarea v-model="criteria.criteria_description" class="form-control"></textarea>
+                                        <textarea placeholder="Criteria" v-model="criteria.criteria_name" class="form-control texterea"></textarea>
+                                        <textarea placeholder="Uitleg" v-model="criteria.criteria_description" class="form-control texterea"></textarea>
                                     </td>
                                     <td>
                                         <select class="form-control" v-model="criteria.rating_group">
@@ -87,15 +87,23 @@
                                     </td>
                                     <td>
                                         <input type="checkbox" v-model="criteria.show_stopper" class="form-control">
+                                        <b-button class="btn btn-danger float-right removeCriterion" @click="openNoteModal(sectionIndex + '-' + index)">Verwijder</b-button>
                                     </td>
+                                    <b-modal :id="'modal-' + sectionIndex + '-' + index" title="Notities" ok-variant="danger" ok-title="Verwijderen" cancel-title="Annuleren" @ok="removeExamItem(sectionIndex, index)">
+                                        <p>Weet u zeker dat u dit criterium wilt verwijderen?</p>
+                                    </b-modal>
                                 </tr>
                             </tbody>
                         </table>
-                        <a type="button" class="btn btn-primary float-right" v-on:click="addCriteria(index)">Criteria toevoegen</a>
+                        <button type="button" class="btn btn-primary float-right" v-on:click="addCriterion(sectionIndex)">Criteria toevoegen</button>
+                        <b-button class="btn btn-danger float-right" style="margin-right:5px;" @click="openNoteModal(sectionIndex)">Verwijder sectie</b-button>
+                        <b-modal :id="'modal-' + sectionIndex" title="Notities" ok-variant="danger" ok-title="Verwijderen" cancel-title="Annuleren" @ok="removeExamItem(sectionIndex, index, 'section')">
+                            <p>Weet u zeker dat u deze sectie wilt verwijderen?</p>
+                        </b-modal>
                     </div>
-                    <a type="button" class="btn btn-primary" v-on:click="addSection()">Sectie toevoegen</a>
+                    <button type="button" class="btn btn-primary" v-on:click="addSection()">Sectie toevoegen</button>
                 </div>
-                <a type="button" class="btn btn-primary" v-on:click="updateDeterminedExam()">Update</a>
+                <button type="button" class="btn btn-primary" v-on:click="updateDeterminedExam()" style="margin-bottom: 25px;">Opslaan</button>
             </form>
         </div>
     </div>
@@ -114,26 +122,15 @@
         },
         created() {
             //Get determinedExam
-            this.$http.get(`http://localhost:8000/exam/` + this.$route.params.examId)
+            this.$http.get(`${this.url}/exam/${this.$route.params.examId}`)
                 .then(response => {
                     if(response.status === 200) {
                         this.determinedExam = response.body;
                     }
                 })
                 .catch(response => {
-                    if(response.status === 0) {
-                        this._addStatusMessage('warning', 'Geen verbinding met server');
-                    } else if(response.status === 404){
-                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                    } else if(response.status === 405){
-                        this._addStatusMessage('warning', 'Examen mag niet aangepast worden. Er is een lopende afnamen van dit examen.');
-                    } else if(response.status === 500){
-                        this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                    } else {
-                        this._addStatusMessage('error', 'Onbekende foutmelding');
-                        console.log(new Error(response))
-                    }
-                })
+                    this._catchException(response);
+                });
         },
         methods: {
             /**
@@ -147,26 +144,15 @@
                 }
 
                 //Update request
-                this.$http.put(`http://localhost:8000/exam/${this.determinedExam._id}`, this.determinedExam)
+                this.$http.put(`${this.url}/exam/${this.determinedExam._id}`, this.determinedExam)
                     .then(response => {
                         if(response.status === 200) {
                             this._addStatusMessage('success', 'Succesvol opgeslagen');
                         }
                     })
                     .catch(response => {
-                       if(response.status === 0) {
-                           this._addStatusMessage('warning', 'Geen verbinding met server');
-                       } else if(response.status === 404){
-                           this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                       } else if(response.status === 405){
-                           this._addStatusMessage('warning', 'Examen mag niet aangepast worden. Er is een lopende afnamen van dit examen.');
-                       } else if(response.status === 500){
-                           this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                       } else {
-                           this._addStatusMessage('error', 'Onbekende foutmelding');
-                           console.log(new Error(response))
-                       }
-                    })
+                        this._catchException(response);
+                    });
             },
             addSection: function() {
                 //Check if array containing criteria sections already exits
@@ -178,10 +164,27 @@
                 this.determinedExam.exam_criteria.push({title: null, criteria: []});
                 this.$forceUpdate();
             },
-            addCriteria: function(index) {
+            addCriterion: function(sectionIndex) {
                 //Push empty criteria into section
-                this.determinedExam.exam_criteria[index].criteria.push({criteria_description: null, criteria_name: null, rating_group: null, show_stopper: false});
+                this.determinedExam.exam_criteria[sectionIndex].criteria.push({criteria_description: null, criteria_name: null, rating_group: null, show_stopper: false});
                 this.$forceUpdate();
+            },
+            // Removes criterion or section from exam.
+            removeExamItem: function(sectionIndex, index, item) {
+                let array;
+                let itemToRemove;
+                if (item === "section") {
+                    array = this.determinedExam.exam_criteria;
+                    itemToRemove = this.determinedExam.exam_criteria[index];
+                } else {
+                    array = this.determinedExam.exam_criteria[sectionIndex].criteria;
+                    itemToRemove = this.determinedExam.exam_criteria[sectionIndex].criteria[index];
+                }
+                // Removes the section from the array.
+                array.splice(global.$.inArray(itemToRemove, array),1);
+            },
+            openNoteModal(modalId) {
+                this.$root.$emit('bv::show::modal', 'modal-' + modalId);
             },
             // Check if there are empty fields.
             checkData: function() {
@@ -205,5 +208,34 @@
 </script>
 
 <style>
-
+.criteriaName
+{
+    width: 12.5%;
+}
+.criteriaDescription
+{
+    padding: 10px 0px 0px 0px;
+    font-weight: bold;
+}
+.criteriaCaesuraGroup
+{
+    width: 3%;
+}
+.criteriaShowStopper
+{
+    width: 0.1%;
+}
+.removeCriterion {
+    position: relative;
+    left: 145px;
+    bottom: 38px;
+}
+.sectionName
+{
+    margin-bottom: 10px;
+}
+.texterea
+{
+    margin-bottom: 10px;
+}
 </style>

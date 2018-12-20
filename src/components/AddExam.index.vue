@@ -43,7 +43,7 @@
             </div>
             <div class="form-group">
                 <label>Cohort:</label>
-                <select class="form-control" v-model="exam_cohort">
+                <select class="form-control" v-model="exam_cohort" placeholder="2018">
                     <option value="2014">2014</option>
                     <option value="2015">2015</option>
                     <option value="2016">2016</option>
@@ -52,7 +52,7 @@
                     <option value="2019">2019</option>
                 </select>
             </div>
-            <a class="btn btn-primary" v-on:click="AddExam()">Toevoegen</a>
+            <button type="button" class="btn btn-primary" v-on:click="AddExam()">Toevoegen</button>
         </form>
     </div>
 </template>
@@ -76,27 +76,23 @@ export default {
 
           // A check to see if everything is filled in
           if (this.exam_title && this.exam_description && this.exam_cohort) {
-              let postData = {};
-              postData['exam_title'] = this.exam_title;
-              postData['exam_description'] = this.exam_description;
-              postData['exam_cohort'] = this.exam_cohort;
-              // The post request to the backend with the paramenters for the new exam
-              this.$http.post('http://localhost:8000/exam/create',  postData)
-              .then(response => {
-                  if(response.status === 200) {
-                    alert("success");
-                    this.$router.push('/determinedexam');
-                  } else if(response.status === 500) {
-                    alert("Internal server error!");
-                  }
-              }).catch(err => {
-                  if(err.status === 0) {
-                      alert("No internet connection!");
-                  }
-              })
+              let data = {};
+              data.exam_title = this.exam_title;
+              data.exam_description = this.exam_description;
+              data.exam_cohort = this.exam_cohort;
+              // The post request to the backend with the parameters for the new exam
+              this.$http.post(`${this.url}/exam/create`,  data)
+                  .then(response => {
+                      if(response.status === 200) {
+                        this.$router.push('/determinedexam');
+                      }
+                  })
+                  .catch(response => {
+                        this._catchException(response);
+                  });
               // Send the user to the home page
           } else {
-              alert("Nog niet alle velden zijn ingevuld.")
+                this._addStatusMessage('warning', 'Nog niet alle velden zijn ingevuld.');
           }
         }
     }

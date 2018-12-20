@@ -30,19 +30,14 @@
         // Function called at creation of the page
         created () {
             // API call
-            this.$http.get('http://localhost:8000/exams/full').then(response => {
-                // Succeed
-                this.DeterminedExams = response.body
-            }, response => {
-                // Failed
-                if (response.status === 404) {
-                    alert(404)
-                } else if (response.status === 500) {
-                    alert(500)
-                } else {
-                    alert("unknown error")
-                }
-            });
+            this.$http.get(`${this.url}/exams/full`)
+                .then(response => {
+                    // Succeed
+                    this.DeterminedExams = response.body
+                })
+                .catch(response => {
+                    this._catchException(response);
+                });
         },
         computed: {
             // For filtering the examns for the search function

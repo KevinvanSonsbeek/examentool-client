@@ -15,8 +15,8 @@
 #removeFilter {
     display: none;
 }
-#handIn {
-    margin-right: 10px;
+.assessmentButtons * {
+    margin: 0 2px;
 }
 @media screen and (max-width: 900px){
     .progress{
@@ -38,10 +38,12 @@
             <div class="progress-bar" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <div id="sectionsDiv">
-        <button type="button" v-on:click="handInAssassment()" class="btn btn-primary float-right" id="handIn">Lever in</button>
-        <button type="button" v-on:click="setShowProperty()" class="btn btn-primary float-right" id="filter">Filter</button>
-        <button type="button" v-on:click="showAllCriteria()" class="btn btn-primary float-right" id="removeFilter">Verwijder filter</button>
-        <!--<div id="sectionsDiv" style="position:relative;bottom:40px;">-->
+            <div class="assessmentButtons float-right">
+                <b-button variant="info" v-on:click="setShowProperty()" id="filter">Filter</b-button>
+                <b-button variant="info" v-on:click="showAllCriteria()" id="removeFilter">Verwijder filter</b-button>
+                <b-button variant="warning" v-on:click="showProcessReportModal()">Proces verbaal</b-button>
+                <b-button variant="success" v-on:click="handInAssassment()"  id="handIn">Lever in</b-button>
+            </div>
             <!--TODO: Find a way to make it dry-->
             <div class="statusMessages">
                 <div v-for="statusMessage in statusMessages" :key="statusMessage.index">
@@ -99,33 +101,36 @@
                         <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.answer" value="false" type="radio"></td>
                         <td><input class="form-check-input" v-on:change="onChange()" v-model="criteria.doubt" type="checkbox"></td>
                         <td>
-                            <button v-if="!criteria.note" class="btn btn-secondary" type="button" data-toggle="modal" :data-target="'#myModal-' + sectionIndex + '-' + criterionIndex"><span class="oi oi-pencil"></span></button>
-                            <button v-else class="btn btn-primary" type="button" data-toggle="modal" :data-target="'#myModal-' + sectionIndex + '-' + criterionIndex"><span class="oi oi-pencil"></span></button>
+                            <b-button @click="openNoteModal(sectionIndex + '-' + criterionIndex)" v-b-modal="" v-if="!criteria.note" variant="secondary"><span class="oi oi-pencil"></span></b-button>
+                            <b-button @click="openNoteModal(sectionIndex + '-' + criterionIndex)" v-else variant="primary"><span class="oi oi-pencil"></span></b-button>
                         </td>
-                        <div class="modal fade" v-bind:id="'myModal-' + sectionIndex + '-' + criterionIndex" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel"><label :for="'noteTextArea-' + sectionIndex + '-' + criterionIndex">Notities</label></h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="form-group">
-                                            <textarea class="form-control" :id="'noteTextArea-' + sectionIndex + '-' + criterionIndex" rows="3" v-on:keyup="onChange()" v-model="criteria.note"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Sluiten</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+                        <b-modal :id="'modal-' + sectionIndex + '-' + criterionIndex" title="Notities" ok-only ok-title="Sluiten"
+                                 @shown="focusNoteTextAreaInModal(sectionIndex + '-' + criterionIndex)">
+                            <textarea class="form-control" :id="'noteTextArea-' + sectionIndex + '-' + criterionIndex" rows="3" v-on:keyup="onChange()" v-model="criteria.note"></textarea>
+                        </b-modal>
                     </tr>
                     </tbody>
                 </table>
             </div>
+            <b-modal :id="'processReportModal'" ref="processReportModal" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
+                     @shown="focusProcessReportTextAreaInModal" @ok="validateProcessReport">
+                <b-form-group :invalid-feedback="invalidProcessReportFeedback">
+                    <b-form-textarea id="noteTextArea"
+                                     v-model="processReport"
+                                     :rows="8"
+                                     :state="processReportState"
+                                     required>
+                    </b-form-textarea>
+                </b-form-group>
+            </b-modal>
+            <b-modal :id="'processReportModalConfirmation'" title="Proces verbaal" ok-title="Verstuur" cancel-title="Annuleren"
+                     @cancel="showProcessReportModal" @ok="sendProcessReport">
+                <p>Weet u zeker dat u dit proces verbaal wilt indienen? De afnamen wordt dan gestopt.</p>
+            </b-modal>
+            <b-modal :id="'assessmentClosedModal'" title="Afnamen gesloten" ok-only @hide="closeExam">
+                <p>Deze afname is gesloten. U wordt doorgestuurd naar de homepagina.</p>
+            </b-modal>
         </div>
     </div>
 </template>
@@ -146,26 +151,42 @@
                 criteriasFilled: 0,
                 toggle: false,
                 percentageFilled: 0,
+                processReport: null,
             }
         },
         computed: {
             webStorageName: function () {
-                return 'assessment-' + this.$route.params.examId + '-' + this.examiner;
-            }
+                return `assessment-${this.$route.params.examId}-${this.examiner}`;
+            },
+            processReportState() {
+                // Vue validation in combination with Bootstrap validation.
+                // Can not be simplified! Will not work.
+                // noinspection RedundantConditionalExpressionJS
+                return !this.processReport ? false : true;
+            },
+            invalidProcessReportFeedback() {
+                return 'Dit veld mag niet leeg zijn';
+            },
         },
         // Function called at creation of the page
         created () {
             this.examiner = prompt("Please enter your name:");
 
-            this.getData().then((data) => {
-                this.assessment = data;
-                this.sections = data.exam_criteria;
-                // Creates the property show and sets it to true
-                for (var i = 0; i < this.sections.length; i++) {
-                    for (var e = 0; e < this.sections[i].criteria.length; e++) {
-                        this.sections[i].criteria[e].show = true;
+            this.getData()
+                .then((data) => {
+                    this.assessment = data;
+                    this.sections = data.exam_criteria;
+                    // Creates the property show and sets it to true
+                    for (var i = 0; i < this.sections.length; i++) {
+                        for (var e = 0; e < this.sections[i].criteria.length; e++) {
+                            this.sections[i].criteria[e].show = true;
+                        }
                     }
-                }
+                });
+
+            this.getProcessReport()
+                .then((data) => {
+                    this.processReport = data.processReport;
             });
         },
         updated () {
@@ -176,16 +197,17 @@
                 return new Promise(
                     (resolve, reject) => {
                         if (this.webStorageSupport) {
-                            this.getWebStorage().then((localData => {
-                                // When there is no web storage, prevent using current date and use data from data
-                                if (localData === null) {
-                                    data.updated_at = new Date(data.updated_at).getTime(); //Convert to unix timestamp
-                                } else {
-                                    data.updated_at = Date.now();
-                                }
-                                localStorage.setItem(this.webStorageName, JSON.stringify(data));
-                                resolve(data);
-                            }));
+                            this.getWebStorage()
+                                .then((localData => {
+                                    // When there is no web storage, prevent using current date and use data from data
+                                    if (localData === null) {
+                                        data.updated_at = new Date(data.updated_at).getTime(); //Convert to unix timestamp
+                                    } else {
+                                        data.updated_at = Date.now();
+                                    }
+                                    localStorage.setItem(this.webStorageName, JSON.stringify(data));
+                                    resolve(data);
+                                }));
                         } else {
                             reject(new Error("Web storage is not supported"));
                         }
@@ -208,25 +230,31 @@
             setServerData(data) {
                 return new Promise(
                     (resolve, reject) => {
-                        this.$http.put('http://localhost:8000/assessment/' + this.assessment._id + '/update', data).then(response => {
-                            resolve(response.body);
-                        }, response => {
-                            this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                            reject(new Error(response))
-                        })
+                        this.$http.put(`${this.url}/assessment/${this.assessment._id}/update`, data)
+                            .then(response => {
+                                resolve(response.body);
+                            })
+                            .catch(response => {
+                                this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                                reject(new Error(response))
+                            });
                     }
                 );
             },
             getServerData()  {
                 return new Promise(
                     (resolve, reject) => {
-                        this.$http.post('http://localhost:8000/assessment/' + this.$route.params.examId + '/join', {examiner_name: this.examiner}).then(response => {
-                            response.body.updated_at = new Date(response.body.updated_at).getTime(); //Convert to unix timestamp
-                            resolve(response.body);
-                        }, response => {
-                            this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
-                            reject(new Error(response))
-                        })
+                        let data = {};
+                        data.examiner_name = this.examiner;
+                        this.$http.post(`${this.url}/assessment/${this.$route.params.examId}/join`, data)
+                            .then(response => {
+                                response.body.updated_at = new Date(response.body.updated_at).getTime(); //Convert to unix timestamp
+                                resolve(response.body);
+                            })
+                            .catch(response => {
+                                this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                                reject(new Error(response))
+                            });
                     }
                 );
             },
@@ -311,14 +339,80 @@
                 this.$forceUpdate();
             },
             handInAssassment() {
-                if(this.percentageFilled === 100)
-                {
+                if(this.percentageFilled === 100) {
                     this._addStatusMessage('success', "Alle criteria zijn ingevuld!");
-                }else
-                {
+                }else {
                     this._addStatusMessage('warning', "Nog niet alle criteria zijn ingevuld!");
                 }
-            }
+            },
+            openNoteModal(modalId) {
+                this.$root.$emit('bv::show::modal', 'modal-' + modalId);
+
+            },
+            focusNoteTextAreaInModal(modalId) {
+                global.$('#noteTextArea-' + modalId).focus();
+            },
+            getProcessReport() {
+                return new Promise(
+                    (resolve, reject) => {
+                        let data = {};
+                        data.examiner_name = this.examiner;
+                        this.$http.get(`${this.url}/assessment/${this.$route.params.examId}/processreport`, data)
+                            .then(response => {
+                                resolve(response.body);
+                            })
+                            .catch(response => {
+                                this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                                reject(new Error(response))
+                            });
+                    }
+                );
+            },
+            setProcessReport() {
+                return new Promise(
+                    (resolve, reject) => {
+                        let data = {};
+                        data.processReport = this.processReport;
+                        this.$http.put(`${this.url}/assessment/${this.$route.params.examId}/processreport`, data)
+                            .then(response => {
+                                resolve(response.body);
+                            })
+                            .catch(response => {
+                                this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
+                                reject(new Error(response))
+                            });
+                    }
+                );
+            },
+            showProcessReportModal() {
+                this.$root.$emit('bv::show::modal', 'processReportModal');
+            },
+            focusProcessReportTextAreaInModal() {
+                global.$('#noteTextArea').focus();
+            },
+            validateProcessReport(evt) {
+               evt.preventDefault();
+               if (this.processReportState) {
+                   this.$refs.processReportModal.hide();
+                   this.confirmProcessReport();
+               }
+            },
+            confirmProcessReport() {
+                this.$root.$emit('bv::show::modal', 'processReportModalConfirmation');
+            },
+            sendProcessReport() {
+                this.setProcessReport()
+                    .then((data) => {
+                        this.processReport = data.processReport;
+                        this.closeExamModal()
+                    });
+            },
+            closeExamModal() {
+                this.$root.$emit('bv::show::modal', 'assessmentClosedModal');
+            },
+            closeExam() {
+                this.$router.push({ name: 'Index' })
+            },
         }
     }
 </script>
