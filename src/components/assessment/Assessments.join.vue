@@ -344,7 +344,7 @@
 
                     this.$http.get(`${this.url}/assessment/${this.$route.params.examId}/finish`, this.assessment)
                         .then(response => {
-                            resolve(response.body);
+                            this.$router.push('/assessments/join');
                         })
                         .catch(response => {
                             this._addStatusMessage('error', this._checkForStatusMessagesString(response.status, response.statusText), response.status);
