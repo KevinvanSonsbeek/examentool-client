@@ -19,3 +19,7 @@ npm run build
 ```
 npm run lint
 ```
+
+Trello Board: 
+
+https://trello.com/b/iY9vLZ8i/examenafname
